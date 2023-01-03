@@ -11,6 +11,7 @@
   import { WarpedMapSource, WarpedMapLayer } from '@allmaps/openlayers'
 
   import Jules from '$lib/components/Jules.svelte'
+  import Projects from '$lib/components/Projects.svelte'
 
 	let map: Map
 	let view: View
@@ -50,9 +51,6 @@
       await warpedMapSource.addGeorefAnnotation(annotation);
     }
 
-
-
-    console.log(warpedMapLayer)
 		view = new View({
 			center: [0, 0],
 			zoom: 1
@@ -83,7 +81,7 @@
 	]
 
   function handleBert(event) {
-    console.log(event.detail)
+    console.log('handleBert', event.detail)
   }
 
 	async function handleClick() {
@@ -105,6 +103,7 @@
 </script>
 
 <div id="map" />
+<Projects />
 <button on:click={handleClick}> Hoi </button>
 <ol>
 	{#each chapters as chapter, index}
