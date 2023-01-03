@@ -25,7 +25,7 @@ function markdown() {
 
 				return `
         export const html = ${JSON.stringify(file.value)}
-        export const matter = ${JSON.stringify(file.data.matter)}
+        export const frontmatter = ${JSON.stringify(file.data.matter)}
         `
 			}
 		}

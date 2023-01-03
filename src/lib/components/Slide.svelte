@@ -1,12 +1,13 @@
 <script lang="ts">
-	import type { MarkdownSlide } from '$lib/shared/types.js'
-
-	export let id: string
-	export let slide: MarkdownSlide
+  export let project: string
+  export let slideNumber: number
+	export let html: string
+	export let frontmatter: any
 </script>
 
 <div>
-	<div>{id}</div>
-	<code>{JSON.stringify(slide.matter)}</code>
-	<div>{@html slide.html}</div>
+	<div>Project: <strong>{project}</strong></div>
+  <div>Number: <strong>{slideNumber}</strong></div>
+	<code>{JSON.stringify(frontmatter)}</code>
+	<div>{@html html}</div>
 </div>

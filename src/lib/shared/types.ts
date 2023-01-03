@@ -1,4 +1,6 @@
 export type MarkdownSlide = {
+  project: string
+  slideNumber: number
 	html: string
-	matter: any
+	frontmatter: any
 }
