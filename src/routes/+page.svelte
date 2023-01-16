@@ -34,6 +34,7 @@
 
 	let warpedMapSource: WarpedMapSource
 	let warpedMapLayer: WarpedMapLayer
+	let vectorSource: VectorSource
 	let vectorLayer: VectorLayer<VectorSource>
 
 	let slideIndex: number = 0
@@ -135,30 +136,22 @@
 	$: geoJsonSource = new GeoJSON().readFeatures(biesboschVector.features[1], {
 		featureProjection: 'EPSG:3857'
 	})
-  $: allmapsAnnotations = selectedSlide.frontmatter.allmaps.map((item: any) => item.url)
+	$: allmapsAnnotations = selectedSlide.frontmatter.allmaps.map((item: any) => item.url)
 
-	$: slideVectorSource = new VectorSource({
-		features: geoJsonSource
-	})
-
-	$: vectorLayer = new VectorLayer({
-		source: slideVectorSource
-	})
-
-	function replaceVectorSource() {
-		slideVectorSource.clear
+	function replaceVectorSource(geojson) {
+		slideVectorSource.clear()
 		slideVectorSource.addFeatures(geoJsonSource)
 	}
 
-  // Function to replace Allmaps layer
+	// Function to replace Allmaps layer
 
 	async function refreshAllmapsLayer() {
-
+    console.log(slidesByProject[slideShowID], slideIndex, selectedSlide, allmapsAnnotations )
 		map.removeLayer(warpedMapLayer) // Todo: check if layer exists
 
 		let annotations = await Promise.all(allmapsAnnotations.map(fetchJson))
 
-    warpedMapSource = new WarpedMapSource()
+		warpedMapSource = new WarpedMapSource()
 
 		warpedMapLayer = new WarpedMapLayer({
 			source: warpedMapSource
@@ -169,8 +162,7 @@
 		}
 
 		map.addLayer(warpedMapLayer)
-
-  }
+	}
 
 	// onMount function after components are loaded, see https://svelte.dev/tutorial/onmount
 
@@ -180,6 +172,11 @@
 		view = new View({
 			center: [0, 0],
 			zoom: 1
+		})
+
+		vectorSource = new VectorSource()
+		vectorLayer = new VectorLayer({
+			source: vectorSource
 		})
 
 		map = new Map({
@@ -198,19 +195,19 @@
 		if (slideIndex < slideCount) {
 			slideIndex += 1
 			map.getView().fit(viewerExtent)
-      refreshAllmapsLayer()
+			refreshAllmapsLayer()
 		}
-		if (slideIndex == slideCount) {
+		if (slideIndex === slideCount) {
 		}
 	}
 
 	async function goPrev() {
-		if (slideIndex != 0) {
+		if (slideIndex !== 0) {
 			slideIndex -= 1
 			map.getView().fit(viewerExtent)
-      refreshAllmapsLayer()
+			refreshAllmapsLayer()
 		}
-		if (slideIndex == 0) {
+		if (slideIndex === 0) {
 		}
 	}
 
