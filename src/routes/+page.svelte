@@ -1,7 +1,11 @@
 <script lang="ts">
+	// JS and Svelte functions
+
 	import { onMount } from 'svelte'
 	import { groupBy } from 'lodash-es'
 	import { formatNumber } from '$lib/intl.js'
+
+	// OpenLayers
 
 	import Map from 'ol/Map'
 	import View from 'ol/View'
@@ -14,23 +18,27 @@
 	import { OSM, Vector as VectorSource } from 'ol/source.js'
 	import { Fill, Stroke, Style } from 'ol/style.js'
 
+	// Allmaps
+
 	import { WarpedMapSource, WarpedMapLayer } from '@allmaps/openlayers'
 
-	import Jules from '$lib/components/Jules.svelte'
-	import Projects from '$lib/components/Projects.svelte'
+	// Typescript
 
 	import type { MarkdownSlide } from '$lib/shared/types.js'
+	import { VectorSourceEvent } from 'ol/source/Vector'
+
+	// Declaring changing variables with let and fixed ones with const
 
 	let map: Map
 	let view: View
 
 	let warpedMapSource: WarpedMapSource
 	let warpedMapLayer: WarpedMapLayer
+	let vectorLayer: VectorLayer<VectorSource>
 
-	let rotation: number = 0
-	let data = {}
+	let slideIndex: number = 0
 
-	let dordrecht = {
+	const biesboschVector = {
 		type: 'FeatureCollection',
 		features: [
 			{
@@ -46,14 +54,27 @@
 							[4.6518381, 51.7866497]
 						]
 					]
-				},
-				properties: {
-					id: 425,
-					name: 'eerste druk-1-14-1833-dordrecht'
+				}
+			},
+			{
+				type: 'Feature',
+				geometry: {
+					type: 'Polygon',
+					coordinates: [
+						[
+							[4.7679879, 51.7866501],
+							[4.88446, 51.7872071],
+							[4.8839519, 51.8327543],
+							[4.7673621, 51.8321967],
+							[4.7679879, 51.7866501]
+						]
+					]
 				}
 			}
 		]
 	}
+
+	// Styles for OpenLayers
 
 	const styles = {
 		Polygon: new Style({
@@ -67,6 +88,8 @@
 			})
 		})
 	}
+
+	// Importing Markdown and frontmatter for slides
 
 	const markdownSlides = import.meta.glob<MarkdownSlide>('$contents/projects/*/slides/*.md', {
 		eager: true
@@ -90,28 +113,52 @@
 		}
 	})
 
+	// Grouping slides by project
+
 	const slidesByProject = groupBy(slides, (slide) => slide.project)
 	console.log(slides, slidesByProject)
+	console.log(slidesByProject.biesbosch[0].frontmatter.viewer.bbox)
+
+	// Function to fetch external jsons
 
 	async function fetchJson(url: any) {
 		return fetch(url).then((response) => response.json())
 	}
 
-	let annotationUrls = [
-		// West-Roxbury
-		'https://raw.githubusercontent.com/allmaps/webgl2-preview/main/static/west-roxbury.json',
-		// Roxbury
-		'https://annotations.allmaps.org/images/25b19ade19654e66',
-		// Provincetown
-		'https://annotations.allmaps.org/?url=https://collections.leventhalmap.org/search/commonwealth:0r96fq56q/manifest',
-		// Cambridge
-		'https://annotations.allmaps.org/?url=https://collections.leventhalmap.org/search/commonwealth:wd376290m/manifest'
-	]
+	// Reactive variables
 
-	onMount(async () => {
-		let annotations = await Promise.all(annotationUrls.map(fetchJson))
+	$: slideShowID = 'biesbosch'
+	$: selectedSlide = slidesByProject[slideShowID][slideIndex]
+	$: slideCount = slidesByProject[slideShowID].length - 1
+	$: boundingBox = selectedSlide.frontmatter.viewer.bbox
+	$: viewerExtent = fromLonLat(boundingBox.slice(0, 2)).concat(fromLonLat(boundingBox.slice(2)))
+	$: geoJsonSource = new GeoJSON().readFeatures(biesboschVector.features[1], {
+		featureProjection: 'EPSG:3857'
+	})
+  $: allmapsAnnotations = selectedSlide.frontmatter.allmaps.map((item: any) => item.url)
 
-		warpedMapSource = new WarpedMapSource()
+	$: slideVectorSource = new VectorSource({
+		features: geoJsonSource
+	})
+
+	$: vectorLayer = new VectorLayer({
+		source: slideVectorSource
+	})
+
+	function replaceVectorSource() {
+		slideVectorSource.clear
+		slideVectorSource.addFeatures(geoJsonSource)
+	}
+
+  // Function to replace Allmaps layer
+
+	async function refreshAllmapsLayer() {
+
+		map.removeLayer(warpedMapLayer) // Todo: check if layer exists
+
+		let annotations = await Promise.all(allmapsAnnotations.map(fetchJson))
+
+    warpedMapSource = new WarpedMapSource()
 
 		warpedMapLayer = new WarpedMapLayer({
 			source: warpedMapSource
@@ -120,6 +167,15 @@
 		for (let annotation of annotations) {
 			await warpedMapSource.addGeorefAnnotation(annotation)
 		}
+
+		map.addLayer(warpedMapLayer)
+
+  }
+
+	// onMount function after components are loaded, see https://svelte.dev/tutorial/onmount
+
+	onMount(async () => {
+		// Initialising OpenLayers
 
 		view = new View({
 			center: [0, 0],
@@ -132,37 +188,30 @@
 				new TileLayer({
 					source: new OSM()
 				}),
-				warpedMapLayer,
-				new VectorLayer({
-					source: new VectorSource({
-						features: new GeoJSON().readFeatures(dordrecht, {
-							featureProjection: 'EPSG:3857'
-						})
-					})
-				})
+				vectorLayer
 			],
 			target: 'map'
 		})
 	})
 
-	let chapters = [
-		{
-			title: 'hallo'
-		},
-		{
-			title: 'deze'
-		},
-		{
-			title: 'ook'
+	async function goNext() {
+		if (slideIndex < slideCount) {
+			slideIndex += 1
+			map.getView().fit(viewerExtent)
+      refreshAllmapsLayer()
 		}
-	]
+		if (slideIndex == slideCount) {
+		}
+	}
 
-	let boston = fromLonLat([-71.076, 42.359])
-	let bbox = [4.651103, 51.78665, 4.768242, 51.832353]
-	let extent = fromLonLat(bbox.slice(0, 2)).concat(fromLonLat(bbox.slice(2)))
-
-	async function goExtent() {
-		map.getView().fit(extent)
+	async function goPrev() {
+		if (slideIndex != 0) {
+			slideIndex -= 1
+			map.getView().fit(viewerExtent)
+      refreshAllmapsLayer()
+		}
+		if (slideIndex == 0) {
+		}
 	}
 
 	async function goBoston() {
@@ -173,27 +222,6 @@
 		})
 		console.log(extent)
 	}
-
-	function handleBert(event) {
-		console.log('handleBert', event.detail)
-	}
-
-	async function handleClick() {
-		rotation = view.getRotation() - Math.PI / 2
-
-		view.animate({
-			rotation
-		})
-
-		chapters.push({
-			title: `Nieuwe: ${formatNumber(rotation)}`
-		})
-		chapters = chapters
-
-		const url = 'https://raw.githubusercontent.com/allmaps/allmaps/main/package.json'
-		const response = await fetch(url)
-		data = await response.json()
-	}
 </script>
 
 <div class="grid-container">
@@ -201,61 +229,26 @@
 	<div class="panel panel-grid-container">
 		<!-- <Projects {slides} /> -->
 		<div class="caption">
-			<h1>Title</h1>
-			<h2>Subtitle</h2>
-			<p>
-				Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed vitae porttitor neque. Nulla
-				mattis tempus nisl, non sagittis mi rhoncus non. Curabitur venenatis dolor erat, a tristique
-				justo lobortis vitae. Integer at faucibus lorem, sed fermentum arcu. Maecenas molestie leo
-				sed ultricies porttitor. Curabitur pharetra tincidunt mi vel feugiat. Nunc semper non ligula
-				sed mollis. Nam sit amet libero ac est posuere porttitor ac ac enim. Nulla facilisi.
-				Phasellus posuere tempor felis vel vulputate. Vestibulum commodo pretium justo ut congue.
-			</p>
-			<p>
-				Nulla consectetur dui ac risus consequat, eget ultrices velit porttitor. Suspendisse
-				placerat auctor mi, non tempor orci porta eu. Class aptent taciti sociosqu ad litora
-				torquent per conubia nostra, per inceptos himenaeos. Nunc at ipsum elementum, ullamcorper
-				enim ut, laoreet nibh. Maecenas vitae nunc a nulla vulputate facilisis. Ut at nunc in elit
-				accumsan elementum eu vel quam. Etiam at justo eget massa mattis sagittis. Mauris maximus
-				tortor ligula, eu iaculis nibh mattis id. Aenean vel imperdiet est, id tristique turpis.
-				Orci varius natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus.
-				Curabitur vestibulum a massa dignissim condimentum. Lorem ipsum dolor sit amet, consectetur
-				adipiscing elit. Aenean malesuada lacus leo, in euismod ante sagittis id. Phasellus
-				vestibulum justo quis iaculis lobortis.
-			</p>
-			<p>
-				Orci varius natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Donec
-				dapibus hendrerit ultricies. Suspendisse hendrerit convallis sapien eu hendrerit. Donec mi
-				dolor, tempus id felis ac, tempor lobortis urna. Nunc vel commodo leo, eget vestibulum
-				metus. Aliquam erat volutpat. Praesent sagittis consectetur eleifend. Donec et nunc arcu.
-			</p>
-			<p>
-				Donec at euismod tortor. Vivamus venenatis pharetra diam quis eleifend. Nulla vel interdum
-				quam. Mauris eu placerat tellus. Vivamus urna nibh, tincidunt nec aliquam in, elementum vel
-				lacus. Cras pellentesque nulla convallis ultricies pulvinar. Pellentesque maximus eu turpis
-				convallis finibus. Proin ac pharetra erat. Ut rutrum porttitor arcu quis pulvinar.
-			</p>
+			<h1>{selectedSlide.frontmatter.meta.heading}</h1>
+			{JSON.stringify(allmapsAnnotations)}
+			{@html selectedSlide.html}
+			<p>slideIndex: {slideIndex}, slideCount: {slideCount}</p>
 		</div>
 		<div class="control-container">
-			<div class="control-item">
-				<button on:click={goExtent} class="button" type="button">Previous</button>
+			<div class="control-item ">
+				<button on:click={goPrev} class="button" type="button">
+					{slideIndex == 0 ? 'Start' : 'Previous'}
+				</button>
 			</div>
 			<div class="control-item">
-				<button on:click={goBoston} class="button" type="button">Next</button>
+				<button on:click={goNext} class="button" type="button">
+					{slideIndex == slideCount ? 'End' : 'Next'}
+				</button>
 			</div>
 		</div>
 	</div>
 	<div id="map" class="map" />
 </div>
-
-<button on:click={handleClick}> Hoi </button>
-<ol>
-	{#each chapters as chapter, index}
-		<Jules on:bert={handleBert} title={chapter.title} {index} />
-	{/each}
-</ol>
-<div>Rotation: {formatNumber(rotation, 4)}</div>
-<pre><code>{JSON.stringify(data, null, 2)}</code></pre>
 
 <style>
 	:global(@font-face) {
@@ -271,10 +264,6 @@
 		font-family: ZurichBT, Helvetica Neue, Helvetica, Arial, sans-serif;
 		padding: 0;
 		margin: 0;
-	}
-
-	li {
-		color: red;
 	}
 
 	.grid-container {
@@ -293,12 +282,24 @@
 			width: 100vw;
 			height: 100vh;
 		}
+		.caption {
+			display: none;
+		}
 	}
 
 	.header {
 		grid-column: 1 / 5;
 		grid-row: header;
 		padding: 10px;
+	}
+
+	.map {
+		grid-column: 1 / 5;
+		grid-row: map;
+		background-color: blue;
+		width: 100%;
+		height: 100%;
+		z-index: 1;
 	}
 
 	.panel {
@@ -342,14 +343,5 @@
 	.button {
 		width: 100px;
 		height: 35px;
-	}
-
-	.map {
-		grid-column: 1 / 5;
-		grid-row: map;
-		background-color: blue;
-		width: 100%;
-		height: 100%;
-		z-index: 1;
 	}
 </style>
