@@ -13,6 +13,7 @@
 	import 'ol/ol.css'
 	import { fromLonLat } from 'ol/proj.js'
 	import ZoomToExtent from 'ol/control/ZoomToExtent.js'
+  import {getCenter} from 'ol/extent';
 	import GeoJSON from 'ol/format/GeoJSON.js'
 	import Feature from 'ol/Feature.js'
 	import { OSM, Vector as VectorSource } from 'ol/source.js'
@@ -132,21 +133,28 @@
 	$: selectedSlide = slidesByProject[slideShowID][slideIndex]
 	$: slideCount = slidesByProject[slideShowID].length - 1
 	$: boundingBox = selectedSlide.frontmatter.viewer.bbox
-	$: viewerExtent = fromLonLat(boundingBox.slice(0, 2)).concat(fromLonLat(boundingBox.slice(2)))
-	$: geoJsonSource = new GeoJSON().readFeatures(biesboschVector.features[1], {
-		featureProjection: 'EPSG:3857'
-	})
-	$: allmapsAnnotations = selectedSlide.frontmatter.allmaps.map((item: any) => item.url)
 
-	function replaceVectorSource(geojson) {
-		slideVectorSource.clear()
-		slideVectorSource.addFeatures(geoJsonSource)
+	let initialView = fromLonLat([5.054, 51.965])
+
+  // Function to replace vector layer
+
+	function replaceVectorSource() {
+		let geojson = new GeoJSON().readFeatures(biesboschVector.features[slideIndex], {
+			featureProjection: 'EPSG:3857'
+		})
+
+		vectorSource.clear()
+
+		vectorSource.addFeatures(geojson)
 	}
 
 	// Function to replace Allmaps layer
 
-	async function refreshAllmapsLayer() {
-    console.log(slidesByProject[slideShowID], slideIndex, selectedSlide, allmapsAnnotations )
+	async function replaceAllmapsLayer() {
+		let selectedSlide = slidesByProject[slideShowID][slideIndex]
+
+		let allmapsAnnotations = selectedSlide.frontmatter.allmaps.map((item: any) => item.url)
+
 		map.removeLayer(warpedMapLayer) // Todo: check if layer exists
 
 		let annotations = await Promise.all(allmapsAnnotations.map(fetchJson))
@@ -164,14 +172,34 @@
 		map.addLayer(warpedMapLayer)
 	}
 
+  // Function to adjust view
+
+  function changeView() {
+
+    let extent = fromLonLat(boundingBox.slice(0, 2)).concat(fromLonLat(boundingBox.slice(2)))
+
+    let rotation = selectedSlide.frontmatter.viewer.rotation * (Math.PI/180)
+
+    let center = getCenter(extent)
+
+    let resolution = view.getResolutionForExtent(extent, map.getSize())
+
+    view.animate({
+			center: center,
+			resolution: resolution,
+			rotation: rotation
+		})
+
+  }
+
 	// onMount function after components are loaded, see https://svelte.dev/tutorial/onmount
 
 	onMount(async () => {
 		// Initialising OpenLayers
 
 		view = new View({
-			center: [0, 0],
-			zoom: 1
+			center: initialView,
+			zoom: 10
 		})
 
 		vectorSource = new VectorSource()
@@ -191,34 +219,28 @@
 		})
 	})
 
-	async function goNext() {
+	function goNext() {
 		if (slideIndex < slideCount) {
 			slideIndex += 1
-			map.getView().fit(viewerExtent)
-			refreshAllmapsLayer()
+      changeView()
+			replaceAllmapsLayer()
+      replaceVectorSource()
 		}
 		if (slideIndex === slideCount) {
 		}
 	}
 
-	async function goPrev() {
+	function goPrev() {
 		if (slideIndex !== 0) {
 			slideIndex -= 1
-			map.getView().fit(viewerExtent)
-			refreshAllmapsLayer()
+      changeView()
+			replaceAllmapsLayer()
+      replaceVectorSource()
 		}
 		if (slideIndex === 0) {
 		}
 	}
 
-	async function goBoston() {
-		view.animate({
-			center: boston,
-			zoom: 12,
-			rotation: 90
-		})
-		console.log(extent)
-	}
 </script>
 
 <div class="grid-container">
@@ -227,7 +249,6 @@
 		<!-- <Projects {slides} /> -->
 		<div class="caption">
 			<h1>{selectedSlide.frontmatter.meta.heading}</h1>
-			{JSON.stringify(allmapsAnnotations)}
 			{@html selectedSlide.html}
 			<p>slideIndex: {slideIndex}, slideCount: {slideCount}</p>
 		</div>
