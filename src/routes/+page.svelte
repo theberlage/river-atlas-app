@@ -18,8 +18,12 @@
 	import { OSM, Vector as VectorSource } from 'ol/source.js'
 	import { Fill, Stroke, Style } from 'ol/style.js'
 	import Select from 'ol/interaction/Select.js'
-	import sheetIndex from '$lib/sheetindex.json'
-  import { VectorSourceEvent } from 'ol/source/Vector'
+	import { VectorSourceEvent } from 'ol/source/Vector'
+
+  // Geojson (temporary)
+
+  import sheetIndex from '$lib/sheetindex.json'
+	import biesboschVector from '$lib/biesbosch.json'
 
 	// Allmaps
 
@@ -28,7 +32,7 @@
 	// Typescript
 
 	import type { MarkdownSlide } from '$lib/shared/types.js'
-  import type { FeatureLike } from 'ol/Feature.js'
+	import type { FeatureLike } from 'ol/Feature.js'
 
 	// Declaring changing variables with let and fixed ones with const
 
@@ -46,50 +50,12 @@
 	let slideCount: number
 	let selectedSlide: any = undefined
 	let selectedFeature: FeatureLike | undefined
-  let allmapsAnnotations: Array<String>
-  const firstRevision: Array<String> = ["https://annotations.allmaps.org/manifests/f940b520d16381d4","https://annotations.allmaps.org/manifests/752b29a50403371d"]
 
-	const biesboschVector = {
-		type: 'FeatureCollection',
-		features: [
-			{
-				type: 'Feature',
-				properties: {
-					slug: 'dordrecht'
-				},
-				geometry: {
-					type: 'Polygon',
-					coordinates: [
-						[
-							[4.6518381, 51.7866497],
-							[4.7682417, 51.7873216],
-							[4.7676233, 51.8323529],
-							[4.6511033, 51.8316801],
-							[4.6518381, 51.7866497]
-						]
-					]
-				}
-			},
-			{
-				type: 'Feature',
-				properties: {
-					slug: 'biesbosch'
-				},
-				geometry: {
-					type: 'Polygon',
-					coordinates: [
-						[
-							[4.7679879, 51.7866501],
-							[4.88446, 51.7872071],
-							[4.8839519, 51.8327543],
-							[4.7673621, 51.8321967],
-							[4.7679879, 51.7866501]
-						]
-					]
-				}
-			}
-		]
-	}
+	let allmapsAnnotations: Array<String>
+	const firstRevision: Array<String> = [
+		'https://annotations.allmaps.org/manifests/f940b520d16381d4',
+		'https://annotations.allmaps.org/manifests/752b29a50403371d'
+	]
 
 	// Styles for OpenLayers
 
@@ -118,7 +84,6 @@
 	// Importing Markdown and frontmatter for slides
 	// @Bert: toevoegen aan object: georef annotaties + geojson
 	// @Bert: toevoegen: markdown + annotations + geojson in mapje overview
-	// @Bert: geojson gebruiken voor projecttitels? (yml verwijderd)
 
 	const markdownSlides = import.meta.glob<MarkdownSlide>('$contents/projects/*/slides/*.md', {
 		eager: true
@@ -152,24 +117,25 @@
 		return fetch(url).then((response) => response.json())
 	}
 
-	// Function to replace vector layer
+	// Function to add vector layer
 
-	function replaceVectorSource() {
-		let geojson = new GeoJSON().readFeatures(biesboschVector.features[slideIndex], {
+	function addVectorSource(geojson: any) {
+		let features = new GeoJSON().readFeatures(geojson, {
 			featureProjection: 'EPSG:3857'
 		})
 
 		vectorSource.clear() // Todo: check if layer exists
 
-		vectorSource.addFeatures(geojson)
+		vectorSource.addFeatures(features)
 	}
 
-	// Function to replace Allmaps layer
+	// Function to add Allmaps layer
 	// @Bert beter om warpedMapLayer te laten bestaan en warpedMapSource.clear() te doen
-	// @Bert optie: checken of annotatie al is geladen (als dezelfde kaart voor meerdere slides wordt gebruikt)
-  // @Bert parameters voor transparency en mask
+	// @Bert checken of annotatie al is geladen (als dezelfde kaart voor meerdere slides wordt gebruikt)
+	// @Bert parameters voor transparency en mask
+	// @Bert kan ik de plugin een geojson terugvragen van de mask?
 
-	async function replaceAllmapsLayer(allmapsAnnotations:any) {
+	async function addAllmapsLayer(allmapsAnnotations: any) {
 		map.removeLayer(warpedMapLayer) // Todo: check if layer exists
 
 		let annotations = await Promise.all(allmapsAnnotations.map(fetchJson))
@@ -178,7 +144,7 @@
 
 		warpedMapLayer = new WarpedMapLayer({
 			source: warpedMapSource,
-      zIndex: 2
+			zIndex: 2
 		})
 
 		for (let annotation of annotations) {
@@ -186,23 +152,15 @@
 		}
 
 		map.addLayer(warpedMapLayer)
-
-    console.log(allmapsAnnotations)
-
-    // z-index toevoegen
 	}
 
 	// Function to adjust view
 
 	function changeView() {
 		let boundingBox = selectedSlide.frontmatter.viewer.bbox
-
 		let extent = fromLonLat(boundingBox.slice(0, 2)).concat(fromLonLat(boundingBox.slice(2)))
-
 		let rotation = selectedSlide.frontmatter.viewer.rotation * (Math.PI / 180)
-
 		let center = getCenter(extent)
-
 		let resolution = view.getResolutionForExtent(extent, map.getSize())
 
 		view.animate({
@@ -212,6 +170,8 @@
 		})
 	}
 
+	// Function to load the initial view again after final slide
+
 	function initialView() {
 		view.animate({
 			center: initialViewCoords,
@@ -219,17 +179,8 @@
 			rotation: 0
 		})
 
-		map.removeLayer(warpedMapLayer)
-
-		vectorSource.clear()
-
-		let geojson = new GeoJSON().readFeatures(sheetIndex, {
-			featureProjection: 'EPSG:3857'
-		})
-
-		vectorSource.addFeatures(geojson)
-
-    replaceAllmapsLayer(firstRevision)
+		addVectorSource(sheetIndex)
+		addAllmapsLayer(firstRevision)
 	}
 
 	// onMount function after components are loaded, see https://svelte.dev/tutorial/onmount
@@ -242,18 +193,12 @@
 			zoom: 10
 		})
 
-		let geojson = new GeoJSON().readFeatures(sheetIndex, {
-			featureProjection: 'EPSG:3857'
-		})
-
 		vectorSource = new VectorSource()
 		vectorLayer = new VectorLayer({
 			source: vectorSource,
 			style: styles,
-      zIndex: 3
+			zIndex: 3
 		})
-
-		vectorSource.addFeatures(geojson)
 
 		warpedMapSource = new WarpedMapSource()
 		warpedMapLayer = new WarpedMapLayer({
@@ -265,7 +210,7 @@
 			layers: [
 				new TileLayer({
 					source: new OSM(),
-          zIndex: 1
+					zIndex: 1
 				}),
 				vectorLayer,
 				warpedMapLayer
@@ -273,10 +218,11 @@
 			target: 'map'
 		})
 
-    replaceAllmapsLayer(firstRevision)
+		addAllmapsLayer(firstRevision)
+		addVectorSource(sheetIndex)
 
 		map.on('pointermove', function (event) {
-      // @Bert: beter maken, typescript error fixen
+			// @Bert beter maken, typescript error fixen
 			if (selectedFeature !== undefined) {
 				selectedFeature.setStyle(undefined)
 				selectedFeature = undefined
@@ -297,9 +243,9 @@
 					selectedSlide = slidesByProject[slideShowID][slideIndex]
 					slideCount = slidesByProject[slideShowID].length
 					changeView()
-          allmapsAnnotations = selectedSlide.frontmatter.allmaps.map((item: any) => item.url)
-					replaceAllmapsLayer(allmapsAnnotations)
-					replaceVectorSource()
+					allmapsAnnotations = selectedSlide.frontmatter.allmaps.map((item: any) => item.url)
+					addAllmapsLayer(allmapsAnnotations)
+					addVectorSource(biesboschVector.features[slideIndex]) // Change to geojson in /contents folder
 				}
 			})
 		})
@@ -310,13 +256,12 @@
 			slideIndex += 1
 			selectedSlide = slidesByProject[slideShowID][slideIndex]
 			changeView()
-      allmapsAnnotations = selectedSlide.frontmatter.allmaps.map((item: any) => item.url)
-			replaceAllmapsLayer(allmapsAnnotations)
-			replaceVectorSource()
-		}
-		else if (slideIndex === slideCount - 1) {
+			allmapsAnnotations = selectedSlide.frontmatter.allmaps.map((item: any) => item.url)
+			addAllmapsLayer(allmapsAnnotations)
+			addVectorSource(biesboschVector.features[slideIndex]) // Change to geojson in /contents folder
+		} else if (slideIndex === slideCount - 1) {
 			slideShowID = undefined
-      slideIndex = 0
+			slideIndex = 0
 			initialView()
 		}
 	}
@@ -326,13 +271,12 @@
 			slideIndex -= 1
 			selectedSlide = slidesByProject[slideShowID][slideIndex]
 			changeView()
-      allmapsAnnotations = selectedSlide.frontmatter.allmaps.map((item: any) => item.url)
-			replaceAllmapsLayer(allmapsAnnotations)
-			replaceVectorSource()
-		}
-		else if (slideIndex === 0) {
+			allmapsAnnotations = selectedSlide.frontmatter.allmaps.map((item: any) => item.url)
+			addAllmapsLayer(allmapsAnnotations)
+			addVectorSource(biesboschVector.features[slideIndex]) // Change to geojson in /contents folder
+		} else if (slideIndex === 0) {
 			slideShowID = undefined
-      slideIndex = 0
+			slideIndex = 0
 			initialView()
 		}
 	}
