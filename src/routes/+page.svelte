@@ -15,10 +15,11 @@
 	import ZoomToExtent from 'ol/control/ZoomToExtent.js'
 	import { getCenter } from 'ol/extent'
 	import GeoJSON from 'ol/format/GeoJSON.js'
-	import Feature from 'ol/Feature.js'
 	import { OSM, Vector as VectorSource } from 'ol/source.js'
 	import { Fill, Stroke, Style } from 'ol/style.js'
 	import Select from 'ol/interaction/Select.js'
+	import sheetIndex from '$lib/sheetindex.json'
+  import { VectorSourceEvent } from 'ol/source/Vector'
 
 	// Allmaps
 
@@ -27,7 +28,7 @@
 	// Typescript
 
 	import type { MarkdownSlide } from '$lib/shared/types.js'
-	import { VectorSourceEvent } from 'ol/source/Vector'
+  import type { FeatureLike } from 'ol/Feature.js'
 
 	// Declaring changing variables with let and fixed ones with const
 
@@ -38,12 +39,13 @@
 	let warpedMapLayer: WarpedMapLayer
 	let vectorSource: VectorSource
 	let vectorLayer: VectorLayer<VectorSource>
-	let select = null
-	let initialView = fromLonLat([5.054, 51.965])
+	let initialViewCoords = fromLonLat([5.054, 51.965])
 
+	let slideShowID: string | undefined
 	let slideIndex: number = 0
-  let selectedFeature: Feature = undefined
-  let forBert: string = undefined
+	let slideCount: number
+	let selectedSlide: any = undefined
+	let selectedFeature: FeatureLike | undefined
 
 	const biesboschVector = {
 		type: 'FeatureCollection',
@@ -68,7 +70,7 @@
 			},
 			{
 				type: 'Feature',
-        properties: {
+				properties: {
 					slug: 'biesbosch'
 				},
 				geometry: {
@@ -112,6 +114,9 @@
 	})
 
 	// Importing Markdown and frontmatter for slides
+	// @Bert: toevoegen aan object: georef annotaties + geojson
+	// @Bert: toevoegen: markdown + annotations + geojson in mapje overview
+	// @Bert: geojson gebruiken voor projecttitels? (yml verwijderd)
 
 	const markdownSlides = import.meta.glob<MarkdownSlide>('$contents/projects/*/slides/*.md', {
 		eager: true
@@ -138,20 +143,12 @@
 	// Grouping slides by project
 
 	const slidesByProject = groupBy(slides, (slide) => slide.project)
-	console.log(slides, slidesByProject)
-	console.log(slidesByProject.biesbosch[0].frontmatter.viewer.bbox)
 
 	// Function to fetch external jsons
 
 	async function fetchJson(url: any) {
 		return fetch(url).then((response) => response.json())
 	}
-
-	// Reactive variables
-
-	$: slideShowID = 'biesbosch'
-	$: selectedSlide = slidesByProject[slideShowID][slideIndex]
-	$: slideCount = slidesByProject[slideShowID].length - 1
 
 	// Function to replace vector layer
 
@@ -166,10 +163,11 @@
 	}
 
 	// Function to replace Allmaps layer
+	// @Bert beter om warpedMapLayer te laten bestaan en warpedMapSource.clear() te doen
+	// @Bert optie: checken of annotatie al is geladen (als dezelfde kaart voor meerdere slides wordt gebruikt)
+  // @Bert: parameters voor transparency en mask
 
 	async function replaceAllmapsLayer() {
-		let selectedSlide = slidesByProject[slideShowID][slideIndex]
-
 		let allmapsAnnotations = selectedSlide.frontmatter.allmaps.map((item: any) => item.url)
 
 		map.removeLayer(warpedMapLayer) // Todo: check if layer exists
@@ -187,6 +185,8 @@
 		}
 
 		map.addLayer(warpedMapLayer)
+
+    // z-index toevoegen
 	}
 
 	// Function to adjust view
@@ -209,14 +209,36 @@
 		})
 	}
 
+	function initialView() {
+		view.animate({
+			center: initialViewCoords,
+			zoom: 10,
+			rotation: 0
+		})
+
+		map.removeLayer(warpedMapLayer)
+
+		vectorSource.clear()
+
+		let geojson = new GeoJSON().readFeatures(sheetIndex, {
+			featureProjection: 'EPSG:3857'
+		})
+
+		vectorSource.addFeatures(geojson)
+	}
+
 	// onMount function after components are loaded, see https://svelte.dev/tutorial/onmount
 
 	onMount(async () => {
 		// Initialising OpenLayers
 
 		view = new View({
-			center: initialView,
+			center: initialViewCoords,
 			zoom: 10
+		})
+
+		let geojson = new GeoJSON().readFeatures(sheetIndex, {
+			featureProjection: 'EPSG:3857'
 		})
 
 		vectorSource = new VectorSource()
@@ -225,57 +247,81 @@
 			style: styles
 		})
 
+		vectorSource.addFeatures(geojson)
+
+		warpedMapSource = new WarpedMapSource()
+		warpedMapLayer = new WarpedMapLayer({
+			source: warpedMapSource
+		})
+
 		map = new Map({
 			view,
 			layers: [
 				new TileLayer({
 					source: new OSM()
 				}),
-				vectorLayer
+				vectorLayer,
+				warpedMapLayer
 			],
 			target: 'map'
 		})
 
 		map.on('pointermove', function (event) {
+      // @Bert: beter maken, typescript error fixen
 			if (selectedFeature !== undefined) {
 				selectedFeature.setStyle(undefined)
 				selectedFeature = undefined
-        map.getTargetElement().style.cursor = ''
+				map.getTargetElement().style.cursor = ''
 			}
 			map.forEachFeatureAtPixel(event.pixel, function (feature) {
 				selectedFeature = feature
 				selectedFeature.setStyle(selected)
-        map.getTargetElement().style.cursor = 'pointer'
+				map.getTargetElement().style.cursor = 'pointer'
 			})
 		})
 
-    map.on('click', function (event) {
+		map.on('click', function (event) {
 			map.forEachFeatureAtPixel(event.pixel, function (feature) {
-        let properties = selectedFeature.getProperties()
-        forBert = properties.slug
+				let properties = selectedFeature.getProperties()
+				if (properties.slug) {
+					slideShowID = properties.slug
+					selectedSlide = slidesByProject[slideShowID][slideIndex]
+					slideCount = slidesByProject[slideShowID].length
+					changeView()
+					replaceAllmapsLayer()
+					replaceVectorSource()
+				}
 			})
 		})
 	})
 
 	function goNext() {
-		if (slideIndex < slideCount) {
+		if (slideIndex < slideCount - 1) {
 			slideIndex += 1
+			selectedSlide = slidesByProject[slideShowID][slideIndex]
 			changeView()
 			replaceAllmapsLayer()
 			replaceVectorSource()
 		}
-		if (slideIndex === slideCount) {
+		else if (slideIndex === slideCount - 1) {
+			slideShowID = undefined
+      slideIndex = 0
+			initialView()
 		}
 	}
 
 	function goPrev() {
-		if (slideIndex !== 0) {
+		if (slideIndex > 0) {
 			slideIndex -= 1
+			selectedSlide = slidesByProject[slideShowID][slideIndex]
 			changeView()
 			replaceAllmapsLayer()
 			replaceVectorSource()
 		}
-		if (slideIndex === 0) {
+		else if (slideIndex === 0) {
+			slideShowID = undefined
+      slideIndex = 0
+			initialView()
 		}
 	}
 </script>
@@ -284,22 +330,21 @@
 	<div class="header">The Berlage: Project NL</div>
 	{#if slideShowID !== undefined}
 		<div class="panel panel-grid-container">
-			<!-- <Projects {slides} /> -->
+      <!-- @Bert: componentje maken  -->
+			<!-- <Projects {slidesByProject} /> -->
 			<div class="caption">
 				<h1>{selectedSlide.frontmatter.meta.heading}</h1>
 				{@html selectedSlide.html}
-				<p>slideIndex: {slideIndex}, slideCount: {slideCount}</p>
-        <p>{forBert}</p>
 			</div>
 			<div class="control-container">
 				<div class="control-item ">
 					<button on:click={goPrev} class="button" type="button">
-						{slideIndex == 0 ? 'Start' : 'Previous'}
+						{slideIndex == 0 ? 'Back to overview' : 'Previous'}
 					</button>
 				</div>
 				<div class="control-item">
 					<button on:click={goNext} class="button" type="button">
-						{slideIndex == slideCount ? 'End' : 'Next'}
+						{slideIndex == slideCount - 1? 'Back to overview' : 'Next'}
 					</button>
 				</div>
 			</div>
