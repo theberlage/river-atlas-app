@@ -46,6 +46,8 @@
 	let slideCount: number
 	let selectedSlide: any = undefined
 	let selectedFeature: FeatureLike | undefined
+  let allmapsAnnotations: Array<String>
+  const firstRevision: Array<String> = ["https://annotations.allmaps.org/manifests/f940b520d16381d4","https://annotations.allmaps.org/manifests/752b29a50403371d"]
 
 	const biesboschVector = {
 		type: 'FeatureCollection',
@@ -165,11 +167,9 @@
 	// Function to replace Allmaps layer
 	// @Bert beter om warpedMapLayer te laten bestaan en warpedMapSource.clear() te doen
 	// @Bert optie: checken of annotatie al is geladen (als dezelfde kaart voor meerdere slides wordt gebruikt)
-  // @Bert: parameters voor transparency en mask
+  // @Bert parameters voor transparency en mask
 
-	async function replaceAllmapsLayer() {
-		let allmapsAnnotations = selectedSlide.frontmatter.allmaps.map((item: any) => item.url)
-
+	async function replaceAllmapsLayer(allmapsAnnotations:any) {
 		map.removeLayer(warpedMapLayer) // Todo: check if layer exists
 
 		let annotations = await Promise.all(allmapsAnnotations.map(fetchJson))
@@ -177,7 +177,8 @@
 		warpedMapSource = new WarpedMapSource()
 
 		warpedMapLayer = new WarpedMapLayer({
-			source: warpedMapSource
+			source: warpedMapSource,
+      zIndex: 2
 		})
 
 		for (let annotation of annotations) {
@@ -185,6 +186,8 @@
 		}
 
 		map.addLayer(warpedMapLayer)
+
+    console.log(allmapsAnnotations)
 
     // z-index toevoegen
 	}
@@ -225,6 +228,8 @@
 		})
 
 		vectorSource.addFeatures(geojson)
+
+    replaceAllmapsLayer(firstRevision)
 	}
 
 	// onMount function after components are loaded, see https://svelte.dev/tutorial/onmount
@@ -244,7 +249,8 @@
 		vectorSource = new VectorSource()
 		vectorLayer = new VectorLayer({
 			source: vectorSource,
-			style: styles
+			style: styles,
+      zIndex: 3
 		})
 
 		vectorSource.addFeatures(geojson)
@@ -258,13 +264,16 @@
 			view,
 			layers: [
 				new TileLayer({
-					source: new OSM()
+					source: new OSM(),
+          zIndex: 1
 				}),
 				vectorLayer,
 				warpedMapLayer
 			],
 			target: 'map'
 		})
+
+    replaceAllmapsLayer(firstRevision)
 
 		map.on('pointermove', function (event) {
       // @Bert: beter maken, typescript error fixen
@@ -288,7 +297,8 @@
 					selectedSlide = slidesByProject[slideShowID][slideIndex]
 					slideCount = slidesByProject[slideShowID].length
 					changeView()
-					replaceAllmapsLayer()
+          allmapsAnnotations = selectedSlide.frontmatter.allmaps.map((item: any) => item.url)
+					replaceAllmapsLayer(allmapsAnnotations)
 					replaceVectorSource()
 				}
 			})
@@ -300,7 +310,8 @@
 			slideIndex += 1
 			selectedSlide = slidesByProject[slideShowID][slideIndex]
 			changeView()
-			replaceAllmapsLayer()
+      allmapsAnnotations = selectedSlide.frontmatter.allmaps.map((item: any) => item.url)
+			replaceAllmapsLayer(allmapsAnnotations)
 			replaceVectorSource()
 		}
 		else if (slideIndex === slideCount - 1) {
@@ -315,7 +326,8 @@
 			slideIndex -= 1
 			selectedSlide = slidesByProject[slideShowID][slideIndex]
 			changeView()
-			replaceAllmapsLayer()
+      allmapsAnnotations = selectedSlide.frontmatter.allmaps.map((item: any) => item.url)
+			replaceAllmapsLayer(allmapsAnnotations)
 			replaceVectorSource()
 		}
 		else if (slideIndex === 0) {
@@ -330,7 +342,7 @@
 	<div class="header">The Berlage: Project NL</div>
 	{#if slideShowID !== undefined}
 		<div class="panel panel-grid-container">
-      <!-- @Bert: componentje maken  -->
+			<!-- @Bert: componentje maken  -->
 			<!-- <Projects {slidesByProject} /> -->
 			<div class="caption">
 				<h1>{selectedSlide.frontmatter.meta.heading}</h1>
@@ -339,12 +351,12 @@
 			<div class="control-container">
 				<div class="control-item ">
 					<button on:click={goPrev} class="button" type="button">
-						{slideIndex == 0 ? 'Back to overview' : 'Previous'}
+						{slideIndex == 0 ? 'Overview' : 'Previous'}
 					</button>
 				</div>
 				<div class="control-item">
 					<button on:click={goNext} class="button" type="button">
-						{slideIndex == slideCount - 1? 'Back to overview' : 'Next'}
+						{slideIndex == slideCount - 1 ? 'Overview' : 'Next'}
 					</button>
 				</div>
 			</div>
