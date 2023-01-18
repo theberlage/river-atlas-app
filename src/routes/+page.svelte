@@ -20,9 +20,9 @@
 	import Select from 'ol/interaction/Select.js'
 	import { VectorSourceEvent } from 'ol/source/Vector'
 
-  // Geojson (temporary)
+	// Geojson (temporary)
 
-  import sheetIndex from '$lib/sheetindex.json'
+	import sheetIndex from '$lib/sheetindex.json'
 	import biesboschVector from '$lib/biesbosch.json'
 
 	// Allmaps
@@ -33,6 +33,8 @@
 
 	import type { MarkdownSlide } from '$lib/shared/types.js'
 	import type { FeatureLike } from 'ol/Feature.js'
+  import type { Coordinate } from 'ol/coordinate'
+  import type Feature from 'ol/Feature.js'
 
 	// Declaring changing variables with let and fixed ones with const
 
@@ -154,12 +156,36 @@
 		map.addLayer(warpedMapLayer)
 	}
 
-	// Function to adjust view
+  function calculateExtent(boundingBox:Coordinate) {
+    return fromLonLat(boundingBox.slice(0, 2)).concat(fromLonLat(boundingBox.slice(2)))
+  }
 
-	function changeView() {
-		let boundingBox = selectedSlide.frontmatter.viewer.bbox
-		let extent = fromLonLat(boundingBox.slice(0, 2)).concat(fromLonLat(boundingBox.slice(2)))
-		let rotation = selectedSlide.frontmatter.viewer.rotation * (Math.PI / 180)
+  // Function to change view and layers
+
+	function changeView(slide: string | undefined, index: number) {
+		let bbox:Coordinate
+		let rotation:number
+		let extent:Array<Number>
+		let geojson
+
+		if (slide !== undefined) {
+			selectedSlide = slidesByProject[slide][index]
+			slideCount = slidesByProject[slide].length
+			allmapsAnnotations = selectedSlide.frontmatter.allmaps.map((item: any) => item.url)
+			geojson = biesboschVector.features[slideIndex] // Todo: change to slide vector
+			extent = calculateExtent(selectedSlide.frontmatter.viewer.bbox)
+			rotation = selectedSlide.frontmatter.viewer.rotation * (Math.PI / 180)
+		} else if (slide === undefined) {
+			bbox = [4.225369, 51.750297, 6.235737, 52.03771] // Todo: change to about.md bbox
+			extent = calculateExtent(bbox)
+			allmapsAnnotations = firstRevision
+			geojson = sheetIndex
+			rotation = 0
+		}
+
+		addAllmapsLayer(allmapsAnnotations)
+		addVectorSource(geojson)
+
 		let center = getCenter(extent)
 		let resolution = view.getResolutionForExtent(extent, map.getSize())
 
@@ -168,19 +194,8 @@
 			resolution: resolution,
 			rotation: rotation
 		})
-	}
 
-	// Function to load the initial view again after final slide
-
-	function initialView() {
-		view.animate({
-			center: initialViewCoords,
-			zoom: 10,
-			rotation: 0
-		})
-
-		addVectorSource(sheetIndex)
-		addAllmapsLayer(firstRevision)
+    console.log(map.getLayers())
 	}
 
 	// onMount function after components are loaded, see https://svelte.dev/tutorial/onmount
@@ -190,7 +205,7 @@
 
 		view = new View({
 			center: initialViewCoords,
-			zoom: 10
+			zoom: 9
 		})
 
 		vectorSource = new VectorSource()
@@ -240,12 +255,7 @@
 				let properties = selectedFeature.getProperties()
 				if (properties.slug) {
 					slideShowID = properties.slug
-					selectedSlide = slidesByProject[slideShowID][slideIndex]
-					slideCount = slidesByProject[slideShowID].length
-					changeView()
-					allmapsAnnotations = selectedSlide.frontmatter.allmaps.map((item: any) => item.url)
-					addAllmapsLayer(allmapsAnnotations)
-					addVectorSource(biesboschVector.features[slideIndex]) // Change to geojson in /contents folder
+					changeView(slideShowID, slideIndex)
 				}
 			})
 		})
@@ -254,30 +264,22 @@
 	function goNext() {
 		if (slideIndex < slideCount - 1) {
 			slideIndex += 1
-			selectedSlide = slidesByProject[slideShowID][slideIndex]
-			changeView()
-			allmapsAnnotations = selectedSlide.frontmatter.allmaps.map((item: any) => item.url)
-			addAllmapsLayer(allmapsAnnotations)
-			addVectorSource(biesboschVector.features[slideIndex]) // Change to geojson in /contents folder
+			changeView(slideShowID, slideIndex)
 		} else if (slideIndex === slideCount - 1) {
 			slideShowID = undefined
 			slideIndex = 0
-			initialView()
+			changeView(slideShowID, slideIndex)
 		}
 	}
 
 	function goPrev() {
 		if (slideIndex > 0) {
 			slideIndex -= 1
-			selectedSlide = slidesByProject[slideShowID][slideIndex]
-			changeView()
-			allmapsAnnotations = selectedSlide.frontmatter.allmaps.map((item: any) => item.url)
-			addAllmapsLayer(allmapsAnnotations)
-			addVectorSource(biesboschVector.features[slideIndex]) // Change to geojson in /contents folder
+			changeView(slideShowID, slideIndex)
 		} else if (slideIndex === 0) {
 			slideShowID = undefined
 			slideIndex = 0
-			initialView()
+			changeView(slideShowID, slideIndex)
 		}
 	}
 </script>
