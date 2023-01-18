@@ -13,11 +13,12 @@
 	import 'ol/ol.css'
 	import { fromLonLat } from 'ol/proj.js'
 	import ZoomToExtent from 'ol/control/ZoomToExtent.js'
-  import {getCenter} from 'ol/extent';
+	import { getCenter } from 'ol/extent'
 	import GeoJSON from 'ol/format/GeoJSON.js'
 	import Feature from 'ol/Feature.js'
 	import { OSM, Vector as VectorSource } from 'ol/source.js'
 	import { Fill, Stroke, Style } from 'ol/style.js'
+	import Select from 'ol/interaction/Select.js'
 
 	// Allmaps
 
@@ -37,14 +38,21 @@
 	let warpedMapLayer: WarpedMapLayer
 	let vectorSource: VectorSource
 	let vectorLayer: VectorLayer<VectorSource>
+	let select = null
+	let initialView = fromLonLat([5.054, 51.965])
 
 	let slideIndex: number = 0
+  let selectedFeature: Feature = undefined
+  let forBert: string = undefined
 
 	const biesboschVector = {
 		type: 'FeatureCollection',
 		features: [
 			{
 				type: 'Feature',
+				properties: {
+					slug: 'dordrecht'
+				},
 				geometry: {
 					type: 'Polygon',
 					coordinates: [
@@ -60,6 +68,9 @@
 			},
 			{
 				type: 'Feature',
+        properties: {
+					slug: 'biesbosch'
+				},
 				geometry: {
 					type: 'Polygon',
 					coordinates: [
@@ -78,18 +89,27 @@
 
 	// Styles for OpenLayers
 
-	const styles = {
-		Polygon: new Style({
-			stroke: new Stroke({
-				color: 'blue',
-				lineDash: [4],
-				width: 3
-			}),
-			fill: new Fill({
-				color: 'rgba(0, 0, 255, 0.1)'
-			})
+	const styles = new Style({
+		stroke: new Stroke({
+			color: 'blue',
+			lineDash: [4],
+			width: 3
+		}),
+		fill: new Fill({
+			color: 'rgba(0, 0, 255, 0.1)'
 		})
-	}
+	})
+
+	const selected = new Style({
+		stroke: new Stroke({
+			color: 'red',
+			lineDash: [4],
+			width: 3
+		}),
+		fill: new Fill({
+			color: 'rgba(0, 0, 255, 0.1)'
+		})
+	})
 
 	// Importing Markdown and frontmatter for slides
 
@@ -132,18 +152,15 @@
 	$: slideShowID = 'biesbosch'
 	$: selectedSlide = slidesByProject[slideShowID][slideIndex]
 	$: slideCount = slidesByProject[slideShowID].length - 1
-	$: boundingBox = selectedSlide.frontmatter.viewer.bbox
 
-	let initialView = fromLonLat([5.054, 51.965])
-
-  // Function to replace vector layer
+	// Function to replace vector layer
 
 	function replaceVectorSource() {
 		let geojson = new GeoJSON().readFeatures(biesboschVector.features[slideIndex], {
 			featureProjection: 'EPSG:3857'
 		})
 
-		vectorSource.clear()
+		vectorSource.clear() // Todo: check if layer exists
 
 		vectorSource.addFeatures(geojson)
 	}
@@ -172,25 +189,25 @@
 		map.addLayer(warpedMapLayer)
 	}
 
-  // Function to adjust view
+	// Function to adjust view
 
-  function changeView() {
+	function changeView() {
+		let boundingBox = selectedSlide.frontmatter.viewer.bbox
 
-    let extent = fromLonLat(boundingBox.slice(0, 2)).concat(fromLonLat(boundingBox.slice(2)))
+		let extent = fromLonLat(boundingBox.slice(0, 2)).concat(fromLonLat(boundingBox.slice(2)))
 
-    let rotation = selectedSlide.frontmatter.viewer.rotation * (Math.PI/180)
+		let rotation = selectedSlide.frontmatter.viewer.rotation * (Math.PI / 180)
 
-    let center = getCenter(extent)
+		let center = getCenter(extent)
 
-    let resolution = view.getResolutionForExtent(extent, map.getSize())
+		let resolution = view.getResolutionForExtent(extent, map.getSize())
 
-    view.animate({
+		view.animate({
 			center: center,
 			resolution: resolution,
 			rotation: rotation
 		})
-
-  }
+	}
 
 	// onMount function after components are loaded, see https://svelte.dev/tutorial/onmount
 
@@ -204,7 +221,8 @@
 
 		vectorSource = new VectorSource()
 		vectorLayer = new VectorLayer({
-			source: vectorSource
+			source: vectorSource,
+			style: styles
 		})
 
 		map = new Map({
@@ -217,14 +235,34 @@
 			],
 			target: 'map'
 		})
+
+		map.on('pointermove', function (event) {
+			if (selectedFeature !== undefined) {
+				selectedFeature.setStyle(undefined)
+				selectedFeature = undefined
+        map.getTargetElement().style.cursor = ''
+			}
+			map.forEachFeatureAtPixel(event.pixel, function (feature) {
+				selectedFeature = feature
+				selectedFeature.setStyle(selected)
+        map.getTargetElement().style.cursor = 'pointer'
+			})
+		})
+
+    map.on('click', function (event) {
+			map.forEachFeatureAtPixel(event.pixel, function (feature) {
+        let properties = selectedFeature.getProperties()
+        forBert = properties.slug
+			})
+		})
 	})
 
 	function goNext() {
 		if (slideIndex < slideCount) {
 			slideIndex += 1
-      changeView()
+			changeView()
 			replaceAllmapsLayer()
-      replaceVectorSource()
+			replaceVectorSource()
 		}
 		if (slideIndex === slideCount) {
 		}
@@ -233,38 +271,40 @@
 	function goPrev() {
 		if (slideIndex !== 0) {
 			slideIndex -= 1
-      changeView()
+			changeView()
 			replaceAllmapsLayer()
-      replaceVectorSource()
+			replaceVectorSource()
 		}
 		if (slideIndex === 0) {
 		}
 	}
-
 </script>
 
 <div class="grid-container">
 	<div class="header">The Berlage: Project NL</div>
-	<div class="panel panel-grid-container">
-		<!-- <Projects {slides} /> -->
-		<div class="caption">
-			<h1>{selectedSlide.frontmatter.meta.heading}</h1>
-			{@html selectedSlide.html}
-			<p>slideIndex: {slideIndex}, slideCount: {slideCount}</p>
-		</div>
-		<div class="control-container">
-			<div class="control-item ">
-				<button on:click={goPrev} class="button" type="button">
-					{slideIndex == 0 ? 'Start' : 'Previous'}
-				</button>
+	{#if slideShowID !== undefined}
+		<div class="panel panel-grid-container">
+			<!-- <Projects {slides} /> -->
+			<div class="caption">
+				<h1>{selectedSlide.frontmatter.meta.heading}</h1>
+				{@html selectedSlide.html}
+				<p>slideIndex: {slideIndex}, slideCount: {slideCount}</p>
+        <p>{forBert}</p>
 			</div>
-			<div class="control-item">
-				<button on:click={goNext} class="button" type="button">
-					{slideIndex == slideCount ? 'End' : 'Next'}
-				</button>
+			<div class="control-container">
+				<div class="control-item ">
+					<button on:click={goPrev} class="button" type="button">
+						{slideIndex == 0 ? 'Start' : 'Previous'}
+					</button>
+				</div>
+				<div class="control-item">
+					<button on:click={goNext} class="button" type="button">
+						{slideIndex == slideCount ? 'End' : 'Next'}
+					</button>
+				</div>
 			</div>
 		</div>
-	</div>
+	{/if}
 	<div id="map" class="map" />
 </div>
 
