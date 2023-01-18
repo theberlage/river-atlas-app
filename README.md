@@ -10,28 +10,29 @@ The following file structure is used for the content (general introduction and i
 
 ```yml
 - contents
-  - about
-    - about.md
-    # Markdown file containg a general introduction to the app
+  - overview
+    - about
+      - about.md # Markdown file containg a general introduction to the app
+    - annotations # Folder containing georeferencing annotations shown on overview page
+      - annotation.json
+    - geojsons # Folder containing vectors loaded on overview page
+      - sheetindex.geojson # Sheet index used to navigate the projects
   - projects
-    - [project-title]
-    # Each project has a dedicated folder
-      - annotations
-      # The annotation folder contains all the georeferencing annotations used for the project
-      - slides
-      # Folder with a collection of markdown files used for the slides
-    projects.yml
-    # Yaml file with list of projects (main title and a slug, which corresponds to the folder name)
-  - sheet-index
-    sheet-index.json
-    # Geojson file containing the sheet index used to navigate the projects
+    - [project-slug] # Each project has a dedicated folder. Use no spaces or caps for folder name
+      - annotations # Folder containing georeferencing annotations for project
+        - annotation.json
+      - geojsons # Folder containing vectors for project (optional)
+        - vector.geojson
+      - slides # Folder with a collection of markdown files used for the slides
+        - 01.md
+        - 02.md
 ```
 
 ## File types
 
 **Markdown with YAML frontmatter**
 
-Markdown is a markup language to add formatting to plain text. [See this guide for more information](https://www.markdownguide.org/basic-syntax/). Each markdown file starts with a metadata block (also called *frontmatter*) in the YAML format, set between `---`.
+Markdown is a markup language to add formatting to plain text. [See this guide for more information](https://www.markdownguide.org/basic-syntax/). Each markdown file starts with a metadata block (also called *frontmatter*) in the YAML format, set between `---`. YAML is a 'human friendly' format to store data, [here's a tutorial](https://spacelift.io/blog/yaml).
 
 Each slide contains the following frontmatter:
 
@@ -52,10 +53,6 @@ allmaps: # List of maps
     mask: rgb(255,0,0) # Mask based on color, RGB value (optional)
     colorize: rgb(255,0,0) # Colorize image after masking, RGB value (optional)
 ```
-
-**YAML**
-
-YAML is a 'human friendly' format to store data, [here's a tutorial](https://spacelift.io/blog/yaml).
 
 **GeoJSON**
 
