@@ -22,8 +22,9 @@
 
 	// Geojson (temporary)
 
-	import sheetIndex from '$lib/sheetindex.json'
-	import biesboschVector from '$lib/biesbosch.json'
+	import sheetIndex from '$lib/geojson/sheetindex.json'
+	import biesboschVector from '$lib/geojson/biesbosch.json'
+	import nl from '$lib/geojson/netherlands.json'
 
 	// Allmaps
 
@@ -33,8 +34,9 @@
 
 	import type { MarkdownSlide } from '$lib/shared/types.js'
 	import type { FeatureLike } from 'ol/Feature.js'
-  import type { Coordinate } from 'ol/coordinate'
-  import type Feature from 'ol/Feature.js'
+	import type { Coordinate } from 'ol/coordinate'
+	import type { Extent } from 'ol/extent'
+	import type { GeoJSONGeometryCollection } from 'ol/format/GeoJSON'
 
 	// Declaring changing variables with let and fixed ones with const
 
@@ -64,8 +66,7 @@
 	const styles = new Style({
 		stroke: new Stroke({
 			color: 'blue',
-			lineDash: [4],
-			width: 3
+			width: 2
 		}),
 		fill: new Fill({
 			color: 'rgba(0, 0, 255, 0.1)'
@@ -75,8 +76,7 @@
 	const selected = new Style({
 		stroke: new Stroke({
 			color: 'red',
-			lineDash: [4],
-			width: 3
+			width: 2
 		}),
 		fill: new Fill({
 			color: 'rgba(0, 0, 255, 0.1)'
@@ -115,20 +115,21 @@
 
 	// Function to fetch external jsons
 
-	async function fetchJson(url: any) {
+	async function fetchJson(url: string) {
 		return fetch(url).then((response) => response.json())
 	}
 
 	// Function to add vector layer
 
-	function addVectorSource(geojson: any) {
-		let features = new GeoJSON().readFeatures(geojson, {
-			featureProjection: 'EPSG:3857'
-		})
-
+	function addVectorSource(geojsons: Array<GeoJSONGeometryCollection>) {
 		vectorSource.clear() // Todo: check if layer exists
 
-		vectorSource.addFeatures(features)
+		for (let geojson of geojsons) {
+			let features = new GeoJSON().readFeatures(geojson, {
+				featureProjection: 'EPSG:3857'
+			})
+			vectorSource.addFeatures(features)
+		}
 	}
 
 	// Function to add Allmaps layer
@@ -156,36 +157,13 @@
 		map.addLayer(warpedMapLayer)
 	}
 
-  function calculateExtent(boundingBox:Coordinate) {
-    return fromLonLat(boundingBox.slice(0, 2)).concat(fromLonLat(boundingBox.slice(2)))
-  }
+	function calculateExtent(boundingBox: Coordinate) {
+		return fromLonLat(boundingBox.slice(0, 2)).concat(fromLonLat(boundingBox.slice(2)))
+	}
 
-  // Function to change view and layers
+	// Function to animate view
 
-	function changeView(slide: string | undefined, index: number) {
-		let bbox:Coordinate
-		let rotation:number
-		let extent:Array<Number>
-		let geojson
-
-		if (slide !== undefined) {
-			selectedSlide = slidesByProject[slide][index]
-			slideCount = slidesByProject[slide].length
-			allmapsAnnotations = selectedSlide.frontmatter.allmaps.map((item: any) => item.url)
-			geojson = biesboschVector.features[slideIndex] // Todo: change to slide vector
-			extent = calculateExtent(selectedSlide.frontmatter.viewer.bbox)
-			rotation = selectedSlide.frontmatter.viewer.rotation * (Math.PI / 180)
-		} else if (slide === undefined) {
-			bbox = [4.225369, 51.750297, 6.235737, 52.03771] // Todo: change to about.md bbox
-			extent = calculateExtent(bbox)
-			allmapsAnnotations = firstRevision
-			geojson = sheetIndex
-			rotation = 0
-		}
-
-		addAllmapsLayer(allmapsAnnotations)
-		addVectorSource(geojson)
-
+	function animateView(extent: Extent, rotation: number) {
 		let center = getCenter(extent)
 		let resolution = view.getResolutionForExtent(extent, map.getSize())
 
@@ -194,8 +172,41 @@
 			resolution: resolution,
 			rotation: rotation
 		})
+	}
 
-    console.log(map.getLayers())
+	// Function to change layers and view depending on state
+
+	function changeView(slide: string | undefined, index: number) {
+		let bbox: Coordinate
+		let rotation: number
+		let extent: Extent
+		let geojsons: Array<GeoJSONGeometryCollection>
+
+		if (slide !== undefined) {
+			selectedSlide = slidesByProject[slide][index]
+			slideCount = slidesByProject[slide].length
+			allmapsAnnotations = selectedSlide.frontmatter.allmaps.map((item: any) => item.url)
+      geojsons = [biesboschVector.features[slideIndex]] // Todo: change to slide geojson
+			extent = calculateExtent(selectedSlide.frontmatter.viewer.bbox)
+			rotation = selectedSlide.frontmatter.viewer.rotation * (Math.PI / 180)
+
+			addAllmapsLayer(allmapsAnnotations)
+			addVectorSource(geojsons)
+			animateView(extent, rotation)
+		} else if (slide === undefined) {
+			// bbox = [4.225369, 51.750297, 6.235737, 52.03771]
+			// extent = calculateExtent(bbox)
+			allmapsAnnotations = firstRevision
+			geojsons = [sheetIndex]
+			rotation = 0
+
+			addAllmapsLayer(allmapsAnnotations)
+			addVectorSource(geojsons)
+
+			extent = vectorSource.getExtent()
+
+			animateView(extent, rotation)
+		}
 	}
 
 	// onMount function after components are loaded, see https://svelte.dev/tutorial/onmount
@@ -223,10 +234,10 @@
 		map = new Map({
 			view,
 			layers: [
-				new TileLayer({
-					source: new OSM(),
-					zIndex: 1
-				}),
+				// new TileLayer({
+				// 	source: new OSM(),
+				// 	zIndex: 1
+				// }),
 				vectorLayer,
 				warpedMapLayer
 			],
@@ -234,7 +245,7 @@
 		})
 
 		addAllmapsLayer(firstRevision)
-		addVectorSource(sheetIndex)
+		addVectorSource([sheetIndex])
 
 		map.on('pointermove', function (event) {
 			// @Bert beter maken, typescript error fixen
@@ -357,17 +368,17 @@
 	.map {
 		grid-column: 1 / 5;
 		grid-row: map;
-		background-color: blue;
+		background-color: white;
 		width: 100%;
 		height: 100%;
 		z-index: 1;
 	}
 
 	.panel {
-		background-color: aqua;
+		background-color: white;
 		z-index: 2;
-		border-radius: 15px;
-		border: solid black;
+		border-radius: 10px;
+		border: solid 1px black;
 		margin: 20px;
 		padding: 10px;
 	}
