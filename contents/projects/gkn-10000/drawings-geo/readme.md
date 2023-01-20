@@ -1,1 +1,0 @@
-GKN group drawings geo
