@@ -98,6 +98,22 @@
                 51.8973549
               ]
             }
+          },
+          {
+            "type": "Feature",
+            "properties": {
+              "pixelCoords": [
+                1523,
+                2031
+              ]
+            },
+            "geometry": {
+              "type": "Point",
+              "coordinates": [
+                4.4378178,
+                51.8980714
+              ]
+            }
           }
         ]
       }
