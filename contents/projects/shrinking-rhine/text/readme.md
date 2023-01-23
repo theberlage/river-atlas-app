@@ -1,0 +1,1 @@
+Shrinking Rhine group text
