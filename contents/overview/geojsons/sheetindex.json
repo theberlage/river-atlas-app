@@ -272,8 +272,7 @@
       },
       "properties": {
         "id": 642,
-        "name": "eerste druk-1-15-1833-puttershoek",
-        "project": "de-rode-week"
+        "name": "eerste druk-1-15-1833-puttershoek"
       }
     },
     {
@@ -851,7 +850,8 @@
       },
       "properties": {
         "id": 666,
-        "name": "eerste druk-2-17-1834-rotterdam"
+        "name": "eerste druk-2-17-1834-rotterdam",
+        "project": "derodeweek"
       }
     },
     {
