@@ -35,8 +35,8 @@
 
 <div class="panel panel-grid-container">
 	<div class="caption">
-		<!-- <h1>{selectedSlide.frontmatter.meta.heading}</h1> -->
-		{@html selectedSlide.html}
+		<h1>{selectedSlide.frontmatter.meta.heading}</h1>
+		<div class="body">{@html selectedSlide.html}</div>
 	</div>
 	<div class="control-container">
 		<div class="control-item ">
@@ -54,8 +54,11 @@
 
 <style>
 	@media screen and (max-width: 400px) {
-		.caption {
+		.body {
 			display: none;
+		}
+		.panel {
+			align-self: end;
 		}
 	}
 

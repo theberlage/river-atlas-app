@@ -285,7 +285,7 @@
 			})
 		})
 
-		map.on('click', function (event) {
+		map.on('singleclick', function (event) {
 			map.forEachFeatureAtPixel(event.pixel, function (feature) {
 				let properties = selectedFeature.getProperties()
 				if (properties.project) {
