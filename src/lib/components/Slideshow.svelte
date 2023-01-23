@@ -35,7 +35,7 @@
 
 <div class="panel panel-grid-container">
 	<div class="caption">
-		<h1>{selectedSlide.frontmatter.meta.heading}</h1>
+		<!-- <h1>{selectedSlide.frontmatter.meta.heading}</h1> -->
 		{@html selectedSlide.html}
 	</div>
 	<div class="control-container">
