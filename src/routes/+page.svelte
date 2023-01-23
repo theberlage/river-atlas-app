@@ -238,12 +238,16 @@
 
 		// if ($page.url.searchParams.has('project')) {
 		//   let project: string = $page.url.searchParams.get('project')
-		//   slideShowID.set(project)
-
-		//   let slide: number = $page.url.searchParams.get('slide')
-		//   slideIndex.set(slide)
-		//   changeView()
-		// }
+    //   if ($slidesByProject[project]) {
+		//     slideShowID.set(project)
+    //     let slide: number = $page.url.searchParams.get('slide')
+    //     let slideCount = $slidesByProject[$slideShowID].length
+    //     if (slide >= 0 && slide <= slideCount) {
+    //       slideIndex.set(slide)
+    //     }
+    //     changeView()
+    //   }
+    // }
 
 		map.on('pointermove', function (event) {
 			// @Bert beter maken, typescript error fixen
