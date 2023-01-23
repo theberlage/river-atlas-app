@@ -202,7 +202,8 @@
       },
       "properties": {
         "id": 451,
-        "name": "eerste druk-1-13-1833-giesendam"
+        "name": "eerste druk-1-13-1833-giesendam",
+        "project": "biesbosch"
       }
     },
     {
@@ -236,7 +237,8 @@
       },
       "properties": {
         "id": 425,
-        "name": "eerste druk-1-14-1833-dordrecht"
+        "name": "eerste druk-1-14-1833-dordrecht",
+        "project": "dordrecht"
       }
     },
     {
