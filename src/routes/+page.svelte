@@ -18,15 +18,10 @@
 	import Select from 'ol/interaction/Select.js'
 	import { VectorSourceEvent } from 'ol/source/Vector'
 
-	// Geojson (temporary)
+	// Stores
 
-	import sheetIndex from '$lib/geojson/sheetindex.json'
-	import biesboschVector from '$lib/geojson/biesbosch.json'
-	import nl from '$lib/geojson/netherlands.json'
-
-  // Stores
-
-  import { slidesByProject, slideShowID, slideIndex } from '$lib/components/stores'
+	import { slidesByProject, slideShowID, slideIndex } from '$lib/components/stores'
+	import { page } from '$app/stores'
 
 	// Allmaps
 
@@ -39,9 +34,10 @@
 	import type { Extent } from 'ol/extent'
 	import type { GeoJSONGeometryCollection } from 'ol/format/GeoJSON'
 
-  // Components
+	// Components
 
-  import Slideshow from '$lib/components/Slideshow.svelte'
+	import Slideshow from '$lib/components/Slideshow.svelte'
+	import { kebabCase } from 'lodash-es'
 
 	// Declaring changing variables with let and fixed ones with const
 
@@ -94,8 +90,9 @@
 
 	// Function to add vector layer
 
-	function addVectorSource(geojsons: Array<GeoJSONGeometryCollection>) {
-		vectorSource.clear() // Todo: check if layer exists
+	async function addVectorSource(geojsonsPaths: Array<string>) {
+		let geojsons = await Promise.all(geojsonsPaths.map(fetchJson))
+		let extent: Extent
 
 		for (let geojson of geojsons) {
 			let features = new GeoJSON().readFeatures(geojson, {
@@ -112,8 +109,6 @@
 	// @Bert kan ik de plugin een geojson terugvragen van de mask?
 
 	async function addAllmapsLayer(allmapsAnnotations: any) {
-		map.removeLayer(warpedMapLayer) // Todo: check if layer exists
-
 		let annotations = await Promise.all(allmapsAnnotations.map(fetchJson))
 
 		warpedMapSource = new WarpedMapSource()
@@ -153,39 +148,51 @@
 		let bbox: Coordinate
 		let rotation: number
 		let extent: Extent
-		let geojsons: Array<GeoJSONGeometryCollection>
-    let slide = $slideShowID
-    let index = $slideIndex
+		let geojsons: Array<string>
+		let slide = $slideShowID
+		let index = $slideIndex
 
 		if (slide !== undefined) {
 			selectedSlide = $slidesByProject[slide][index]
 			slideCount = $slidesByProject[slide].length
-			allmapsAnnotations = selectedSlide.frontmatter.allmaps.map((item: any) => item.url)
-      geojsons = [biesboschVector.features[index]] // Todo: change to slide geojson
 			extent = calculateExtent(selectedSlide.frontmatter.viewer.bbox)
 			rotation = selectedSlide.frontmatter.viewer.rotation * (Math.PI / 180)
 
-      for (let allmaps of selectedSlide.frontmatter.allmaps) {
-        const url = `http://localhost:5173/projects/dordrecht/annotations/${allmaps.annotation}`
-        fetchJson(url).then((data) => {
-          console.log(data)
-        })
-      }
+			map.removeLayer(warpedMapLayer) // Todo: check if layer exists
+			if (selectedSlide.frontmatter.allmaps) {
+				allmapsAnnotations = selectedSlide.frontmatter.allmaps.map((item: any) => {
+					return `/projects/${$slideShowID}/annotations/${item.annotation}`
+				})
+				addAllmapsLayer(allmapsAnnotations)
+			}
 
-			addAllmapsLayer(allmapsAnnotations)
-			addVectorSource(geojsons)
+			if (vectorSource) {
+				vectorSource.clear()
+			}
+			if (selectedSlide.frontmatter.geojson) {
+				geojsons = selectedSlide.frontmatter.geojson.map((item: any) => {
+					return `/projects/${$slideShowID}/geojsons/${item.filename}`
+				})
+				addVectorSource(geojsons)
+			}
+
 			animateView(extent, rotation)
 		} else if (slide === undefined) {
-			// bbox = [4.225369, 51.750297, 6.235737, 52.03771]
-			// extent = calculateExtent(bbox)
-			allmapsAnnotations = firstRevision
-			geojsons = [sheetIndex]
+			bbox = [4.225369, 51.750297, 6.235737, 52.03771]
+			extent = calculateExtent(bbox)
 			rotation = 0
 
+			allmapsAnnotations = firstRevision
+			if (warpedMapLayer) {
+				map.removeLayer(warpedMapLayer)
+			}
 			addAllmapsLayer(allmapsAnnotations)
+
+			geojsons = ['/overview/geojsons/sheetindex.json']
+			vectorSource.clear() // Todo: check if layer exists
 			addVectorSource(geojsons)
 
-			extent = vectorSource.getExtent()
+			// extent = vectorSource.getExtent() // Aanpassen want addVectorSource is async
 
 			animateView(extent, rotation)
 		}
@@ -227,7 +234,16 @@
 		})
 
 		addAllmapsLayer(firstRevision)
-		addVectorSource([sheetIndex])
+		addVectorSource(['/overview/geojsons/sheetindex.json'])
+
+		// if ($page.url.searchParams.has('project')) {
+		//   let project: string = $page.url.searchParams.get('project')
+		//   slideShowID.set(project)
+
+		//   let slide: number = $page.url.searchParams.get('slide')
+		//   slideIndex.set(slide)
+		//   changeView()
+		// }
 
 		map.on('pointermove', function (event) {
 			// @Bert beter maken, typescript error fixen
@@ -246,8 +262,8 @@
 		map.on('click', function (event) {
 			map.forEachFeatureAtPixel(event.pixel, function (feature) {
 				let properties = selectedFeature.getProperties()
-				if (properties.slug) {
-					slideShowID.set(properties.slug)
+				if (properties.project) {
+					slideShowID.set(properties.project)
 					changeView()
 				}
 			})
@@ -258,7 +274,7 @@
 <div class="grid-container">
 	<div class="header">The Berlage: Project NL</div>
 	{#if $slideShowID !== undefined}
-    <Slideshow on:changeView={changeView}/>
+		<Slideshow on:changeView={changeView} />
 	{/if}
 	<div id="map" class="map" />
 </div>
