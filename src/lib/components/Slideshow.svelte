@@ -1,36 +1,36 @@
 <script lang="ts">
-  import { createEventDispatcher } from 'svelte';
-  import { slidesByProject, slideShowID, slideIndex } from '$lib/components/stores'
+	import { createEventDispatcher } from 'svelte'
+	import { slidesByProject, slideShowID, slideIndex } from '$lib/components/stores'
 
-  const dispatch = createEventDispatcher();
+	const dispatch = createEventDispatcher()
 
-  let slideCount: number
-  let selectedSlide: any
+	let slideCount: number
+	let selectedSlide: any
 
-  $: if ($slideShowID !== undefined) {
-    slideCount = $slidesByProject[$slideShowID].length
-    selectedSlide = $slidesByProject[$slideShowID][$slideIndex]
-  }
+	$: if ($slideShowID !== undefined) {
+		slideCount = $slidesByProject[$slideShowID].length
+		selectedSlide = $slidesByProject[$slideShowID][$slideIndex]
+	}
 
-  function goNext() {
+	function goNext() {
 		if ($slideIndex < slideCount - 1) {
-			slideIndex.update(n => n + 1)
+			slideIndex.update((n) => n + 1)
 		} else if ($slideIndex === slideCount - 1) {
 			slideShowID.set(undefined)
 			slideIndex.set(0)
 		}
-    dispatch('changeView')
+		dispatch('changeView')
 	}
 
 	function goPrev() {
 		if ($slideIndex > 0) {
-			slideIndex.update(n => n - 1)
+			slideIndex.update((n) => n - 1)
 		} else if ($slideIndex === 0) {
 			slideShowID.set(undefined)
 			slideIndex.set(0)
 		}
-    dispatch('changeView')
-  }
+		dispatch('changeView')
+	}
 </script>
 
 <div class="panel panel-grid-container">
