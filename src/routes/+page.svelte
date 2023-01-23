@@ -165,6 +165,13 @@
 			extent = calculateExtent(selectedSlide.frontmatter.viewer.bbox)
 			rotation = selectedSlide.frontmatter.viewer.rotation * (Math.PI / 180)
 
+      for (let allmaps of selectedSlide.frontmatter.allmaps) {
+        const url = `http://localhost:5173/projects/dordrecht/annotations/${allmaps.annotation}`
+        fetchJson(url).then((data) => {
+          console.log(data)
+        })
+      }
+
 			addAllmapsLayer(allmapsAnnotations)
 			addVectorSource(geojsons)
 			animateView(extent, rotation)
