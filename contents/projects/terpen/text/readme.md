@@ -1,1 +1,0 @@
-Terpen group text
