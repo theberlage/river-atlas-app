@@ -11,12 +11,6 @@ allmaps:
     opacity: 100
     mask: rgb(255,0,0)
     colorize: rgb(255,0,0)
-  - label: 1904 Riverkaart
-    attribution: Gelders Archief
-      name: 
-      url:
-    annotation: 
-    opacity: 0
 ---
 # **De Rode Week**
 ### _Factories_
