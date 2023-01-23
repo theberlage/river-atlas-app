@@ -38,6 +38,7 @@
 
 	import Slideshow from '$lib/components/Slideshow.svelte'
 	import { kebabCase } from 'lodash-es'
+  import Feature from 'ol/Feature.js'
 
 	// Declaring changing variables with let and fixed ones with const
 
@@ -74,12 +75,24 @@
 
 	const selected = new Style({
 		stroke: new Stroke({
+			color: 'black',
+			width: 2
+		}),
+		fill: new Fill({
+			color: 'rgba(0, 0, 255, 0.1)'
+		}),
+    zIndex: 5
+	})
+
+	const selectable = new Style({
+		stroke: new Stroke({
 			color: 'red',
 			width: 2
 		}),
 		fill: new Fill({
 			color: 'rgba(0, 0, 255, 0.1)'
-		})
+		}),
+    zIndex: 4
 	})
 
 	// Function to fetch external jsons
@@ -100,6 +113,13 @@
 			})
 			vectorSource.addFeatures(features)
 		}
+
+    vectorSource.forEachFeature(function (feature) {
+        let properties = feature.getProperties()
+        if (properties.project) {
+          feature.setStyle(selectable)
+        }
+    })
 	}
 
 	// Function to add Allmaps layer
@@ -251,15 +271,17 @@
 
 		map.on('pointermove', function (event) {
 			// @Bert beter maken, typescript error fixen
-			if (selectedFeature !== undefined) {
-				selectedFeature.setStyle(undefined)
+			if (selectedFeature !== undefined && selectedFeature.getProperties().project) {
+				selectedFeature.setStyle(selectable)
 				selectedFeature = undefined
 				map.getTargetElement().style.cursor = ''
 			}
 			map.forEachFeatureAtPixel(event.pixel, function (feature) {
-				selectedFeature = feature
-				selectedFeature.setStyle(selected)
-				map.getTargetElement().style.cursor = 'pointer'
+        selectedFeature = feature
+				if (selectedFeature.getProperties().project) {
+				  selectedFeature.setStyle(selected)
+				  map.getTargetElement().style.cursor = 'pointer'
+				}
 			})
 		})
 
@@ -310,7 +332,7 @@
 	@media screen and (max-width: 400px) {
 		.grid-container {
 			display: grid;
-			grid-template-columns: 1fr [panel];
+			grid-template-columns: [panel] 1fr;
 			grid-template-rows: [header] 40px [map] 1fr;
 			width: 100vw;
 			height: 100vh;
