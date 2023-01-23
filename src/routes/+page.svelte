@@ -2,8 +2,6 @@
 	// JS and Svelte functions
 
 	import { onMount } from 'svelte'
-	import { groupBy } from 'lodash-es'
-	import { formatNumber } from '$lib/intl.js'
 
 	// OpenLayers
 
@@ -26,17 +24,24 @@
 	import biesboschVector from '$lib/geojson/biesbosch.json'
 	import nl from '$lib/geojson/netherlands.json'
 
+  // Stores
+
+  import { slidesByProject, slideShowID, slideIndex } from '$lib/components/stores'
+
 	// Allmaps
 
 	import { WarpedMapSource, WarpedMapLayer } from '@allmaps/openlayers'
 
 	// Typescript
 
-	import type { MarkdownSlide } from '$lib/shared/types.js'
 	import type { FeatureLike } from 'ol/Feature.js'
 	import type { Coordinate } from 'ol/coordinate'
 	import type { Extent } from 'ol/extent'
 	import type { GeoJSONGeometryCollection } from 'ol/format/GeoJSON'
+
+  // Components
+
+  import Slideshow from '$lib/components/Slideshow.svelte'
 
 	// Declaring changing variables with let and fixed ones with const
 
@@ -49,8 +54,6 @@
 	let vectorLayer: VectorLayer<VectorSource>
 	let initialViewCoords = fromLonLat([5.054, 51.965])
 
-	let slideShowID: string | undefined
-	let slideIndex: number = 0
 	let slideCount: number
 	let selectedSlide: any = undefined
 	let selectedFeature: FeatureLike | undefined
@@ -82,36 +85,6 @@
 			color: 'rgba(0, 0, 255, 0.1)'
 		})
 	})
-
-	// Importing Markdown and frontmatter for slides
-	// @Bert: toevoegen aan object: georef annotaties + geojson
-	// @Bert: toevoegen: markdown + annotations + geojson in mapje overview
-
-	const markdownSlides = import.meta.glob<MarkdownSlide>('$contents/projects/*/slides/*.md', {
-		eager: true
-	})
-
-	const slides = Object.entries(markdownSlides).map(([id, slide]) => {
-		let project = ''
-		let slideNumber = -1
-
-		const match = /projects\/(?<project>\w+)\/slides\/(?<slideNumber>\d+).md$/.exec(id)
-
-		if (match && match.groups) {
-			project = match.groups.project
-			slideNumber = parseInt(match.groups.slideNumber)
-		}
-
-		return {
-			project,
-			slideNumber,
-			...slide
-		}
-	})
-
-	// Grouping slides by project
-
-	const slidesByProject = groupBy(slides, (slide) => slide.project)
 
 	// Function to fetch external jsons
 
@@ -176,17 +149,19 @@
 
 	// Function to change layers and view depending on state
 
-	function changeView(slide: string | undefined, index: number) {
+	function changeView() {
 		let bbox: Coordinate
 		let rotation: number
 		let extent: Extent
 		let geojsons: Array<GeoJSONGeometryCollection>
+    let slide = $slideShowID
+    let index = $slideIndex
 
 		if (slide !== undefined) {
-			selectedSlide = slidesByProject[slide][index]
-			slideCount = slidesByProject[slide].length
+			selectedSlide = $slidesByProject[slide][index]
+			slideCount = $slidesByProject[slide].length
 			allmapsAnnotations = selectedSlide.frontmatter.allmaps.map((item: any) => item.url)
-      geojsons = [biesboschVector.features[slideIndex]] // Todo: change to slide geojson
+      geojsons = [biesboschVector.features[index]] // Todo: change to slide geojson
 			extent = calculateExtent(selectedSlide.frontmatter.viewer.bbox)
 			rotation = selectedSlide.frontmatter.viewer.rotation * (Math.PI / 180)
 
@@ -234,10 +209,10 @@
 		map = new Map({
 			view,
 			layers: [
-				// new TileLayer({
-				// 	source: new OSM(),
-				// 	zIndex: 1
-				// }),
+				new TileLayer({
+					source: new OSM(),
+					zIndex: 1
+				}),
 				vectorLayer,
 				warpedMapLayer
 			],
@@ -265,59 +240,18 @@
 			map.forEachFeatureAtPixel(event.pixel, function (feature) {
 				let properties = selectedFeature.getProperties()
 				if (properties.slug) {
-					slideShowID = properties.slug
-					changeView(slideShowID, slideIndex)
+					slideShowID.set(properties.slug)
+					changeView()
 				}
 			})
 		})
 	})
-
-	function goNext() {
-		if (slideIndex < slideCount - 1) {
-			slideIndex += 1
-			changeView(slideShowID, slideIndex)
-		} else if (slideIndex === slideCount - 1) {
-			slideShowID = undefined
-			slideIndex = 0
-			changeView(slideShowID, slideIndex)
-		}
-	}
-
-	function goPrev() {
-		if (slideIndex > 0) {
-			slideIndex -= 1
-			changeView(slideShowID, slideIndex)
-		} else if (slideIndex === 0) {
-			slideShowID = undefined
-			slideIndex = 0
-			changeView(slideShowID, slideIndex)
-		}
-	}
 </script>
 
 <div class="grid-container">
 	<div class="header">The Berlage: Project NL</div>
-	{#if slideShowID !== undefined}
-		<div class="panel panel-grid-container">
-			<!-- @Bert: componentje maken  -->
-			<!-- <Projects {slidesByProject} /> -->
-			<div class="caption">
-				<h1>{selectedSlide.frontmatter.meta.heading}</h1>
-				{@html selectedSlide.html}
-			</div>
-			<div class="control-container">
-				<div class="control-item ">
-					<button on:click={goPrev} class="button" type="button">
-						{slideIndex == 0 ? 'Overview' : 'Previous'}
-					</button>
-				</div>
-				<div class="control-item">
-					<button on:click={goNext} class="button" type="button">
-						{slideIndex == slideCount - 1 ? 'Overview' : 'Next'}
-					</button>
-				</div>
-			</div>
-		</div>
+	{#if $slideShowID !== undefined}
+    <Slideshow on:changeView={changeView}/>
 	{/if}
 	<div id="map" class="map" />
 </div>
@@ -354,9 +288,6 @@
 			width: 100vw;
 			height: 100vh;
 		}
-		.caption {
-			display: none;
-		}
 	}
 
 	.header {
@@ -372,48 +303,5 @@
 		width: 100%;
 		height: 100%;
 		z-index: 1;
-	}
-
-	.panel {
-		background-color: white;
-		z-index: 2;
-		border-radius: 10px;
-		border: solid 1px black;
-		margin: 20px;
-		padding: 10px;
-	}
-
-	.panel-grid-container {
-		grid-column: panel;
-		grid-row: map;
-		display: grid;
-		grid-template-columns: 1fr;
-		grid-template-rows: 1fr [controls] 100px;
-		min-width: 0;
-		min-height: 0;
-	}
-
-	.caption {
-		grid-column: 1 / 2;
-		grid-row: 1 / 3;
-		overflow: auto;
-		z-index: 2;
-	}
-
-	.control-container {
-		grid-column: 1 / 2;
-		grid-row: controls;
-		display: flex;
-		flex-flow: row wrap;
-		justify-content: center;
-		gap: 20px;
-		margin: 20px;
-		align-items: flex-end;
-		z-index: 3;
-	}
-
-	.button {
-		width: 100px;
-		height: 35px;
 	}
 </style>
