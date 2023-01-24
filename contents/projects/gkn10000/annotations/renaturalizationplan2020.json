@@ -1,0 +1,90 @@
+{
+  "type": "AnnotationPage",
+  "@context": [
+    "http://www.w3.org/ns/anno.jsonld"
+  ],
+  "items": [
+    {
+      "id": "f71b6283b8dd9d6f",
+      "type": "Annotation",
+      "@context": [
+        "http://www.w3.org/ns/anno.jsonld",
+        "http://geojson.org/geojson-ld/geojson-context.jsonld",
+        "http://iiif.io/api/presentation/3/context.json"
+      ],
+      "motivation": "georeferencing",
+      "target": {
+        "type": "Image",
+        "source": "https://dlc.services/iiif-img/7/33/26b9577a-890f-4858-9cf5-7d0286c32219/full/full/0/default.jpg",
+        "service": [
+          {
+            "@id": "https://dlc.services/iiif-img/7/33/26b9577a-890f-4858-9cf5-7d0286c32219",
+            "type": "ImageService2"
+          }
+        ],
+        "selector": {
+          "type": "SvgSelector",
+          "value": "<svg width=\"4961\" height=\"2835\"><polygon points=\"0,0 0,2835 4961,2835 4961,0\" /></svg>"
+        }
+      },
+      "body": {
+        "type": "FeatureCollection",
+        "purpose": "gcp-georeferencing",
+        "transformation": {
+          "type": "polynomial",
+          "order": 0
+        },
+        "features": [
+          {
+            "type": "Feature",
+            "properties": {
+              "pixelCoords": [
+                241,
+                1168
+              ]
+            },
+            "geometry": {
+              "type": "Point",
+              "coordinates": [
+                5.6340546,
+                51.9002782
+              ]
+            }
+          },
+          {
+            "type": "Feature",
+            "properties": {
+              "pixelCoords": [
+                4646,
+                1409
+              ]
+            },
+            "geometry": {
+              "type": "Point",
+              "coordinates": [
+                5.6874997,
+                51.8986412
+              ]
+            }
+          },
+          {
+            "type": "Feature",
+            "properties": {
+              "pixelCoords": [
+                1991,
+                291
+              ]
+            },
+            "geometry": {
+              "type": "Point",
+              "coordinates": [
+                5.6555745,
+                51.9069034
+              ]
+            }
+          }
+        ]
+      }
+    }
+  ]
+}
