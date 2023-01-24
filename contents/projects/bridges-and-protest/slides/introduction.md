@@ -1,13 +1,13 @@
 ---
 meta:
-  heading: De Rode Week
-  period: [1936]
+  heading: Waalbrug
+  period: [1920]
 viewer:
-  bbox: [4.405436,51.87276,4.480117,51.918844]
+  bbox: [5.78255,51.823874,5.920099,51.908839]
   rotation: 0
 allmaps:
-  - label: Facsimile Second Edition Rivermap, 1936
-    annotation: rivermap.json
+  - label: Facsimile Second Edition Rivermap, 1920
+    annotation: nijmegenmap.json
     opacity: 100
     mask: rgb(255,0,0)
     colorize: rgb(255,0,0)
