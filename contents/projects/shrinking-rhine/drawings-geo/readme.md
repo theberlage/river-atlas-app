@@ -1,1 +1,0 @@
-Shrinking Rhine drawings
