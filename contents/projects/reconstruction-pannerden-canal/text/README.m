@@ -1,1 +1,0 @@
-Pannerden Canal group text
