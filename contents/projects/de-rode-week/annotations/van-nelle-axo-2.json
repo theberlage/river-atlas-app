@@ -1,0 +1,106 @@
+{
+  "type": "AnnotationPage",
+  "@context": [
+    "http://www.w3.org/ns/anno.jsonld"
+  ],
+  "items": [
+    {
+      "id": "775f90e00a9aa891",
+      "type": "Annotation",
+      "@context": [
+        "http://www.w3.org/ns/anno.jsonld",
+        "http://geojson.org/geojson-ld/geojson-context.jsonld",
+        "http://iiif.io/api/presentation/3/context.json"
+      ],
+      "motivation": "georeferencing",
+      "target": {
+        "type": "Image",
+        "source": "https://dlc.services/iiif-img/7/33/649b8cc6-99fc-443d-8918-9ee9b4ff5436/full/full/0/default.jpg",
+        "service": [
+          {
+            "@id": "https://dlc.services/iiif-img/7/33/649b8cc6-99fc-443d-8918-9ee9b4ff5436",
+            "type": "ImageService2"
+          }
+        ],
+        "selector": {
+          "type": "SvgSelector",
+          "value": "<svg width=\"1500\" height=\"1172\"><polygon points=\"909,1142 1469,1141 1473,772 1453,790 1445,751 1425,680 1432,631 1429,613 1448,616 1461,610 1478,650 1490,93 1477,90 1471,63 1468,46 1471,28 463,21 453,29 424,34 391,39 370,24 41,21 23,37 22,196 24,439 24,516 38,552 32,564 23,592 24,803 23,926 26,1047 29,1146 563,1149 607,1068 637,1035 631,1019 668,974 685,969 728,886 742,875 756,860 775,876 791,885 787,913 799,928 815,975 852,1025 871,1039 890,1070 893,1111\" /></svg>"
+        }
+      },
+      "body": {
+        "type": "FeatureCollection",
+        "purpose": "gcp-georeferencing",
+        "transformation": {
+          "type": "polynomial",
+          "order": 0
+        },
+        "features": [
+          {
+            "type": "Feature",
+            "properties": {
+              "pixelCoords": [
+                824,
+                572
+              ]
+            },
+            "geometry": {
+              "type": "Point",
+              "coordinates": [
+                4.4323559,
+                51.9242092
+              ]
+            }
+          },
+          {
+            "type": "Feature",
+            "properties": {
+              "pixelCoords": [
+                1016,
+                454
+              ]
+            },
+            "geometry": {
+              "type": "Point",
+              "coordinates": [
+                4.4315239,
+                51.9247458
+              ]
+            }
+          },
+          {
+            "type": "Feature",
+            "properties": {
+              "pixelCoords": [
+                399,
+                790
+              ]
+            },
+            "geometry": {
+              "type": "Point",
+              "coordinates": [
+                4.4337085,
+                51.9230394
+              ]
+            }
+          },
+          {
+            "type": "Feature",
+            "properties": {
+              "pixelCoords": [
+                289,
+                694
+              ]
+            },
+            "geometry": {
+              "type": "Point",
+              "coordinates": [
+                4.433223,
+                51.9226192
+              ]
+            }
+          }
+        ]
+      }
+    }
+  ]
+}
