@@ -1,1 +1,1780 @@
-{"type":"FeatureCollection","features":[{"type":"Feature","geometry":{"type":"Polygon","coordinates":[[[6.044123,51.830536],[6.171147,51.829756],[6.17197,51.876986],[6.044813,51.877767],[6.044123,51.830536]]]},"properties":{"id":675,"name":"eerste herziening-1-1-1874-schenkenschans"}},{"type":"Feature","geometry":{"type":"Polygon","coordinates":[[[5.171759,51.939566],[5.323124,51.939746],[5.323033,52.003258],[5.171454,52.003078],[5.171759,51.939566]]]},"properties":{"id":399,"name":"eerste herziening-2-11-1882-culemborg"}},{"type":"Feature","geometry":{"type":"Polygon","coordinates":[[[5.928163,51.844018],[6.044994,51.843421],[6.04566,51.888933],[5.92871,51.889531],[5.928163,51.844018]]]},"properties":{"id":526,"name":"eerste herziening-1-2-1873-kekerdom","project":"reconstructionpannerdencanal"}},{"type":"Feature","geometry":{"type":"Polygon","coordinates":[[[5.10291,51.931007],[5.203814,51.931208],[5.20345,52.020262],[5.102345,52.020061],[5.10291,51.931007]]]},"properties":{"id":478,"name":"eerste herziening-2-12-1882-hagestein"}},{"type":"Feature","geometry":{"type":"Polygon","coordinates":[[[4.143096,51.856484],[4.216652,51.85724],[4.21477,51.929469],[4.141096,51.928711],[4.143096,51.856484]]]},"properties":{"id":380,"name":"eerste herziening-1-23-1880-brielle"}},{"type":"Feature","geometry":{"type":"Polygon","coordinates":[[[4.986386,51.950305],[5.130878,51.950709],[5.130501,52.016627],[4.985797,52.016222],[4.986386,51.950305]]]},"properties":{"id":748,"name":"eerste herziening-2-13-1883-vianen"}},{"type":"Feature","geometry":{"type":"Polygon","coordinates":[[[5.115426,51.795512],[5.232212,51.795724],[5.232057,51.841034],[5.115153,51.840821],[5.115426,51.795512]]]},"properties":{"id":793,"name":"eerste herziening-1-10-1875-zuilichem"}},{"type":"Feature","geometry":{"type":"Polygon","coordinates":[[[4.870089,51.92551],[5.014473,51.926056],[5.013935,51.990851],[4.869342,51.990303],[4.870089,51.92551]]]},"properties":{"id":353,"name":"eerste herziening-2-14-1883-ameide"}},{"type":"Feature","geometry":{"type":"Polygon","coordinates":[[[5.042814,51.768959],[5.116086,51.769151],[5.115653,51.84114],[5.042264,51.840948],[5.042814,51.768959]]]},"properties":{"id":376,"name":"eerste herziening-1-11-1875-brakel"}},{"type":"Feature","geometry":{"type":"Polygon","coordinates":[[[4.752792,51.892512],[4.898819,51.89321],[4.898003,51.968206],[4.751732,51.967507],[4.752792,51.892512]]]},"properties":{"id":680,"name":"eerste herziening-2-15-1883-schoonhoven"}},{"type":"Feature","geometry":{"type":"Polygon","coordinates":[[[4.926769,51.786768],[5.043789,51.787169],[5.043375,51.84153],[4.926214,51.841128],[4.926769,51.786768]]]},"properties":{"id":456,"name":"eerste herziening-1-12-1876-gorinchem"}},{"type":"Feature","geometry":{"type":"Polygon","coordinates":[[[4.637595,51.871104],[4.781738,51.871935],[4.780861,51.936985],[4.636509,51.936152],[4.637595,51.871104]]]},"properties":{"id":563,"name":"eerste herziening-2-16-1883-lekkerkerk"}},{"type":"Feature","geometry":{"type":"Polygon","coordinates":[[[4.854674,51.768074],[4.927925,51.768383],[4.92718,51.841461],[4.85381,51.841151],[4.854674,51.768074]]]},"properties":{"id":765,"name":"eerste herziening-1-13-1877-werkendam"}},{"type":"Feature","geometry":{"type":"Polygon","coordinates":[[[4.406457,51.877856],[4.545342,51.878933],[4.544289,51.935126],[4.405231,51.934046],[4.406457,51.877856]]]},"properties":{"id":667,"name":"eerste herziening-2-18-1880-rotterdam"}},{"type":"Feature","geometry":{"type":"Polygon","coordinates":[[[4.78192,51.759912],[4.855465,51.760268],[4.854613,51.832468],[4.780951,51.832111],[4.78192,51.759912]]]},"properties":{"id":453,"name":"eerste herziening-1-14-1877-giessendam","project":"terpen"}},{"type":"Feature","geometry":{"type":"Polygon","coordinates":[[[4.41899,51.88548],[4.534534,51.886375],[4.533714,51.929617],[4.418058,51.928721],[4.41899,51.88548]]]},"properties":{"id":668,"name":"eerste herziening-2-18-1904-rotterdam","project":"shrinkingrhine"}},{"type":"Feature","geometry":{"type":"Polygon","coordinates":[[[4.709602,51.759729],[4.782875,51.76013],[4.781904,51.832537],[4.708513,51.832136],[4.709602,51.759729]]]},"properties":{"id":686,"name":"eerste herziening-1-15-1878-sliedrecht"}},{"type":"Feature","geometry":{"type":"Polygon","coordinates":[[[4.291884,51.877819],[4.43069,51.879032],[4.429452,51.937205],[4.290466,51.93599],[4.291884,51.877819]]]},"properties":{"id":758,"name":"eerste herziening-2-19-1881-vlaardingen"}},{"type":"Feature","geometry":{"type":"Polygon","coordinates":[[[4.593743,51.786354],[4.710035,51.787082],[4.709351,51.832579],[4.592942,51.831849],[4.593743,51.786354]]]},"properties":{"id":429,"name":"eerste herziening-1-16-1890-dordrecht","project":"bordersandboundaries"}},{"type":"Feature","geometry":{"type":"Polygon","coordinates":[[[4.302627,51.883261],[4.418913,51.884277],[4.41808,51.922957],[4.301693,51.92194],[4.302627,51.883261]]]},"properties":{"id":759,"name":"eerste herziening-2-19-1906-vlaardingen"}},{"type":"Feature","geometry":{"type":"Polygon","coordinates":[[[4.52099,51.786398],[4.594548,51.786919],[4.59328,51.85899],[4.519603,51.858469],[4.52099,51.786398]]]},"properties":{"id":490,"name":"eerste herziening-1-17-1878-heerjansdam"}},{"type":"Feature","geometry":{"type":"Polygon","coordinates":[[[4.209599,51.848463],[4.311608,51.849442],[4.309477,51.938457],[4.207266,51.937475],[4.209599,51.848463]]]},"properties":{"id":585,"name":"eerste herziening-2-20-1880-maassluis"}},{"type":"Feature","geometry":{"type":"Polygon","coordinates":[[[4.448501,51.795008],[4.521936,51.795573],[4.520544,51.867993],[4.446992,51.867427],[4.448501,51.795008]]]},"properties":{"id":493,"name":"eerste herziening-1-18-1879-heinenoord"}},{"type":"Feature","geometry":{"type":"Polygon","coordinates":[[[4.215298,51.888472],[4.303105,51.889315],[4.302129,51.929744],[4.214244,51.9289],[4.215298,51.888472]]]},"properties":{"id":587,"name":"eerste herziening-2-20-1903-maassluis"}},{"type":"Feature","geometry":{"type":"Polygon","coordinates":[[[4.594423,51.678552],[4.71057,51.67928],[4.709757,51.733598],[4.59347,51.732868],[4.594423,51.678552]]]},"properties":{"id":601,"name":"eerste herziening-1-18-1885-moerdijk"}},{"type":"Feature","geometry":{"type":"Polygon","coordinates":[[[5.915403,51.880602],[6.060588,51.879859],[6.061534,51.942957],[5.916146,51.943701],[5.915403,51.880602]]]},"properties":{"id":362,"name":"eerste herziening-2-3-1876-angeren"}},{"type":"Feature","geometry":{"type":"Polygon","coordinates":[[[4.303677,51.812583],[4.376292,51.813231],[4.374677,51.885138],[4.301946,51.884489],[4.303677,51.812583]]]},"properties":{"id":513,"name":"eerste herziening-1-20-1880-hoogvliet"}},{"type":"Feature","geometry":{"type":"Polygon","coordinates":[[[5.901519,51.925259],[6.047068,51.924532],[6.047974,51.986112],[5.902226,51.986841],[5.901519,51.925259]]]},"properties":{"id":768,"name":"eerste herziening-2-4-1877-westervoort"}},{"type":"Feature","geometry":{"type":"Polygon","coordinates":[[[4.302503,51.882946],[4.419561,51.883968],[4.418556,51.930642],[4.301377,51.929618],[4.302503,51.882946]]]},"properties":{"id":757,"name":"eerste herziening-1-21-1881-vlaardingen","project":"derodeweek"}},{"type":"Feature","geometry":{"type":"Polygon","coordinates":[[[5.785631,51.93659],[5.930661,51.936009],[5.931419,51.998519],[5.786186,51.999101],[5.785631,51.93659]]]},"properties":{"id":364,"name":"eerste herziening-2-5-1881-arnhem"}},{"type":"Feature","geometry":{"type":"Polygon","coordinates":[[[4.21568,51.856859],[4.303591,51.857703],[4.30185,51.929924],[4.213797,51.929078],[4.21568,51.856859]]]},"properties":{"id":584,"name":"eerste herziening-1-22-1880-maassluis"}},{"type":"Feature","geometry":{"type":"Polygon","coordinates":[[[5.672122,51.939296],[5.811428,51.938876],[5.811989,51.998239],[5.672499,51.99866],[5.672122,51.939296]]]},"properties":{"id":501,"name":"eerste herziening-2-6-1881-heteren"}},{"type":"Feature","geometry":{"type":"Polygon","coordinates":[[[5.812429,51.845184],[5.928916,51.844704],[5.929459,51.889801],[5.812856,51.890281],[5.812429,51.845184]]]},"properties":{"id":616,"name":"eerste herziening-1-3-1873-nijmegen","project":"bridgesandprotest"}},{"type":"Feature","geometry":{"type":"Polygon","coordinates":[[[5.554971,51.922884],[5.694271,51.922602],[5.69466,51.979356],[5.555184,51.979638],[5.554971,51.922884]]]},"properties":{"id":628,"name":"eerste herziening-2-7-1881-opheusden"}},{"type":"Feature","geometry":{"type":"Polygon","coordinates":[[[5.69619,51.860403],[5.813369,51.860036],[5.813799,51.905343],[5.696501,51.90571],[5.69619,51.860403]]]},"properties":{"id":497,"name":"eerste herziening-1-4-1873-herveld"}},{"type":"Feature","geometry":{"type":"Polygon","coordinates":[[[5.479876,51.920233],[5.581209,51.920109],[5.581598,52.009965],[5.480062,52.010089],[5.479876,51.920233]]]},"properties":{"id":656,"name":"eerste herziening-2-8-1881-rheenen"}},{"type":"Feature","geometry":{"type":"Polygon","coordinates":[[[5.580649,51.872759],[5.696982,51.87251],[5.697294,51.917771],[5.580844,51.918021],[5.580649,51.872759]]]},"properties":{"id":418,"name":"eerste herziening-1-5-1873-dodewaard","project":"gkn10000"}},{"type":"Feature","geometry":{"type":"Polygon","coordinates":[[[5.410873,51.940692],[5.505823,51.940634],[5.506049,52.026164],[5.410919,52.026222],[5.410873,51.940692]]]},"properties":{"id":594,"name":"eerste herziening-2-9-1882-maurik"}},{"type":"Feature","geometry":{"type":"Polygon","coordinates":[[[4.129657,51.920882],[4.272043,51.922319],[4.270458,51.986098],[4.127869,51.984658],[4.129657,51.920882]]]},"properties":{"id":406,"name":"eerste herziening-2-21-1881-de lier"}},{"type":"Feature","geometry":{"type":"Polygon","coordinates":[[[5.464346,51.873574],[5.581056,51.873439],[5.58125,51.918331],[5.464423,51.918466],[5.464346,51.873574]]]},"properties":{"id":559,"name":"eerste herziening-1-6-1874-leeuwen"}},{"type":"Feature","geometry":{"type":"Polygon","coordinates":[[[5.376824,51.839602],[5.464705,51.839577],[5.464815,51.903177],[5.37681,51.903202],[5.376824,51.839602]]]},"properties":{"id":727,"name":"eerste herziening-1-7-1874-tiel"}},{"type":"Feature","geometry":{"type":"Polygon","coordinates":[[[5.290762,51.93909],[5.436699,51.939119],[5.436769,52.001648],[5.290628,52.001619],[5.290762,51.93909]]]},"properties":{"id":778,"name":"eerste herziening-2-10-1882-wijk bij duurstede"}},{"type":"Feature","geometry":{"type":"Polygon","coordinates":[[[5.347198,51.785718],[5.464067,51.7857],[5.46416,51.840142],[5.34715,51.840161],[5.347198,51.785718]]]},"properties":{"id":737,"name":"eerste herziening-1-8-1874-varik"}},{"type":"Feature","geometry":{"type":"Polygon","coordinates":[[[4.057837,51.912876],[4.155866,51.913944],[4.153582,51.99716],[4.05537,51.996089],[4.057837,51.912876]]]},"properties":{"id":508,"name":"eerste herziening-2-22-1881-hoek van holland"}},{"type":"Feature","geometry":{"type":"Polygon","coordinates":[[[5.23139,51.786138],[5.34794,51.786234],[5.347892,51.840691],[5.231202,51.840594],[5.23139,51.786138]]]},"properties":{"id":787,"name":"eerste herziening-1-9-1875-zaltbommel"}},{"type":"Feature","geometry":{"type":"Polygon","coordinates":[[[4.06941,51.960317],[4.140767,51.961095],[4.139806,51.995681],[4.068394,51.994902],[4.06941,51.960317]]]},"properties":{"id":510,"name":"eerste herziening-2-22-1906-hoek van holland"}},{"type":"Feature","geometry":{"type":"Polygon","coordinates":[[[4.53488,51.87612],[4.651729,51.876909],[4.650982,51.922576],[4.534014,51.921786],[4.53488,51.87612]]]},"properties":{"id":548,"name":"eerste herziening-1-17-1879-krimpen a/d lek"}},{"type":"Feature","geometry":{"type":"Polygon","coordinates":[[[4.521215,51.867432],[4.666163,51.868411],[4.665177,51.929857],[4.520031,51.928876],[4.521215,51.867432]]]},"properties":{"id":552,"name":"eerste herziening-2-17-1879-krimpen aan de lek"}},{"type":"Feature","geometry":{"type":"Polygon","coordinates":[[[4.06947,51.917355],[4.143161,51.918158],[4.14112,51.991762],[4.067307,51.990957],[4.06947,51.917355]]]},"properties":{"id":507,"name":"eerste herziening-1-25-1881-hoek van holland"}},{"type":"Feature","geometry":{"type":"Polygon","coordinates":[[[4.535158,51.876197],[4.651237,51.876982],[4.650498,51.922152],[4.534301,51.921366],[4.535158,51.876197]]]},"properties":{"id":553,"name":"eerste herziening-2-17-1907-krimpen aan de lek"}},{"type":"Feature","geometry":{"type":"Polygon","coordinates":[[[4.231694,51.766886],[4.347919,51.767973],[4.346872,51.813402],[4.23053,51.812312],[4.231694,51.766886]]]},"properties":{"id":724,"name":"eerste herziening-1-s 2-1880-supplementblad no. 2 spui : nieuw-beijerland"}},{"type":"Feature","geometry":{"type":"Polygon","coordinates":[[[4.593198,51.831192],[4.709888,51.831923],[4.709203,51.877423],[4.592395,51.87669],[4.593198,51.831192]]]},"properties":{"id":723,"name":"eerste herziening-1-s 2-1879-supplementblad no. 2 pelser en noord. alblasserdam"}}]}
+{
+  "type": "FeatureCollection",
+  "features": [
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              6.044123,
+              51.830536
+            ],
+            [
+              6.171147,
+              51.829756
+            ],
+            [
+              6.17197,
+              51.876986
+            ],
+            [
+              6.044813,
+              51.877767
+            ],
+            [
+              6.044123,
+              51.830536
+            ]
+          ]
+        ]
+      },
+      "properties": {
+        "id": 675,
+        "name": "eerste herziening-1-1-1874-schenkenschans"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              5.171759,
+              51.939566
+            ],
+            [
+              5.323124,
+              51.939746
+            ],
+            [
+              5.323033,
+              52.003258
+            ],
+            [
+              5.171454,
+              52.003078
+            ],
+            [
+              5.171759,
+              51.939566
+            ]
+          ]
+        ]
+      },
+      "properties": {
+        "id": 399,
+        "name": "eerste herziening-2-11-1882-culemborg"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              5.928163,
+              51.844018
+            ],
+            [
+              6.044994,
+              51.843421
+            ],
+            [
+              6.04566,
+              51.888933
+            ],
+            [
+              5.92871,
+              51.889531
+            ],
+            [
+              5.928163,
+              51.844018
+            ]
+          ]
+        ]
+      },
+      "properties": {
+        "id": 526,
+        "name": "eerste herziening-1-2-1873-kekerdom",
+        "project": "reconstructionpannerdencanal"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              5.10291,
+              51.931007
+            ],
+            [
+              5.203814,
+              51.931208
+            ],
+            [
+              5.20345,
+              52.020262
+            ],
+            [
+              5.102345,
+              52.020061
+            ],
+            [
+              5.10291,
+              51.931007
+            ]
+          ]
+        ]
+      },
+      "properties": {
+        "id": 478,
+        "name": "eerste herziening-2-12-1882-hagestein"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              4.143096,
+              51.856484
+            ],
+            [
+              4.216652,
+              51.85724
+            ],
+            [
+              4.21477,
+              51.929469
+            ],
+            [
+              4.141096,
+              51.928711
+            ],
+            [
+              4.143096,
+              51.856484
+            ]
+          ]
+        ]
+      },
+      "properties": {
+        "id": 380,
+        "name": "eerste herziening-1-23-1880-brielle"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              4.986386,
+              51.950305
+            ],
+            [
+              5.130878,
+              51.950709
+            ],
+            [
+              5.130501,
+              52.016627
+            ],
+            [
+              4.985797,
+              52.016222
+            ],
+            [
+              4.986386,
+              51.950305
+            ]
+          ]
+        ]
+      },
+      "properties": {
+        "id": 748,
+        "name": "eerste herziening-2-13-1883-vianen"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              5.115426,
+              51.795512
+            ],
+            [
+              5.232212,
+              51.795724
+            ],
+            [
+              5.232057,
+              51.841034
+            ],
+            [
+              5.115153,
+              51.840821
+            ],
+            [
+              5.115426,
+              51.795512
+            ]
+          ]
+        ]
+      },
+      "properties": {
+        "id": 793,
+        "name": "eerste herziening-1-10-1875-zuilichem"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              4.870089,
+              51.92551
+            ],
+            [
+              5.014473,
+              51.926056
+            ],
+            [
+              5.013935,
+              51.990851
+            ],
+            [
+              4.869342,
+              51.990303
+            ],
+            [
+              4.870089,
+              51.92551
+            ]
+          ]
+        ]
+      },
+      "properties": {
+        "id": 353,
+        "name": "eerste herziening-2-14-1883-ameide"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              5.042814,
+              51.768959
+            ],
+            [
+              5.116086,
+              51.769151
+            ],
+            [
+              5.115653,
+              51.84114
+            ],
+            [
+              5.042264,
+              51.840948
+            ],
+            [
+              5.042814,
+              51.768959
+            ]
+          ]
+        ]
+      },
+      "properties": {
+        "id": 376,
+        "name": "eerste herziening-1-11-1875-brakel"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              4.752792,
+              51.892512
+            ],
+            [
+              4.898819,
+              51.89321
+            ],
+            [
+              4.898003,
+              51.968206
+            ],
+            [
+              4.751732,
+              51.967507
+            ],
+            [
+              4.752792,
+              51.892512
+            ]
+          ]
+        ]
+      },
+      "properties": {
+        "id": 680,
+        "name": "eerste herziening-2-15-1883-schoonhoven"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              4.926769,
+              51.786768
+            ],
+            [
+              5.043789,
+              51.787169
+            ],
+            [
+              5.043375,
+              51.84153
+            ],
+            [
+              4.926214,
+              51.841128
+            ],
+            [
+              4.926769,
+              51.786768
+            ]
+          ]
+        ]
+      },
+      "properties": {
+        "id": 456,
+        "name": "eerste herziening-1-12-1876-gorinchem"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              4.637595,
+              51.871104
+            ],
+            [
+              4.781738,
+              51.871935
+            ],
+            [
+              4.780861,
+              51.936985
+            ],
+            [
+              4.636509,
+              51.936152
+            ],
+            [
+              4.637595,
+              51.871104
+            ]
+          ]
+        ]
+      },
+      "properties": {
+        "id": 563,
+        "name": "eerste herziening-2-16-1883-lekkerkerk"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              4.854674,
+              51.768074
+            ],
+            [
+              4.927925,
+              51.768383
+            ],
+            [
+              4.92718,
+              51.841461
+            ],
+            [
+              4.85381,
+              51.841151
+            ],
+            [
+              4.854674,
+              51.768074
+            ]
+          ]
+        ]
+      },
+      "properties": {
+        "id": 765,
+        "name": "eerste herziening-1-13-1877-werkendam"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              4.406457,
+              51.877856
+            ],
+            [
+              4.545342,
+              51.878933
+            ],
+            [
+              4.544289,
+              51.935126
+            ],
+            [
+              4.405231,
+              51.934046
+            ],
+            [
+              4.406457,
+              51.877856
+            ]
+          ]
+        ]
+      },
+      "properties": {
+        "id": 667,
+        "name": "eerste herziening-2-18-1880-rotterdam"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              4.78192,
+              51.759912
+            ],
+            [
+              4.855465,
+              51.760268
+            ],
+            [
+              4.854613,
+              51.832468
+            ],
+            [
+              4.780951,
+              51.832111
+            ],
+            [
+              4.78192,
+              51.759912
+            ]
+          ]
+        ]
+      },
+      "properties": {
+        "id": 453,
+        "name": "eerste herziening-1-14-1877-giessendam",
+        "project": "terpen"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              4.41899,
+              51.88548
+            ],
+            [
+              4.534534,
+              51.886375
+            ],
+            [
+              4.533714,
+              51.929617
+            ],
+            [
+              4.418058,
+              51.928721
+            ],
+            [
+              4.41899,
+              51.88548
+            ]
+          ]
+        ]
+      },
+      "properties": {
+        "id": 668,
+        "name": "eerste herziening-2-18-1904-rotterdam",
+        "project": "shrinkingrhine"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              4.709602,
+              51.759729
+            ],
+            [
+              4.782875,
+              51.76013
+            ],
+            [
+              4.781904,
+              51.832537
+            ],
+            [
+              4.708513,
+              51.832136
+            ],
+            [
+              4.709602,
+              51.759729
+            ]
+          ]
+        ]
+      },
+      "properties": {
+        "id": 686,
+        "name": "eerste herziening-1-15-1878-sliedrecht"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              4.291884,
+              51.877819
+            ],
+            [
+              4.43069,
+              51.879032
+            ],
+            [
+              4.429452,
+              51.937205
+            ],
+            [
+              4.290466,
+              51.93599
+            ],
+            [
+              4.291884,
+              51.877819
+            ]
+          ]
+        ]
+      },
+      "properties": {
+        "id": 758,
+        "name": "eerste herziening-2-19-1881-vlaardingen"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              4.593743,
+              51.786354
+            ],
+            [
+              4.710035,
+              51.787082
+            ],
+            [
+              4.709351,
+              51.832579
+            ],
+            [
+              4.592942,
+              51.831849
+            ],
+            [
+              4.593743,
+              51.786354
+            ]
+          ]
+        ]
+      },
+      "properties": {
+        "id": 429,
+        "name": "eerste herziening-1-16-1890-dordrecht",
+        "project": "bordersandboundaries"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              4.302627,
+              51.883261
+            ],
+            [
+              4.418913,
+              51.884277
+            ],
+            [
+              4.41808,
+              51.922957
+            ],
+            [
+              4.301693,
+              51.92194
+            ],
+            [
+              4.302627,
+              51.883261
+            ]
+          ]
+        ]
+      },
+      "properties": {
+        "id": 759,
+        "name": "eerste herziening-2-19-1906-vlaardingen"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              4.52099,
+              51.786398
+            ],
+            [
+              4.594548,
+              51.786919
+            ],
+            [
+              4.59328,
+              51.85899
+            ],
+            [
+              4.519603,
+              51.858469
+            ],
+            [
+              4.52099,
+              51.786398
+            ]
+          ]
+        ]
+      },
+      "properties": {
+        "id": 490,
+        "name": "eerste herziening-1-17-1878-heerjansdam"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              4.209599,
+              51.848463
+            ],
+            [
+              4.311608,
+              51.849442
+            ],
+            [
+              4.309477,
+              51.938457
+            ],
+            [
+              4.207266,
+              51.937475
+            ],
+            [
+              4.209599,
+              51.848463
+            ]
+          ]
+        ]
+      },
+      "properties": {
+        "id": 585,
+        "name": "eerste herziening-2-20-1880-maassluis"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              4.448501,
+              51.795008
+            ],
+            [
+              4.521936,
+              51.795573
+            ],
+            [
+              4.520544,
+              51.867993
+            ],
+            [
+              4.446992,
+              51.867427
+            ],
+            [
+              4.448501,
+              51.795008
+            ]
+          ]
+        ]
+      },
+      "properties": {
+        "id": 493,
+        "name": "eerste herziening-1-18-1879-heinenoord"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              4.215298,
+              51.888472
+            ],
+            [
+              4.303105,
+              51.889315
+            ],
+            [
+              4.302129,
+              51.929744
+            ],
+            [
+              4.214244,
+              51.9289
+            ],
+            [
+              4.215298,
+              51.888472
+            ]
+          ]
+        ]
+      },
+      "properties": {
+        "id": 587,
+        "name": "eerste herziening-2-20-1903-maassluis"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              4.594423,
+              51.678552
+            ],
+            [
+              4.71057,
+              51.67928
+            ],
+            [
+              4.709757,
+              51.733598
+            ],
+            [
+              4.59347,
+              51.732868
+            ],
+            [
+              4.594423,
+              51.678552
+            ]
+          ]
+        ]
+      },
+      "properties": {
+        "id": 601,
+        "name": "eerste herziening-1-18-1885-moerdijk"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              5.915403,
+              51.880602
+            ],
+            [
+              6.060588,
+              51.879859
+            ],
+            [
+              6.061534,
+              51.942957
+            ],
+            [
+              5.916146,
+              51.943701
+            ],
+            [
+              5.915403,
+              51.880602
+            ]
+          ]
+        ]
+      },
+      "properties": {
+        "id": 362,
+        "name": "eerste herziening-2-3-1876-angeren"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              4.303677,
+              51.812583
+            ],
+            [
+              4.376292,
+              51.813231
+            ],
+            [
+              4.374677,
+              51.885138
+            ],
+            [
+              4.301946,
+              51.884489
+            ],
+            [
+              4.303677,
+              51.812583
+            ]
+          ]
+        ]
+      },
+      "properties": {
+        "id": 513,
+        "name": "eerste herziening-1-20-1880-hoogvliet"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              5.901519,
+              51.925259
+            ],
+            [
+              6.047068,
+              51.924532
+            ],
+            [
+              6.047974,
+              51.986112
+            ],
+            [
+              5.902226,
+              51.986841
+            ],
+            [
+              5.901519,
+              51.925259
+            ]
+          ]
+        ]
+      },
+      "properties": {
+        "id": 768,
+        "name": "eerste herziening-2-4-1877-westervoort"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              4.302503,
+              51.882946
+            ],
+            [
+              4.419561,
+              51.883968
+            ],
+            [
+              4.418556,
+              51.930642
+            ],
+            [
+              4.301377,
+              51.929618
+            ],
+            [
+              4.302503,
+              51.882946
+            ]
+          ]
+        ]
+      },
+      "properties": {
+        "id": 757,
+        "name": "eerste herziening-1-21-1881-vlaardingen",
+        "project": "derodeweek"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              5.785631,
+              51.93659
+            ],
+            [
+              5.930661,
+              51.936009
+            ],
+            [
+              5.931419,
+              51.998519
+            ],
+            [
+              5.786186,
+              51.999101
+            ],
+            [
+              5.785631,
+              51.93659
+            ]
+          ]
+        ]
+      },
+      "properties": {
+        "id": 364,
+        "name": "eerste herziening-2-5-1881-arnhem"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              4.21568,
+              51.856859
+            ],
+            [
+              4.303591,
+              51.857703
+            ],
+            [
+              4.30185,
+              51.929924
+            ],
+            [
+              4.213797,
+              51.929078
+            ],
+            [
+              4.21568,
+              51.856859
+            ]
+          ]
+        ]
+      },
+      "properties": {
+        "id": 584,
+        "name": "eerste herziening-1-22-1880-maassluis"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              5.672122,
+              51.939296
+            ],
+            [
+              5.811428,
+              51.938876
+            ],
+            [
+              5.811989,
+              51.998239
+            ],
+            [
+              5.672499,
+              51.99866
+            ],
+            [
+              5.672122,
+              51.939296
+            ]
+          ]
+        ]
+      },
+      "properties": {
+        "id": 501,
+        "name": "eerste herziening-2-6-1881-heteren"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              5.812429,
+              51.845184
+            ],
+            [
+              5.928916,
+              51.844704
+            ],
+            [
+              5.929459,
+              51.889801
+            ],
+            [
+              5.812856,
+              51.890281
+            ],
+            [
+              5.812429,
+              51.845184
+            ]
+          ]
+        ]
+      },
+      "properties": {
+        "id": 616,
+        "name": "eerste herziening-1-3-1873-nijmegen",
+        "project": "bridgesandprotest"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              5.554971,
+              51.922884
+            ],
+            [
+              5.694271,
+              51.922602
+            ],
+            [
+              5.69466,
+              51.979356
+            ],
+            [
+              5.555184,
+              51.979638
+            ],
+            [
+              5.554971,
+              51.922884
+            ]
+          ]
+        ]
+      },
+      "properties": {
+        "id": 628,
+        "name": "eerste herziening-2-7-1881-opheusden"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              5.69619,
+              51.860403
+            ],
+            [
+              5.813369,
+              51.860036
+            ],
+            [
+              5.813799,
+              51.905343
+            ],
+            [
+              5.696501,
+              51.90571
+            ],
+            [
+              5.69619,
+              51.860403
+            ]
+          ]
+        ]
+      },
+      "properties": {
+        "id": 497,
+        "name": "eerste herziening-1-4-1873-herveld"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              5.479876,
+              51.920233
+            ],
+            [
+              5.581209,
+              51.920109
+            ],
+            [
+              5.581598,
+              52.009965
+            ],
+            [
+              5.480062,
+              52.010089
+            ],
+            [
+              5.479876,
+              51.920233
+            ]
+          ]
+        ]
+      },
+      "properties": {
+        "id": 656,
+        "name": "eerste herziening-2-8-1881-rheenen"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              5.580649,
+              51.872759
+            ],
+            [
+              5.696982,
+              51.87251
+            ],
+            [
+              5.697294,
+              51.917771
+            ],
+            [
+              5.580844,
+              51.918021
+            ],
+            [
+              5.580649,
+              51.872759
+            ]
+          ]
+        ]
+      },
+      "properties": {
+        "id": 418,
+        "name": "eerste herziening-1-5-1873-dodewaard",
+        "project": "gkn10000"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              5.410873,
+              51.940692
+            ],
+            [
+              5.505823,
+              51.940634
+            ],
+            [
+              5.506049,
+              52.026164
+            ],
+            [
+              5.410919,
+              52.026222
+            ],
+            [
+              5.410873,
+              51.940692
+            ]
+          ]
+        ]
+      },
+      "properties": {
+        "id": 594,
+        "name": "eerste herziening-2-9-1882-maurik"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              4.129657,
+              51.920882
+            ],
+            [
+              4.272043,
+              51.922319
+            ],
+            [
+              4.270458,
+              51.986098
+            ],
+            [
+              4.127869,
+              51.984658
+            ],
+            [
+              4.129657,
+              51.920882
+            ]
+          ]
+        ]
+      },
+      "properties": {
+        "id": 406,
+        "name": "eerste herziening-2-21-1881-de lier"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              5.464346,
+              51.873574
+            ],
+            [
+              5.581056,
+              51.873439
+            ],
+            [
+              5.58125,
+              51.918331
+            ],
+            [
+              5.464423,
+              51.918466
+            ],
+            [
+              5.464346,
+              51.873574
+            ]
+          ]
+        ]
+      },
+      "properties": {
+        "id": 559,
+        "name": "eerste herziening-1-6-1874-leeuwen"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              5.376824,
+              51.839602
+            ],
+            [
+              5.464705,
+              51.839577
+            ],
+            [
+              5.464815,
+              51.903177
+            ],
+            [
+              5.37681,
+              51.903202
+            ],
+            [
+              5.376824,
+              51.839602
+            ]
+          ]
+        ]
+      },
+      "properties": {
+        "id": 727,
+        "name": "eerste herziening-1-7-1874-tiel"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              5.290762,
+              51.93909
+            ],
+            [
+              5.436699,
+              51.939119
+            ],
+            [
+              5.436769,
+              52.001648
+            ],
+            [
+              5.290628,
+              52.001619
+            ],
+            [
+              5.290762,
+              51.93909
+            ]
+          ]
+        ]
+      },
+      "properties": {
+        "id": 778,
+        "name": "eerste herziening-2-10-1882-wijk bij duurstede"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              5.347198,
+              51.785718
+            ],
+            [
+              5.464067,
+              51.7857
+            ],
+            [
+              5.46416,
+              51.840142
+            ],
+            [
+              5.34715,
+              51.840161
+            ],
+            [
+              5.347198,
+              51.785718
+            ]
+          ]
+        ]
+      },
+      "properties": {
+        "id": 737,
+        "name": "eerste herziening-1-8-1874-varik"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              4.057837,
+              51.912876
+            ],
+            [
+              4.155866,
+              51.913944
+            ],
+            [
+              4.153582,
+              51.99716
+            ],
+            [
+              4.05537,
+              51.996089
+            ],
+            [
+              4.057837,
+              51.912876
+            ]
+          ]
+        ]
+      },
+      "properties": {
+        "id": 508,
+        "name": "eerste herziening-2-22-1881-hoek van holland"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              5.23139,
+              51.786138
+            ],
+            [
+              5.34794,
+              51.786234
+            ],
+            [
+              5.347892,
+              51.840691
+            ],
+            [
+              5.231202,
+              51.840594
+            ],
+            [
+              5.23139,
+              51.786138
+            ]
+          ]
+        ]
+      },
+      "properties": {
+        "id": 787,
+        "name": "eerste herziening-1-9-1875-zaltbommel"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              4.06941,
+              51.960317
+            ],
+            [
+              4.140767,
+              51.961095
+            ],
+            [
+              4.139806,
+              51.995681
+            ],
+            [
+              4.068394,
+              51.994902
+            ],
+            [
+              4.06941,
+              51.960317
+            ]
+          ]
+        ]
+      },
+      "properties": {
+        "id": 510,
+        "name": "eerste herziening-2-22-1906-hoek van holland"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              4.53488,
+              51.87612
+            ],
+            [
+              4.651729,
+              51.876909
+            ],
+            [
+              4.650982,
+              51.922576
+            ],
+            [
+              4.534014,
+              51.921786
+            ],
+            [
+              4.53488,
+              51.87612
+            ]
+          ]
+        ]
+      },
+      "properties": {
+        "id": 548,
+        "name": "eerste herziening-1-17-1879-krimpen a/d lek"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              4.521215,
+              51.867432
+            ],
+            [
+              4.666163,
+              51.868411
+            ],
+            [
+              4.665177,
+              51.929857
+            ],
+            [
+              4.520031,
+              51.928876
+            ],
+            [
+              4.521215,
+              51.867432
+            ]
+          ]
+        ]
+      },
+      "properties": {
+        "id": 552,
+        "name": "eerste herziening-2-17-1879-krimpen aan de lek"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              4.06947,
+              51.917355
+            ],
+            [
+              4.143161,
+              51.918158
+            ],
+            [
+              4.14112,
+              51.991762
+            ],
+            [
+              4.067307,
+              51.990957
+            ],
+            [
+              4.06947,
+              51.917355
+            ]
+          ]
+        ]
+      },
+      "properties": {
+        "id": 507,
+        "name": "eerste herziening-1-25-1881-hoek van holland"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              4.535158,
+              51.876197
+            ],
+            [
+              4.651237,
+              51.876982
+            ],
+            [
+              4.650498,
+              51.922152
+            ],
+            [
+              4.534301,
+              51.921366
+            ],
+            [
+              4.535158,
+              51.876197
+            ]
+          ]
+        ]
+      },
+      "properties": {
+        "id": 553,
+        "name": "eerste herziening-2-17-1907-krimpen aan de lek"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              4.231694,
+              51.766886
+            ],
+            [
+              4.347919,
+              51.767973
+            ],
+            [
+              4.346872,
+              51.813402
+            ],
+            [
+              4.23053,
+              51.812312
+            ],
+            [
+              4.231694,
+              51.766886
+            ]
+          ]
+        ]
+      },
+      "properties": {
+        "id": 724,
+        "name": "eerste herziening-1-s 2-1880-supplementblad no. 2 spui : nieuw-beijerland"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              4.593198,
+              51.831192
+            ],
+            [
+              4.709888,
+              51.831923
+            ],
+            [
+              4.709203,
+              51.877423
+            ],
+            [
+              4.592395,
+              51.87669
+            ],
+            [
+              4.593198,
+              51.831192
+            ]
+          ]
+        ]
+      },
+      "properties": {
+        "id": 723,
+        "name": "eerste herziening-1-s 2-1879-supplementblad no. 2 pelser en noord. alblasserdam"
+      }
+    }
+  ]
+}
