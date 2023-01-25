@@ -62,6 +62,8 @@
 		'https://annotations.allmaps.org/manifests/752b29a50403371d'
 	]
 
+  let innerHeight:number
+
 	// Styles for OpenLayers
 
 	const styles = new Style({
@@ -312,7 +314,9 @@
 	})
 </script>
 
-<div class="grid-container">
+<svelte:window bind:innerHeight />
+
+<div class="grid-container" style="height:{innerHeight}px;">
 	<div class="header">The Berlage: Project NL</div>
 	{#if $slideShowID !== undefined}
 		<Slideshow on:changeView={changeView} />
@@ -335,7 +339,6 @@
 		font-size: 15px;
 		padding: 0;
 		margin: 0;
-		height: 100%;
 	}
 
 	.grid-container {
@@ -343,7 +346,7 @@
 		grid-template-columns: 1fr 1fr 1fr [panel] 350px;
 		grid-template-rows: [header] 42px [map] 1fr;
 		width: 100vw;
-		height: 100vh;
+    height: 100vh;
 	}
 
 	@media screen and (max-width: 600px) {
