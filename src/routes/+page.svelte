@@ -183,7 +183,8 @@
 				allmapsAnnotations = selectedSlide.frontmatter.allmaps.map((item: any) => {
 					return `/projects/${$slideShowID}/annotations/${item.annotation}`
 				})
-				addAllmapsLayer(allmapsAnnotations)
+        let allmapsAnnotationsReversed = allmapsAnnotations.reverse()
+				addAllmapsLayer(allmapsAnnotationsReversed)
 			}
 
 			if (vectorSource) {
@@ -208,7 +209,7 @@
 			}
 			addAllmapsLayer(allmapsAnnotations)
 
-			geojsons = ['/overview/geojsons/sheetindex.json']
+			geojsons = ['/overview/geojsons/first-revision.geojson']
 			vectorSource.clear() // Todo: check if layer exists
 			addVectorSource(geojsons)
 
@@ -254,7 +255,7 @@
 		})
 
 		addAllmapsLayer(firstRevision)
-		addVectorSource(['/overview/geojsons/sheetindex.json'])
+		addVectorSource(['/overview/geojsons/first-revision.geojson'])
 
 		// if ($page.url.searchParams.has('project')) {
 		//   let project: string = $page.url.searchParams.get('project')
@@ -291,6 +292,7 @@
 				if (properties.project) {
 					slideShowID.set(properties.project)
 					changeView()
+          console.log(properties.project)
 				}
 			})
 		})
