@@ -17,6 +17,7 @@
 	import { Fill, Stroke, Style } from 'ol/style.js'
 	import Select from 'ol/interaction/Select.js'
 	import { VectorSourceEvent } from 'ol/source/Vector'
+	import MapboxVector from 'ol/layer/MapboxVector'
 
 	// Stores
 
@@ -65,32 +66,32 @@
 
 	const styles = new Style({
 		stroke: new Stroke({
-			color: 'blue',
-			width: 2
+			color: 'black',
+			width: 1
 		}),
 		fill: new Fill({
-			color: 'rgba(0, 0, 255, 0.1)'
+			color: 'rgba(255, 255, 255, 0)'
 		})
 	})
 
 	const selected = new Style({
 		stroke: new Stroke({
-			color: 'black',
-			width: 2
+			color: 'blue',
+			width: 0
 		}),
 		fill: new Fill({
-			color: 'rgba(0, 0, 255, 0.1)'
+			color: 'rgba(0, 0, 255, 0.6)'
 		}),
 		zIndex: 5
 	})
 
 	const selectable = new Style({
 		stroke: new Stroke({
-			color: 'red',
-			width: 2
+			color: 'blue',
+			width: 0
 		}),
 		fill: new Fill({
-			color: 'rgba(0, 0, 255, 0.1)'
+			color: 'rgba(0, 0, 255, 1)'
 		}),
 		zIndex: 4
 	})
@@ -203,11 +204,11 @@
 			extent = calculateExtent(bbox)
 			rotation = 0
 
-			allmapsAnnotations = firstRevision
+			// allmapsAnnotations = firstRevision
 			if (warpedMapLayer) {
 				map.removeLayer(warpedMapLayer)
 			}
-			addAllmapsLayer(allmapsAnnotations)
+			// addAllmapsLayer(allmapsAnnotations)
 
 			geojsons = ['/overview/geojsons/first-revision.geojson']
 			vectorSource.clear() // Todo: check if layer exists
@@ -241,20 +242,27 @@
 			source: warpedMapSource
 		})
 
+		let mapBoxLayer = new MapboxVector({
+			styleUrl: 'mapbox://styles/eliottmoreau/cld2u07au002k01ql8ku1gx29',
+			accessToken:
+				'pk.eyJ1IjoiZWxpb3R0bW9yZWF1IiwiYSI6ImNsY3N0bWUwcDBlNXYzd3MxaGptMDlyeXgifQ.pXVx5GYbNMBGYDNY_gQZVg'
+		})
+
 		map = new Map({
 			view,
 			layers: [
-				new TileLayer({
-					source: new OSM(),
-					zIndex: 1
-				}),
+				// new TileLayer({
+				// 	source: new OSM(),
+				// 	zIndex: 1
+				// }),
+				mapBoxLayer,
 				vectorLayer,
 				warpedMapLayer
 			],
 			target: 'map'
 		})
 
-		addAllmapsLayer(firstRevision)
+		// addAllmapsLayer(firstRevision)
 		addVectorSource(['/overview/geojsons/first-revision.geojson'])
 
 		// if ($page.url.searchParams.has('project')) {
@@ -271,16 +279,19 @@
 		// }
 
 		map.on('pointermove', function (event) {
-			// @Bert beter maken, typescript error fixen
-			if (selectedFeature !== undefined && selectedFeature.getProperties().project) {
-				selectedFeature.setStyle(selectable)
-				selectedFeature = undefined
-				map.getTargetElement().style.cursor = ''
-			}
-			map.forEachFeatureAtPixel(event.pixel, function (feature) {
-				selectedFeature = feature
-				if (selectedFeature.getProperties().project) {
-					selectedFeature.setStyle(selected)
+			vectorLayer.getFeatures(event.pixel).then(function (features) {
+				let feature = features.length ? features[0] : undefined
+				if (feature == undefined || !feature.getProperties().project) {
+					vectorSource.forEachFeature(function (feature) {
+						let properties = feature.getProperties()
+						if (properties.project) {
+							feature.setStyle(selectable)
+						}
+					})
+					map.getTargetElement().style.cursor = ''
+				}
+				if (feature !== undefined && feature.getProperties().project) {
+					feature.setStyle(selected)
 					map.getTargetElement().style.cursor = 'pointer'
 				}
 			})
@@ -290,7 +301,7 @@
 			vectorLayer.getFeatures(event.pixel).then(function (features) {
 				const feature = features.length ? features[0] : undefined
 				if (feature !== undefined) {
-					let properties = feature.getProperties()
+					const properties = feature.getProperties()
 					if (properties.project) {
 						slideShowID.set(properties.project)
 						changeView()
@@ -327,7 +338,7 @@
 
 	.grid-container {
 		display: grid;
-		grid-template-columns: 1fr 1fr 1fr [panel] 400px;
+		grid-template-columns: 1fr 1fr 1fr [panel] 350px;
 		grid-template-rows: [header] 40px [map] 1fr;
 		width: 100vw;
 		height: 100vh;
