@@ -63,7 +63,7 @@
 	}
 
 	.panel {
-		background-color: white;
+		background-color: rgba(255, 255, 255, 0.8);
 		z-index: 2;
 		border-radius: 10px;
 		border: solid 1px black;
