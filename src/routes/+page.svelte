@@ -38,7 +38,7 @@
 
 	import Slideshow from '$lib/components/Slideshow.svelte'
 	import { kebabCase } from 'lodash-es'
-  import Feature from 'ol/Feature.js'
+	import Feature from 'ol/Feature.js'
 
 	// Declaring changing variables with let and fixed ones with const
 
@@ -81,7 +81,7 @@
 		fill: new Fill({
 			color: 'rgba(0, 0, 255, 0.1)'
 		}),
-    zIndex: 5
+		zIndex: 5
 	})
 
 	const selectable = new Style({
@@ -92,7 +92,7 @@
 		fill: new Fill({
 			color: 'rgba(0, 0, 255, 0.1)'
 		}),
-    zIndex: 4
+		zIndex: 4
 	})
 
 	// Function to fetch external jsons
@@ -114,12 +114,12 @@
 			vectorSource.addFeatures(features)
 		}
 
-    vectorSource.forEachFeature(function (feature) {
-        let properties = feature.getProperties()
-        if (properties.project) {
-          feature.setStyle(selectable)
-        }
-    })
+		vectorSource.forEachFeature(function (feature) {
+			let properties = feature.getProperties()
+			if (properties.project) {
+				feature.setStyle(selectable)
+			}
+		})
 	}
 
 	// Function to add Allmaps layer
@@ -183,7 +183,7 @@
 				allmapsAnnotations = selectedSlide.frontmatter.allmaps.map((item: any) => {
 					return `/projects/${$slideShowID}/annotations/${item.annotation}`
 				})
-        let allmapsAnnotationsReversed = allmapsAnnotations.reverse()
+				let allmapsAnnotationsReversed = allmapsAnnotations.reverse()
 				addAllmapsLayer(allmapsAnnotationsReversed)
 			}
 
@@ -259,16 +259,16 @@
 
 		// if ($page.url.searchParams.has('project')) {
 		//   let project: string = $page.url.searchParams.get('project')
-    //   if ($slidesByProject[project]) {
+		//   if ($slidesByProject[project]) {
 		//     slideShowID.set(project)
-    //     let slide: number = $page.url.searchParams.get('slide')
-    //     let slideCount = $slidesByProject[$slideShowID].length
-    //     if (slide >= 0 && slide <= slideCount) {
-    //       slideIndex.set(slide)
-    //     }
-    //     changeView()
-    //   }
-    // }
+		//     let slide: number = $page.url.searchParams.get('slide')
+		//     let slideCount = $slidesByProject[$slideShowID].length
+		//     if (slide >= 0 && slide <= slideCount) {
+		//       slideIndex.set(slide)
+		//     }
+		//     changeView()
+		//   }
+		// }
 
 		map.on('pointermove', function (event) {
 			// @Bert beter maken, typescript error fixen
@@ -278,21 +278,23 @@
 				map.getTargetElement().style.cursor = ''
 			}
 			map.forEachFeatureAtPixel(event.pixel, function (feature) {
-        selectedFeature = feature
+				selectedFeature = feature
 				if (selectedFeature.getProperties().project) {
-				  selectedFeature.setStyle(selected)
-				  map.getTargetElement().style.cursor = 'pointer'
+					selectedFeature.setStyle(selected)
+					map.getTargetElement().style.cursor = 'pointer'
 				}
 			})
 		})
 
 		map.on('singleclick', function (event) {
-			map.forEachFeatureAtPixel(event.pixel, function (feature) {
-				let properties = selectedFeature.getProperties()
-				if (properties.project) {
-					slideShowID.set(properties.project)
-					changeView()
-          console.log(properties.project)
+			vectorLayer.getFeatures(event.pixel).then(function (features) {
+				const feature = features.length ? features[0] : undefined
+				if (feature !== undefined) {
+					let properties = feature.getProperties()
+					if (properties.project) {
+						slideShowID.set(properties.project)
+						changeView()
+					}
 				}
 			})
 		})
