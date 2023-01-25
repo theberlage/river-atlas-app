@@ -35,25 +35,21 @@
 
 <div class="panel panel-grid-container">
 	<div class="caption">
-		<h1>{selectedSlide.frontmatter.meta.heading}</h1>
-		<div class="body">{@html selectedSlide.html}</div>
+		<p class="project">{selectedSlide.frontmatter.meta.heading}</p>
+		<p class="body">{@html selectedSlide.html}</p>
 	</div>
 	<div class="control-container">
-		<div class="control-item ">
-			<button on:click={goPrev} class="button" type="button">
-				{$slideIndex == 0 ? 'Overview' : 'Previous'}
-			</button>
-		</div>
-		<div class="control-item">
-			<button on:click={goNext} class="button" type="button">
-				{$slideIndex == slideCount - 1 ? 'Overview' : 'Next'}
-			</button>
-		</div>
+		<button class="control-item" on:click={goNext}>
+			{$slideIndex == slideCount - 1 ? 'Back to overview' : 'Next slide'}
+		</button>
+		<button class="control-item" on:click={goPrev}>
+			{$slideIndex == 0 ? 'Back to overview' : 'Previous slide'}
+		</button>
 	</div>
 </div>
 
 <style>
-	@media screen and (max-width: 400px) {
+	@media screen and (max-width: 600px) {
 		.body {
 			display: none;
 		}
@@ -65,10 +61,10 @@
 	.panel {
 		background-color: rgba(255, 255, 255, 0.8);
 		z-index: 2;
-		border-radius: 10px;
-		border: solid 1px black;
-		margin: 20px;
-		padding: 10px;
+		/* border-radius: 10px; */
+		/* border: solid 1px black; */
+		/* margin: 20px; */
+		/* padding: 20px; */
 	}
 
 	.panel-grid-container {
@@ -79,13 +75,50 @@
 		grid-template-rows: 1fr [controls] 100px;
 		min-width: 0;
 		min-height: 0;
+		border-left: 1px solid lightgray;
+	}
+
+	:global(h1) {
+		font-size: 1rem;
+		font-weight: normal;
+	}
+
+	:global(h2) {
+		font-size: 1rem;
+		font-weight: normal;
+	}
+
+	:global(h3) {
+		font-size: 1rem;
+		font-weight: normal;
+	}
+
+	:global(strong) {
+		font-weight: normal;
+	}
+
+	:global(em) {
+		font-style: normal;
 	}
 
 	.caption {
 		grid-column: 1 / 2;
-		grid-row: 1 / 3;
+		grid-row: 1 / 2;
 		overflow: auto;
 		z-index: 2;
+		line-height: 1.3;
+		padding-left: 20px;
+		padding-right: 20px;
+	}
+
+	.body {
+		hyphens: auto;
+		text-align: justify;
+		text-justify: inter-word;
+	}
+
+	.project {
+		font-size: 0.8rem;
 	}
 
 	.control-container {
@@ -94,14 +127,27 @@
 		display: flex;
 		flex-flow: row wrap;
 		justify-content: center;
-		gap: 20px;
-		margin: 20px;
-		align-items: flex-end;
+		align-items: flex-start;
 		z-index: 3;
+		border-top: 1px solid lightgray;
 	}
 
-	.button {
-		width: 100px;
-		height: 35px;
+	.control-item {
+		height: 50%;
+		width: 100%;
+		vertical-align: middle;
+		text-align: center;
+		background-color: transparent;
+		border: none;
+		cursor: pointer;
+	}
+
+	.control-item:hover {
+		background-color: lightgray;
+	}
+
+	.control-item:first-child {
+		border-bottom: 1px solid lightgray;
+		/* border-left: 1px solid lightgray; */
 	}
 </style>

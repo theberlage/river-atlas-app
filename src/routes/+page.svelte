@@ -62,11 +62,13 @@
 		'https://annotations.allmaps.org/manifests/752b29a50403371d'
 	]
 
+  let innerHeight:number
+
 	// Styles for OpenLayers
 
 	const styles = new Style({
 		stroke: new Stroke({
-			color: 'black',
+			color: 'grey',
 			width: 1
 		}),
 		fill: new Fill({
@@ -262,7 +264,7 @@
 			target: 'map'
 		})
 
-		// addAllmapsLayer(firstRevision)
+		addAllmapsLayer(firstRevision)
 		addVectorSource(['/overview/geojsons/first-revision.geojson'])
 
 		// if ($page.url.searchParams.has('project')) {
@@ -312,7 +314,9 @@
 	})
 </script>
 
-<div class="grid-container">
+<svelte:window bind:innerHeight />
+
+<div class="grid-container" style="height:{innerHeight}px;">
 	<div class="header">The Berlage: Project NL</div>
 	{#if $slideShowID !== undefined}
 		<Slideshow on:changeView={changeView} />
@@ -332,6 +336,7 @@
 	:global(html),
 	:global(body) {
 		font-family: ZurichBT, Helvetica Neue, Helvetica, Arial, sans-serif;
+		font-size: 15px;
 		padding: 0;
 		margin: 0;
 	}
@@ -339,12 +344,12 @@
 	.grid-container {
 		display: grid;
 		grid-template-columns: 1fr 1fr 1fr [panel] 350px;
-		grid-template-rows: [header] 40px [map] 1fr;
+		grid-template-rows: [header] 42px [map] 1fr;
 		width: 100vw;
-		height: 100vh;
+    height: 100vh;
 	}
 
-	@media screen and (max-width: 400px) {
+	@media screen and (max-width: 600px) {
 		.grid-container {
 			display: grid;
 			grid-template-columns: [panel] 1fr;
@@ -358,6 +363,8 @@
 		grid-column: 1 / 5;
 		grid-row: header;
 		padding: 10px;
+		font-size: 1.2rem;
+		border-bottom: 1px solid lightgrey;
 	}
 
 	.map {
