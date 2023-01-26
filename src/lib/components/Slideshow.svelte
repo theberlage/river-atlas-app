@@ -36,7 +36,10 @@
 
 <div class="panel panel-grid-container">
 	<div class="caption">
-		<p class="project">{selectedSlide.frontmatter.meta.heading}</p>
+		<p class="project">
+			{selectedSlide.frontmatter.meta.heading}
+			<span class="float">{$slideIndex + 1}/{slideCount}</span>
+		</p>
 		<p class:hidden class="body">{@html selectedSlide.html}</p>
 	</div>
 	<div class="control-container">
@@ -115,6 +118,9 @@
 	.project {
 		font-size: 0.8rem;
 	}
+	.float {
+		float: right;
+	}
 
 	.control-container {
 		grid-column: 1 / 2;
@@ -171,9 +177,9 @@
 		}
 		.control-item:last-child {
 			border-right: 1px solid lightgray;
-      border-top: none
+			border-top: none;
 		}
-    .control-item:first-child {
+		.control-item:first-child {
 			border-bottom: 1px solid lightgray;
 		}
 		.hideshow {
