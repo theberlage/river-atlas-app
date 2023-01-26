@@ -22,7 +22,6 @@
 	// Stores
 
 	import { slidesByProject, slideShowID, slideIndex } from '$lib/components/stores'
-	import { page } from '$app/stores'
 
 	// Allmaps
 
@@ -38,7 +37,6 @@
 	// Components
 
 	import Slideshow from '$lib/components/Slideshow.svelte'
-	import Feature from 'ol/Feature.js'
 
 	// Declaring changing variables with let and fixed ones with const
 

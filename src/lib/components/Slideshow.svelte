@@ -6,6 +6,7 @@
 
 	let slideCount: number
 	let selectedSlide: any
+	let hidden: boolean = false
 
 	$: if ($slideShowID !== undefined) {
 		slideCount = $slidesByProject[$slideShowID].length
@@ -35,15 +36,21 @@
 
 <div class="panel panel-grid-container">
 	<div class="caption">
-		<p class="project">{selectedSlide.frontmatter.meta.heading}</p>
-		<p class="body">{@html selectedSlide.html}</p>
+		<p class="project">
+			{selectedSlide.frontmatter.meta.heading}
+			<span class="float">{$slideIndex + 1}/{slideCount}</span>
+		</p>
+		<p class:hidden class="body">{@html selectedSlide.html}</p>
 	</div>
 	<div class="control-container">
+		<button class="control-item hideshow" on:click={() => (hidden = !hidden)}>
+			{hidden === false ? 'Hide text' : 'Show text'}
+		</button>
 		<button class="control-item" on:click={goNext}>
-			{$slideIndex == slideCount - 1 ? 'Back to overview' : 'Next slide'}
+			{$slideIndex === slideCount - 1 ? 'Back to overview' : 'Next slide'}
 		</button>
 		<button class="control-item" on:click={goPrev}>
-			{$slideIndex == 0 ? 'Back to overview' : 'Previous slide'}
+			{$slideIndex === 0 ? 'Back to overview' : 'Previous slide'}
 		</button>
 	</div>
 </div>
@@ -98,6 +105,10 @@
 		padding-right: 20px;
 	}
 
+	.hidden {
+		display: none;
+	}
+
 	.body {
 		hyphens: auto;
 		text-align: justify;
@@ -106,6 +117,9 @@
 
 	.project {
 		font-size: 0.8rem;
+	}
+	.float {
+		float: right;
 	}
 
 	.control-container {
@@ -131,21 +145,25 @@
 		background-color: lightgray;
 	}
 
-	.control-item:first-child {
-		border-bottom: 1px solid lightgray;
+	.control-item:last-child {
+		border-top: 1px solid lightgray;
+	}
+
+	.hideshow {
+		display: none;
 	}
 
 	@media all and (max-width: 600px) {
-		.body {
-			display: none;
-		}
 		.panel {
 			align-self: end;
+			min-width: 0;
+			min-height: 0;
+			max-height: 80%;
 		}
 		.panel-grid-container {
-			grid-template-rows: 1fr [controls] 50px;
+			grid-template-rows: 1fr [controls] 100px;
 			border-top: 1px solid lightgray;
-      border-left: none;
+			border-left: none;
 		}
 		.project {
 			font-size: 1rem;
@@ -154,12 +172,20 @@
 			flex-direction: row-reverse;
 		}
 		.control-item {
-			height: 100%;
+			height: 50%;
 			width: 50%;
 		}
+		.control-item:last-child {
+			border-right: 1px solid lightgray;
+			border-top: none;
+		}
 		.control-item:first-child {
-			border-bottom: none;
-			border-left: 1px solid lightgray;
+			border-bottom: 1px solid lightgray;
+		}
+		.hideshow {
+			display: block;
+			width: 100%;
+			height: 50%;
 		}
 	}
 </style>
