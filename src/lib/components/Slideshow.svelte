@@ -139,8 +139,8 @@
 		background-color: lightgray;
 	}
 
-	.control-item:first-child {
-		border-bottom: 1px solid lightgray;
+	.control-item:last-child {
+		border-top: 1px solid lightgray;
 	}
 
 	.hideshow {
@@ -171,6 +171,10 @@
 		}
 		.control-item:last-child {
 			border-right: 1px solid lightgray;
+      border-top: none
+		}
+    .control-item:first-child {
+			border-bottom: 1px solid lightgray;
 		}
 		.hideshow {
 			display: block;
