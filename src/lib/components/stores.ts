@@ -3,7 +3,6 @@ import { groupBy } from 'lodash-es'
 import type { MarkdownSlide } from '$lib/shared/types.js'
 
 // Importing Markdown and frontmatter for slides
-// @Bert: toevoegen aan object: georef annotaties + geojson
 // @Bert: toevoegen: markdown + annotations + geojson in mapje overview
 
 const markdownSlides = import.meta.glob<MarkdownSlide>('$contents/projects/*/slides/*.md', {
