@@ -49,22 +49,9 @@
 </div>
 
 <style>
-	@media screen and (max-width: 600px) {
-		.body {
-			display: none;
-		}
-		.panel {
-			align-self: end;
-		}
-	}
-
 	.panel {
 		background-color: rgba(255, 255, 255, 0.8);
 		z-index: 2;
-		/* border-radius: 10px; */
-		/* border: solid 1px black; */
-		/* margin: 20px; */
-		/* padding: 20px; */
 	}
 
 	.panel-grid-container {
@@ -135,11 +122,9 @@
 	.control-item {
 		height: 50%;
 		width: 100%;
-		vertical-align: middle;
-		text-align: center;
 		background-color: transparent;
 		border: none;
-		cursor: pointer;
+		font-size: 1rem;
 	}
 
 	.control-item:hover {
@@ -148,6 +133,33 @@
 
 	.control-item:first-child {
 		border-bottom: 1px solid lightgray;
-		/* border-left: 1px solid lightgray; */
+	}
+
+	@media all and (max-width: 600px) {
+		.body {
+			display: none;
+		}
+		.panel {
+			align-self: end;
+		}
+		.panel-grid-container {
+			grid-template-rows: 1fr [controls] 50px;
+			border-top: 1px solid lightgray;
+      border-left: none;
+		}
+		.project {
+			font-size: 1rem;
+		}
+		.control-container {
+			flex-direction: row-reverse;
+		}
+		.control-item {
+			height: 100%;
+			width: 50%;
+		}
+		.control-item:first-child {
+			border-bottom: none;
+			border-left: 1px solid lightgray;
+		}
 	}
 </style>

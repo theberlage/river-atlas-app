@@ -38,7 +38,6 @@
 	// Components
 
 	import Slideshow from '$lib/components/Slideshow.svelte'
-	import { kebabCase } from 'lodash-es'
 	import Feature from 'ol/Feature.js'
 
 	// Declaring changing variables with let and fixed ones with const
@@ -349,7 +348,7 @@
     height: 100vh;
 	}
 
-	@media screen and (max-width: 600px) {
+	@media all and (max-width: 600px) {
 		.grid-container {
 			display: grid;
 			grid-template-columns: [panel] 1fr;
