@@ -7,10 +7,14 @@
 	let slideCount: number
 	let selectedSlide: any
 	let hidden: boolean = false
+	let annotations: any | undefined = undefined
 
 	$: if ($slideShowID !== undefined) {
 		slideCount = $slidesByProject[$slideShowID].length
 		selectedSlide = $slidesByProject[$slideShowID][$slideIndex]
+		if (selectedSlide.frontmatter.allmaps) {
+			annotations = selectedSlide.frontmatter.allmaps
+		}
 	}
 
 	function goNext() {
@@ -35,12 +39,21 @@
 </script>
 
 <div class="panel panel-grid-container">
-	<div class="caption">
+	<div class="description">
 		<p class="project">
 			{selectedSlide.frontmatter.meta.heading}
 			<span class="float">{$slideIndex + 1}/{slideCount}</span>
 		</p>
 		<p class:hidden class="body">{@html selectedSlide.html}</p>
+		<ul>
+			{#if annotations}
+				{#each annotations as annotation}
+					<li>
+						{annotation.label}
+					</li>
+				{/each}
+			{/if}
+		</ul>
 	</div>
 	<div class="control-container">
 		<button class="control-item hideshow" on:click={() => (hidden = !hidden)}>
@@ -73,17 +86,17 @@
 	}
 
 	:global(h1) {
-		font-size: 1rem;
+		font-size: 1.3rem;
 		font-weight: normal;
 	}
 
 	:global(h2) {
-		font-size: 1rem;
+		font-size: 1.3rem;
 		font-weight: normal;
 	}
 
 	:global(h3) {
-		font-size: 1rem;
+		font-size: 1.3rem;
 		font-weight: normal;
 	}
 
@@ -95,7 +108,21 @@
 		font-style: normal;
 	}
 
-	.caption {
+	ul {
+		font-size: 0.8rem;
+		margin-left: 0;
+    padding-left: 1em;
+    list-style-type: none;
+  }
+
+	ul > li:before {
+    display: inline-block;
+		content: '–';
+    width: 1em;
+    margin-left: -1em;
+	}
+
+	.description {
 		grid-column: 1 / 2;
 		grid-row: 1 / 2;
 		overflow: auto;
