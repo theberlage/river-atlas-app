@@ -44,16 +44,18 @@
 			{selectedSlide.frontmatter.meta.heading}
 			<span class="float">{$slideIndex + 1}/{slideCount}</span>
 		</p>
-		<p class:hidden class="body">{@html selectedSlide.html}</p>
-		<ul>
-			{#if annotations}
-				{#each annotations as annotation}
-					<li>
-						{annotation.label}
-					</li>
-				{/each}
-			{/if}
-		</ul>
+		<div class:hidden class="body">
+			{@html selectedSlide.html}
+			<ul>
+				{#if annotations}
+					{#each annotations as annotation}
+						<li>
+							{annotation.label}
+						</li>
+					{/each}
+				{/if}
+			</ul>
+		</div>
 	</div>
 	<div class="control-container">
 		<button class="control-item hideshow" on:click={() => (hidden = !hidden)}>
@@ -111,15 +113,15 @@
 	ul {
 		font-size: 0.8rem;
 		margin-left: 0;
-    padding-left: 1em;
-    list-style-type: none;
-  }
+		padding-left: 1em;
+		list-style-type: none;
+	}
 
 	ul > li:before {
-    display: inline-block;
+		display: inline-block;
 		content: '–';
-    width: 1em;
-    margin-left: -1em;
+		width: 1em;
+		margin-left: -1em;
 	}
 
 	.description {
