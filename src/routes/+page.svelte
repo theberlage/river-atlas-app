@@ -313,6 +313,10 @@
 
 <svelte:window bind:innerHeight />
 
+<svelte:head>
+  <title>River Atlas</title>
+</svelte:head>
+
 <div class="grid-container" style="height:{innerHeight}px;">
 	<div class="header">The Berlage: Project NL</div>
 	{#if $slideShowID !== undefined}
