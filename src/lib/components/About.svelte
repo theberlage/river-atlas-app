@@ -4,7 +4,7 @@
 
 <div class="about">
 	<div class="body">
-		<h1>{$aboutPage[0][1].frontmatter.title}</h1>
+		<p class="project">{$aboutPage[0][1].frontmatter.title}</p>
 		<div class="html">{@html $aboutPage[0][1].html}</div>
 	</div>
 </div>
@@ -23,10 +23,15 @@
 		display: flex;
 		justify-content: center;
 		align-items: center;
+    line-height: 1.3;
 	}
 	.body {
 		max-width: 600px;
 		max-height: 100%;
+	}
+  .project {
+		font-size: 0.8rem;
+    margin-bottom: 0;
 	}
 	.html {
 		hyphens: auto;
