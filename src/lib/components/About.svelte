@@ -25,14 +25,14 @@
 		align-items: center;
 	}
 	.body {
-		max-width: 800px;
+		max-width: 600px;
 		max-height: 100%;
 	}
 	.html {
 		hyphens: auto;
 		text-align: justify;
 		text-justify: inter-word;
-		columns: 2;
+		columns: 1;
 	}
 	:global(a) {
 		color: blue;
