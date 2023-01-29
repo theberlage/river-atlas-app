@@ -147,9 +147,6 @@
 	.project {
 		font-size: 0.8rem;
 	}
-	.float {
-		float: right;
-	}
 
 	.control-container {
 		grid-column: 1 / 2;
@@ -168,6 +165,7 @@
 		background-color: transparent;
 		border: none;
 		font-size: 1rem;
+		color: blue;
 	}
 
 	.control-item:hover {

@@ -9,6 +9,10 @@ const markdownSlides = import.meta.glob<MarkdownSlide>('$contents/projects/*/sli
   eager: true
 })
 
+const aboutMarkdown = import.meta.glob<MarkdownSlide>('$contents/overview/about/*.md', {
+  eager: true
+})
+
 const slides = Object.entries(markdownSlides).map(([id, slide]) => {
   let project = ''
   let slideNumber = -1
@@ -30,6 +34,7 @@ const slides = Object.entries(markdownSlides).map(([id, slide]) => {
 // Grouping slides by project
 
 export const slidesByProject = readable(groupBy(slides, (slide) => slide.project))
+export const aboutPage = readable(Object.entries(aboutMarkdown))
 
 // Writable stores
 

@@ -37,6 +37,7 @@
 	// Components
 
 	import Slideshow from '$lib/components/Slideshow.svelte'
+	import About from '$lib/components/About.svelte'
 
 	// Declaring changing variables with let and fixed ones with const
 
@@ -59,7 +60,8 @@
 		'https://annotations.allmaps.org/manifests/752b29a50403371d'
 	]
 
-  let innerHeight:number
+	let innerHeight: number
+	let about: boolean = false
 
 	// Styles for OpenLayers
 
@@ -309,16 +311,40 @@
 			})
 		})
 	})
+
+	function goHome(id: string | undefined) {
+		slideShowID.set(id)
+		about = false
+		changeView()
+	}
 </script>
 
 <svelte:window bind:innerHeight />
 
 <svelte:head>
-  <title>River Atlas</title>
+	<title>River Atlas</title>
 </svelte:head>
 
 <div class="grid-container" style="height:{innerHeight}px;">
-	<div class="header">The Berlage: Project NL</div>
+	<div class="header">
+		<span class="link" on:click={() => goHome(undefined)} on:keypress={() => goHome(undefined)}>
+			River Atlas</span
+		>
+		{#if $slideShowID === undefined}
+			<span
+				class="float link"
+				on:click={() => (about = !about)}
+				on:keypress={() => (about = !about)}
+			>
+				{about === false ? 'About' : 'Back to overview'}
+			</span>
+		{:else}
+			<span class="float grey">About</span>
+		{/if}
+	</div>
+	{#if about}
+		<About />
+	{/if}
 	{#if $slideShowID !== undefined}
 		<Slideshow on:changeView={changeView} />
 	{/if}
@@ -342,12 +368,16 @@
 		margin: 0;
 	}
 
+	:global(.float) {
+		float: right;
+	}
+
 	.grid-container {
 		display: grid;
 		grid-template-columns: 1fr 1fr 1fr [panel] 350px;
 		grid-template-rows: [header] 42px [map] 1fr;
 		width: 100vw;
-    height: 100vh;
+		height: 100vh;
 	}
 
 	@media all and (max-width: 600px) {
@@ -366,6 +396,14 @@
 		padding: 10px;
 		font-size: 1.2rem;
 		border-bottom: 1px solid lightgrey;
+	}
+
+	.link {
+		cursor: pointer;
+	}
+
+	.grey {
+		color: grey;
 	}
 
 	.map {
