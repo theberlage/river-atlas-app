@@ -334,7 +334,7 @@
         ],
         "selector": {
           "type": "SvgSelector",
-          "value": "<svg width=\"11281\" height=\"7849\"><polygon points=\"0,0 0,7849 11137,7863 11159,-13\" /></svg>"
+          "value": "<svg width=\"11281\" height=\"7849\"><polygon points=\"0,0 0,7849 10107,7833 10095,6915 10130,911 10132,5\" /></svg>"
         }
       },
       "body": {
