@@ -39,6 +39,11 @@
 		text-justify: inter-word;
 		columns: 1;
 	}
+  :global(ul) {
+		margin-left: 0;
+		padding-left: 0;
+		list-style-type: none;
+	}
 	:global(a) {
 		color: blue;
 		text-decoration: none;
