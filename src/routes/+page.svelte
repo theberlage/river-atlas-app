@@ -48,20 +48,24 @@
 	let warpedMapLayer: WarpedMapLayer
 	let vectorSource: VectorSource
 	let vectorLayer: VectorLayer<VectorSource>
-	let initialViewCoords = fromLonLat([5.054, 51.965])
 
 	let slideCount: number
 	let selectedSlide: any = undefined
 	let selectedFeature: FeatureLike | undefined
 
 	let allmapsAnnotations: Array<String>
+
+	let innerHeight: number
+	let about: boolean = false
+
+	// Overview constants
+
 	const firstRevision: Array<String> = [
 		'https://annotations.allmaps.org/manifests/f940b520d16381d4',
 		'https://annotations.allmaps.org/manifests/752b29a50403371d'
 	]
-
-	let innerHeight: number
-	let about: boolean = false
+	const firstRevisionVector: Array<string> = ['/overview/geojsons/first-revision.geojson']
+	const initialViewCoords = fromLonLat([5.115, 51.882])
 
 	// Styles for OpenLayers
 
@@ -201,7 +205,7 @@
 
 			animateView(extent, rotation)
 		} else if (slide === undefined) {
-			bbox = [4.225369, 51.750297, 6.235737, 52.03771]
+			bbox = [4.018731, 51.737203, 6.213143, 52.027794]
 			extent = calculateExtent(bbox)
 			rotation = 0
 
@@ -211,7 +215,7 @@
 			}
 			addAllmapsLayer(allmapsAnnotations)
 
-			geojsons = ['/overview/geojsons/first-revision.geojson']
+			geojsons = firstRevisionVector
 			vectorSource.clear() // Todo: check if layer exists
 			addVectorSource(geojsons)
 
@@ -228,7 +232,7 @@
 
 		view = new View({
 			center: initialViewCoords,
-			zoom: 9
+			zoom: 8
 		})
 
 		vectorSource = new VectorSource()
@@ -264,7 +268,8 @@
 		})
 
 		addAllmapsLayer(firstRevision)
-		addVectorSource(['/overview/geojsons/first-revision.geojson'])
+		addVectorSource(firstRevisionVector)
+		changeView()
 
 		// if ($page.url.searchParams.has('project')) {
 		//   let project: string = $page.url.searchParams.get('project')
@@ -312,8 +317,9 @@
 		})
 	})
 
-	function goHome(id: string | undefined) {
-		slideShowID.set(id)
+	function goHome() {
+		slideShowID.set(undefined)
+		slideIndex.set(0)
 		about = false
 		changeView()
 	}
@@ -327,7 +333,7 @@
 
 <div class="grid-container" style="height:{innerHeight}px;">
 	<div class="header">
-		<span class="link" on:click={() => goHome(undefined)} on:keypress={() => goHome(undefined)}>
+		<span class="link" on:click={() => goHome()} on:keypress={() => goHome()}>
 			The Berlage: River Atlas</span
 		>
 		{#if $slideShowID === undefined}
