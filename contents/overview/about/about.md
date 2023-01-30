@@ -12,24 +12,24 @@ The exhibition consists of original prints of the river maps from different peri
 This atlas navigates some clues about the types of challenges that may be faced in the near future, and how to identify the complex web of relationships they would be entangled in and the arsenal of tools that may be available for acting on them.
 
 Contributions by:
-- Chen Chaomin (CN)
-- Nicolaos Charalambous (CY)
-- Sneha Gireesh (IN)
-- Thomas Gkikas (GR)
-- Ujal Gorchu (AZ)
-- Eliott Moreau (FR/US)
-- Ana Nuno De Buen (MX/ES)
-- Kelly Olinger (US)
-- Maria Stergiou (GR)
-- Lenneke Slangen (NL)
-- Yuhe Tan (CN)
-- Felix Verheyden (BE)
-- Nien Heng Yang (TW)
-- Han Yang (CN)
+Nicolaos Charalambous (CY)
+Chaomin Chen (CN)
+Sneha Gireesh (IN)
+Thomas Gkikas (GR)
+Ujal Gorchu (AZ)
+Eliott Moreau (FR)
+Ana Nuño De Buen (MX)
+Kelly Olinger (US)
+Maria Stergiou (GR)
+Lenneke Slangen (NL)
+Yuhe Tan (CN)
+Felix Verheyden (BE)
+Nien Heng Yang (TW)
+Han Yang (CN)
 
 Course led by Sanne van den Breemer with Juan Benavides and Benjamin Groothuijse.
 
-With special thanks to Robbert de Koning, Ilmar Hurkxkens, Fransje Hooimeijer, Reinout Klaarenbeek, Mathilde Maijer, Tom MacWright, Jules Schoonman, Bert Spaan and  The Gelders Archive.
+With special thanks to Robbert de Koning, Ilmar Hurkxkens, Fransje Hooimeijer, Reinout Klaarenbeek, Mathilde Maijer, Tom MacWright, Jules Schoonman, Bert Spaan and The Gelders Archive.
 
 Allmaps is a set of open source tools for curating, georeferencing and exploring digitized maps. It works on the basis of the International Image Interoperability Framework (IIIF), which is implemented by an increasing number of libraries and archives worldwide in order to share their digital collections. The Allmaps Editor can be used to annotate images with geographic information. Subsequently the map can be loaded in a map interface and compared with other maps in the Allmaps Viewer, without the need for derivatives or additional server infrastructure. The Berlage collaborated with Allmaps on the River Atlas.
 
