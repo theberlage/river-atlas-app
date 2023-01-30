@@ -1,6 +1,8 @@
 ---
-title: River Atlas, Project NL
+title: The Berlage Center for Advanced Studies in Architecture and Urban Design
 ---
+## Project NL
+
 River Atlas culminates the fall 2023 incarnation of the Berlage’s long-standing Project NL course organized in collaboration with TU Delft Library and Allmaps. An attempt to understand the river landscapes of the Netherlands—not as givens but rather products of complex sets of decisions, negotiations, aspirations, and at times arbitrary events—it traces broader historical shifts such as the Enlightenment’s effort to engineer nature, moments of hesitation, and gradual aspirations for coexistence.
 
 A range of cartographic documents, archival materials and historical records are used to document spaces, buildings, infrastructure, landscapes, and how these transformed over time. From the first comprehensive cartographic documentation of the Netherlands’s river landscape in the 1830s—led by B. H. Goudriaan—to the late twentieth century “New Style” maps, Dutch river maps were a primary source of investigation. They were studied through the lens of river dynamics and regulation, trade and transportation, extraction and discharge and inhabitation and recreation. Following the dawn of enlightened thought this set of cartography documents—consisting of hundreds of maps informing the trained eye about their historical context, purpose of execution, their patrons and beneficiaries—was the first attempt at measuring, quantifying, and assessing the river in order to start planning into the future. The availability of new digital tools such as Allmaps and Placemark, made it possible to work with these documents. Operations that would have taken an unfeasible amount of time and tedious labor—such as overlaying, duplicating, masking, and juxtaposing these maps in the same physically accurate space—are now possible with the help of these open-source tools.
