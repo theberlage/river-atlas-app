@@ -29,12 +29,8 @@ Felix Verheyden (BE)
 Nien Heng Yang (TW)
 Han Yang (CN)
 
-Project NL River Atlas tutors:
-Juan Benavides
-Sanne van den Breemer
-Benjamin Groothuijse
+Course led by Sanne van den Breemer with Juan Benavides and Benjamin Groothuijse
 
-With Special Thanks to:
-Robbert de Koning, Ilmar Hurkxkens, Fransje Hooimeijer, Reinout Klaarenbeek, Mathilde Maijer, Tom MacWright, Jules Schoonman, Bert Spaan and  The Gelders Archive
+With Special Thanks to Robbert de Koning, Ilmar Hurkxkens, Fransje Hooimeijer, Reinout Klaarenbeek, Mathilde Maijer, Tom MacWright, Jules Schoonman, Bert Spaan and  The Gelders Archive
 
 Source code
