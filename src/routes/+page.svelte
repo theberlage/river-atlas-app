@@ -38,6 +38,7 @@
 
 	import Slideshow from '$lib/components/Slideshow.svelte'
 	import About from '$lib/components/About.svelte'
+	import Berlage from '$lib/components/Berlage.svelte'
 
 	// Declaring changing variables with let and fixed ones with const
 
@@ -323,9 +324,25 @@
 		about = false
 		changeView()
 	}
+
+	let bear: boolean = false
+
+	function onKeyDown(e: any) {
+		switch (e.keyCode) {
+			case 66:
+				bear = true
+		}
+	}
+
+	function onKeyUp(e: any) {
+		switch (e.keyCode) {
+			case 66:
+				bear = false
+		}
+	}
 </script>
 
-<svelte:window bind:innerHeight />
+<svelte:window bind:innerHeight on:keydown={onKeyDown} on:keyup={onKeyUp} />
 
 <svelte:head>
 	<title>River Atlas</title>
@@ -353,6 +370,9 @@
 	{/if}
 	{#if $slideShowID !== undefined}
 		<Slideshow on:changeView={changeView} />
+	{/if}
+	{#if bear}
+		<Berlage />
 	{/if}
 	<div id="map" class="map" />
 </div>
