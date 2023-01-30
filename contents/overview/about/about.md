@@ -1,5 +1,5 @@
 ---
-title: Project NL
+title: Project NL River Atlas
 ---
 Descriptive text about Project NL (500 words)
 The River Atlas culminates the current incarnation of the Berlage’s long-standing Project NL course in a collaboration with TU Delft’s Department of Academic Heritage, Allmaps, Placemark. It is an attempt to understand the Dutch river landscapes not as givens but rather products of complex sets of decisions, negotiations, aspirations, and—at times—arbitrary events. It traces these decisions in relation to broader historical shifts such as the Enlightenment, our subsequent effort to engineer nature, moments of hesitation and gradual aspirations for coexistence. 
@@ -11,22 +11,28 @@ The exhibition layout consists of original prints of the river maps from differe
 This atlas is in no way comprehensive but as a tool for navigation it give us some clues about the types of challenges we may have to face in the near future, how to identify the complex web of relationships they would be entangled in and the arsenal of tools that may be available to us for acting on them. 
 
 
-Student list
-Chen Chaomin
-Nicolaos Charalambous
-Sneha Gireesh
-Thomas Gkikas
-Ujal Gorchu
-Eliott Moreau
-Ana Nuno De Buen
-Kelly Olinger	 	
-Maria Stergiou
-Lenneke Slangen	
-Yuhe Tan
-Felix Verheyden	
-Nien Heng Yang
-Han Yang
+Contributions by:
+Chen Chaomin (CN)
+Nicolaos Charalambous (CY)
+Sneha Gireesh (IN)
+Thomas Gkikas (GR)
+Ujal Gorchu (AZ)
+Eliott Moreau (FR/US)
+Ana Nuno De Buen (MX/ES)
+Kelly Olinger (US)
+Maria Stergiou (GR)
+Lenneke Slangen (NL)
+Yuhe Tan (CN)
+Felix Verheyden (BE)
+Nien Heng Yang (TW)
+Han Yang (CN)
 
-Credits
+Project NL River Atlas tutors:
+Juan Benavides
+Sanne van den Breemer
+Benjamin Groothuijse
+
+With Special Thanks to:
+Robbert de Koning, Ilmar Hurkxkens, Fransje Hooimeijer, Reinout Klaarenbeek, Mathilde Maijer, Tom MacWright, Jules Schoonman, Bert Spaan and  The Gelders Archive
 
 Source code
