@@ -12,7 +12,7 @@ This atlas navigates some clues about the types of challenges that may be faced 
 
 
 Contributions by:
-Chen Chaomin (CN)
+Chaomin Chen (CN)
 Nicolaos Charalambous (CY)
 Sneha Gireesh (IN)
 Thomas Gkikas (GR)
