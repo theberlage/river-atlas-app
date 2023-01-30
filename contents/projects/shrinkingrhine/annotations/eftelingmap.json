@@ -62,8 +62,8 @@
             "geometry": {
               "type": "Point",
               "coordinates": [
-                4.5034182,
-                51.9167676
+                4.5031828,
+                51.9166683
               ]
             }
           },
@@ -87,15 +87,15 @@
             "type": "Feature",
             "properties": {
               "pixelCoords": [
-                911,
-                1304
+                909,
+                1419
               ]
             },
             "geometry": {
               "type": "Point",
               "coordinates": [
-                4.4972303,
-                51.913286
+                4.4985917,
+                51.9140463
               ]
             }
           },
