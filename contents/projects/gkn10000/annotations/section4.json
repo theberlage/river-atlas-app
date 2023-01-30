@@ -5,7 +5,7 @@
     ],
     "items": [
         {
-            "id": "2b526a0fa53b8a0c",
+            "id": "538c9c64f6679c9a",
             "type": "Annotation",
             "@context": [
                 "http://www.w3.org/ns/anno.jsonld",
@@ -24,7 +24,7 @@
                 ],
                 "selector": {
                     "type": "SvgSelector",
-                    "value": "<svg width=\"7418\" height=\"1750\"><polygon points=\"3709,-1 6187,3 6194,880 3712,871\" /></svg>"
+                    "value": "<svg width=\"7418\" height=\"1750\"><polygon points=\"6198,-1 7423,4 7419,1764 6176,1760\" /></svg>"
                 }
             },
             "body": {
@@ -39,15 +39,15 @@
                         "type": "Feature",
                         "properties": {
                             "pixelCoords": [
-                                3702,
-                                1
+                                6775,
+                                632
                             ]
                         },
                         "geometry": {
                             "type": "Point",
                             "coordinates": [
-                                5.6746706,
-                                51.8987515
+                                5.6706415,
+                                51.9038069
                             ]
                         }
                     },
@@ -55,15 +55,15 @@
                         "type": "Feature",
                         "properties": {
                             "pixelCoords": [
-                                3712,
-                                857
+                                7356,
+                                1724
                             ]
                         },
                         "geometry": {
                             "type": "Point",
                             "coordinates": [
-                                5.6753068,
-                                51.8984774
+                                5.6743474,
+                                51.9030883
                             ]
                         }
                     },
@@ -71,15 +71,15 @@
                         "type": "Feature",
                         "properties": {
                             "pixelCoords": [
-                                6180,
-                                859
+                                6238,
+                                1711
                             ]
                         },
                         "geometry": {
                             "type": "Point",
                             "coordinates": [
-                                5.6763811,
-                                51.8994146
+                                5.6718903,
+                                51.9015889
                             ]
                         }
                     }
