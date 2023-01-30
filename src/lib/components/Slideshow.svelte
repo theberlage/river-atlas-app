@@ -36,7 +36,35 @@
 		}
 		dispatch('changeView')
 	}
+
+	function goHome() {
+		slideShowID.set(undefined)
+		slideIndex.set(0)
+		dispatch('changeView')
+	}
+
+	// up = 38
+	// down = 40
+	// right = 39
+	// left = 37
+  // esc = 27
+
+	function onKeyDown(e: any) {
+		switch (e.keyCode) {
+			case 27:
+				goHome()
+				break
+			case 37:
+				goPrev()
+				break
+			case 39:
+				goNext()
+				break
+		}
+	}
 </script>
+
+<svelte:window on:keydown|preventDefault={onKeyDown} />
 
 <div class="panel panel-grid-container">
 	<div class="description">
@@ -114,9 +142,9 @@
 		font-size: 0.8rem;
 	}
 
-  ul > li {
-    padding-bottom: 1rem;;
-  }
+	ul > li {
+		padding-bottom: 1rem;
+	}
 
 	.description {
 		grid-column: 1 / 2;

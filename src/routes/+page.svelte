@@ -334,7 +334,7 @@
 <div class="grid-container" style="height:{innerHeight}px;">
 	<div class="header">
 		<span class="link" on:click={() => goHome()} on:keypress={() => goHome()}>
-			The Berlage: River Atlas</span
+			<span class="hidden">The Berlage: </span>River Atlas</span
 		>
 		{#if $slideShowID === undefined}
 			<span
@@ -393,6 +393,9 @@
 			grid-template-rows: [header] 40px [map] 1fr;
 			width: 100vw;
 			height: 100vh;
+		}
+		.hidden {
+			display: none;
 		}
 	}
 
