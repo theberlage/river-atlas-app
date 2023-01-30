@@ -13,7 +13,7 @@
 	.about {
 		grid-column: 1 / 5;
 		grid-row: map;
-		background-color: rgba(255, 255, 255, 0.8);
+		background-color: rgba(255, 255, 255, 0.9);
 		padding-left: 20px;
 		padding-right: 20px;
 		min-width: 0;

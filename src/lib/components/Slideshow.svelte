@@ -72,7 +72,7 @@
 
 <style>
 	.panel {
-		background-color: rgba(255, 255, 255, 0.8);
+		background-color: rgba(255, 255, 255, 0.9);
 		z-index: 2;
 	}
 
@@ -113,15 +113,19 @@
 	ul {
 		font-size: 0.8rem;
 		margin-left: 0;
-		padding-left: 1em;
+		padding-left: 0;
 		list-style-type: none;
 	}
 
+  ul > li {
+    padding-bottom: 1rem;;
+  }
+
 	ul > li:before {
-		display: inline-block;
+		/* display: inline-block;
 		content: '–';
 		width: 1em;
-		margin-left: -1em;
+		margin-left: -1em; */
 	}
 
 	.description {
@@ -139,9 +143,9 @@
 	}
 
 	.body {
-		hyphens: auto;
+		/* hyphens: auto;
 		text-align: justify;
-		text-justify: inter-word;
+		text-justify: inter-word; */
 	}
 
 	.project {

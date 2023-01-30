@@ -77,22 +77,22 @@
 
 	const selected = new Style({
 		stroke: new Stroke({
-			color: 'blue',
-			width: 0
+			color: 'black',
+			width: 1
 		}),
 		fill: new Fill({
-			color: 'rgba(0, 0, 255, 0.6)'
+			color: 'rgba(0, 255, 255, 0.2)'
 		}),
 		zIndex: 5
 	})
 
 	const selectable = new Style({
 		stroke: new Stroke({
-			color: 'blue',
-			width: 0
+			color: 'rgba(0, 0, 0, 1)',
+			width: 1
 		}),
 		fill: new Fill({
-			color: 'rgba(0, 0, 255, 1)'
+			color: 'rgba(0, 255, 255, 0.6)'
 		}),
 		zIndex: 4
 	})
@@ -205,11 +205,11 @@
 			extent = calculateExtent(bbox)
 			rotation = 0
 
-			// allmapsAnnotations = firstRevision
+			allmapsAnnotations = firstRevision
 			if (warpedMapLayer) {
 				map.removeLayer(warpedMapLayer)
 			}
-			// addAllmapsLayer(allmapsAnnotations)
+			addAllmapsLayer(allmapsAnnotations)
 
 			geojsons = ['/overview/geojsons/first-revision.geojson']
 			vectorSource.clear() // Todo: check if layer exists
@@ -328,7 +328,7 @@
 <div class="grid-container" style="height:{innerHeight}px;">
 	<div class="header">
 		<span class="link" on:click={() => goHome(undefined)} on:keypress={() => goHome(undefined)}>
-			River Atlas</span
+			The Berlage: River Atlas</span
 		>
 		{#if $slideShowID === undefined}
 			<span
@@ -374,7 +374,7 @@
 
 	.grid-container {
 		display: grid;
-		grid-template-columns: 1fr 1fr 1fr [panel] 350px;
+		grid-template-columns: 1fr 1fr 1fr [panel] 400px;
 		grid-template-rows: [header] 42px [map] 1fr;
 		width: 100vw;
 		height: 100vh;
