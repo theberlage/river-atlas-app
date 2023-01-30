@@ -14,20 +14,20 @@ This atlas navigates some clues about the types of challenges that may be faced 
 _River Atlas will be exhibited in the Department of Architecture corridor, located on the first floor of the TU Delft’s [Faculty of Architecture and the Built Environment](https://www.tudelft.nl/bk/)’s eastern wing, from Tuesday, January 31 to Wednesday, March 1._
 
 Contributions by:
-- Chen Chaomin (CN)
-- Nicolaos Charalambous (CY)
-- Sneha Gireesh (IN)
-- Thomas Gkikas (GR)
-- Ujal Gorchu (AZ)
-- Eliott Moreau (FR/US)
-- Ana Nuno De Buen (MX/ES)
-- Kelly Olinger (US)
-- Maria Stergiou (GR)
-- Lenneke Slangen (NL)
-- Yuhe Tan (CN)
-- Felix Verheyden (BE)
-- Nien Heng Yang (TW)
-- Han Yang (CN)
+Nicolaos Charalambous (CY)
+Chaomin Chen (CN)
+Sneha Gireesh (IN)
+Thomas Gkikas (GR)
+Ujal Gorchu (AZ)
+Eliott Moreau (FR)
+Ana Nuño De Buen (MX)
+Kelly Olinger (US)
+Maria Stergiou (GR)
+Lenneke Slangen (NL)
+Yuhe Tan (CN)
+Felix Verheyden (BE)
+Nien Heng Yang (TW)
+Han Yang (CN)
 
 Teaching team: Sanne van den Breemer, Juan Benavides, Benjamin Groothuijse and Jules Schoonman.
 
