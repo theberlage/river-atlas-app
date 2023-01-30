@@ -1,21 +1,36 @@
 ---
-title: "The Berlage: Project NL"
+title: River Atlas, Project NL
 ---
-## River atlas
+River Atlas culminates the fall 2023 incarnation of the Berlage’s long-standing Project NL course organized in collaboration with TU Delft Library and Allmaps. An attempt to understand the river landscapes of the Netherlands—not as givens but rather products of complex sets of decisions, negotiations, aspirations, and at times arbitrary events—it traces broader historical shifts such as the Enlightenment’s effort to engineer nature, moments of hesitation, and gradual aspirations for coexistence.
 
-Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nunc dapibus euismod eleifend. Praesent cursus non diam tincidunt pellentesque. In ut lacus ac lectus aliquam suscipit. Nunc sem quam, tempus sit amet sollicitudin ut, facilisis vitae eros. Nam in erat tempus, bibendum turpis eget, imperdiet risus. Etiam at odio nec libero ultricies dignissim vitae nec lectus. Maecenas tortor nisi, placerat eget ornare vel, dignissim et justo. Nam posuere quam vel massa tempus, eu porta turpis sollicitudin. Etiam nec ullamcorper purus. Fusce vel neque felis. Nunc at metus arcu. Fusce vulputate suscipit diam, ac tempor ipsum suscipit quis. Sed eu elit leo.
+A range of cartographic documents, archival materials and historical records are used to document spaces, buildings, infrastructure, landscapes, and how these transformed over time. From the first comprehensive cartographic documentation of the Netherlands’s river landscape in the 1830s—led by B. H. Goudriaan—to the late twentieth century “New Style” maps, Dutch river maps were a primary source of investigation. They were studied through the lens of river dynamics and regulation, trade and transportation, extraction and discharge and inhabitation and recreation. Following the dawn of enlightened thought this set of cartography documents—consisting of hundreds of maps informing the trained eye about their historical context, purpose of execution, their patrons and beneficiaries—was the first attempt at measuring, quantifying, and assessing the river in order to start planning into the future. The availability of new digital tools such as Allmaps and Placemark, made it possible to work with these documents. Operations that would have taken an unfeasible amount of time and tedious labor—such as overlaying, duplicating, masking, and juxtaposing these maps in the same physically accurate space—are now possible with the help of these open-source tools.
 
-Mauris nibh felis, luctus at nunc ornare, tempor interdum lorem. Morbi consectetur finibus ligula ut hendrerit. Morbi venenatis, est eget scelerisque sodales, orci arcu ullamcorper magna, fermentum vulputate felis sapien fermentum sem. Nam ut velit sed sapien euismod convallis in sit amet turpis. Vestibulum rhoncus vulputate mauris sed dapibus. Sed condimentum id leo ut luctus. In at ligula urna. Mauris egestas purus nec pellentesque molestie. Praesent et augue sit amet augue malesuada faucibus.
+The exhibition consists of original prints of the river maps from different periods displayed in the freestanding vitrines and speculative histories based on these maps placed within and on top the wall vitrines. Seven narratives each speculate on how a different set of decisions based a specific pivotal point in history could have crystallized in an entirely different yet probable spatial configuration. They look at themes ranging from settlement patterns and unproductive landscapes to national and local infrastructures, drawing links between historical tendencies and the current state of the river landscapes. Together with the original maps and the complementary digital application, they constitute a body of work that explores the relationship between developments in cartographic technology and the material culture of archive material, reflecting on shifts in the accessibility, possibilities of processing, and forms of dissemination of cartographic documents.
 
-Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia curae; Mauris sed turpis vitae nunc lobortis gravida. Orci varius natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Sed pharetra purus mauris, at rhoncus nisl volutpat nec. Mauris sed tortor sit amet felis viverra tincidunt ac ac mauris. Suspendisse potenti. Curabitur viverra elit lobortis dui dictum tempus. In fringilla ex quis vulputate commodo. Morbi pulvinar est convallis, molestie lectus a, tincidunt ligula. Donec viverra ex ligula, ac sagittis enim iaculis bibendum. Nulla auctor odio sed lectus egestas, eget pulvinar est efficitur. Duis egestas ornare pellentesque.
+This atlas navigates some clues about the types of challenges that may be faced in the near future, and how to identify the complex web of relationships they would be entangled in and the arsenal of tools that may be available for acting on them.
 
-## Heading
+Contributions by:
+- Chen Chaomin (CN)
+- Nicolaos Charalambous (CY)
+- Sneha Gireesh (IN)
+- Thomas Gkikas (GR)
+- Ujal Gorchu (AZ)
+- Eliott Moreau (FR/US)
+- Ana Nuno De Buen (MX/ES)
+- Kelly Olinger (US)
+- Maria Stergiou (GR)
+- Lenneke Slangen (NL)
+- Yuhe Tan (CN)
+- Felix Verheyden (BE)
+- Nien Heng Yang (TW)
+- Han Yang (CN)
 
-Donec ullamcorper lacus in magna interdum, ac efficitur orci scelerisque. Ut eget semper justo. Aliquam tincidunt iaculis elit sit amet tempus. Aenean non felis libero. Nam vehicula pellentesque enim, quis varius ipsum mattis sed. Sed ac convallis augue. In hendrerit, quam id porttitor egestas, mauris nulla pharetra lectus, eu tincidunt urna quam vitae lectus. Nulla blandit, diam eget fermentum aliquam, ex leo tincidunt ante, eget consequat sem mi vitae erat. Mauris porta sapien sed finibus laoreet. Maecenas blandit risus tortor. In posuere, leo at molestie consequat, justo eros euismod libero, non scelerisque felis est id sem. Quisque mattis quis ex nec tristique.
+Course led by Sanne van den Breemer with Juan Benavides and Benjamin Groothuijse.
 
-Morbi non mauris mauris. Maecenas efficitur augue felis, nec posuere mauris congue consectetur. Sed justo risus, tempor in mattis at, porta vel massa. In tincidunt maximus hendrerit. Fusce consectetur vehicula dolor, et laoreet purus mollis id. Vestibulum bibendum venenatis iaculis. Aliquam efficitur risus arcu, et sollicitudin metus pulvinar sit amet. In hac habitasse platea dictumst. Sed imperdiet, lectus id vulputate maximus, velit lectus eleifend felis, ac ullamcorper purus tortor aliquam velit. Curabitur pulvinar mauris in risus sagittis gravida. Mauris elementum, sem nec rutrum semper, tellus libero vehicula mi, ut faucibus elit odio pulvinar risus. Curabitur vulputate quam eros, iaculis euismod dolor fringilla eu. Nunc consectetur ex dignissim, varius diam eget, posuere risus. Suspendisse id odio nulla.
+With special thanks to Robbert de Koning, Ilmar Hurkxkens, Fransje Hooimeijer, Reinout Klaarenbeek, Mathilde Maijer, Tom MacWright, Jules Schoonman, Bert Spaan and  The Gelders Archive.
 
-Student list
-Credits
+Allmaps is a set of open source tools for curating, georeferencing and exploring digitized maps. It works on the basis of the International Image Interoperability Framework (IIIF), which is implemented by an increasing number of libraries and archives worldwide in order to share their digital collections. The Allmaps Editor can be used to annotate images with geographic information. Subsequently the map can be loaded in a map interface and compared with other maps in the Allmaps Viewer, without the need for derivatives or additional server infrastructure. The Berlage collaborated with Allmaps on the River Atlas.
 
-[Source code](https://github.com/theberlage/project-nl-app)
+_River Atlas will be exhibited in the Department of Architecture corridor, located on the first floor of the TU Delft’s Faculty of Architecture and the Built Environment’s eastern wing, from Tuesday, January 31 to Wednesday, March 1._
+
+[The source code of this website can be found on GitHub.](https://github.com/theberlage/project-nl-app)
