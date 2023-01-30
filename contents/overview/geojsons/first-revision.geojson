@@ -407,7 +407,8 @@
       },
       "properties": {
         "id": 563,
-        "name": "eerste herziening-2-16-1883-lekkerkerk"
+        "name": "eerste herziening-2-16-1883-lekkerkerk",
+        "project": "bordersandboundaries"
       }
     },
     {
@@ -647,8 +648,7 @@
       },
       "properties": {
         "id": 429,
-        "name": "eerste herziening-1-16-1890-dordrecht",
-        "project": "bordersandboundaries"
+        "name": "eerste herziening-1-16-1890-dordrecht"
       }
     },
     {
