@@ -38,7 +38,7 @@
 
 	import Slideshow from '$lib/components/Slideshow.svelte'
 	import About from '$lib/components/About.svelte'
-	import Berlage from '$lib/components/Berlage.svelte'
+	import Bearlage from '$lib/components/Bearlage.svelte'
 
 	// Declaring changing variables with let and fixed ones with const
 
@@ -372,7 +372,7 @@
 		<Slideshow on:changeView={changeView} />
 	{/if}
 	{#if bear}
-		<Berlage />
+		<Bearlage />
 	{/if}
 	<div id="map" class="map" />
 </div>
