@@ -146,7 +146,7 @@
 		})
 
 		for (let annotation of annotations) {
-			await warpedMapSource.addGeorefAnnotation(annotation)
+			await warpedMapSource.addGeoreferenceAnnotation(annotation)
 		}
 
 		map.addLayer(warpedMapLayer)
@@ -158,7 +158,11 @@
 
 	// Function to animate view
 
-	function animateView(extent: Extent, rotation: number) {
+	function sleep(ms: number) {
+		return new Promise((resolve) => setTimeout(resolve, ms))
+	}
+
+	async function animateView(extent: Extent, rotation: number, duration: number = 1000) {
 		let center = getCenter(extent)
 		let resolution = view.getResolutionForExtent(extent, map.getSize())
 
@@ -167,11 +171,12 @@
 			resolution: resolution,
 			rotation: rotation
 		})
+		await sleep(duration)
 	}
 
 	// Function to change layers and view depending on state
 
-	function changeView() {
+	async function changeView() {
 		let bbox: Coordinate
 		let rotation: number
 		let extent: Extent
@@ -186,6 +191,8 @@
 			rotation = selectedSlide.frontmatter.viewer.rotation * (Math.PI / 180)
 
 			map.removeLayer(warpedMapLayer) // Todo: check if layer exists
+			await animateView(extent, rotation)
+
 			if (selectedSlide.frontmatter.allmaps) {
 				allmapsAnnotations = selectedSlide.frontmatter.allmaps.map((item: any) => {
 					return `/projects/${$slideShowID}/annotations/${item.annotation}`
@@ -203,8 +210,6 @@
 				})
 				addVectorSource(geojsons)
 			}
-
-			animateView(extent, rotation)
 		} else if (slide === undefined) {
 			bbox = [4.018731, 51.737203, 6.213143, 52.027794]
 			extent = calculateExtent(bbox)
