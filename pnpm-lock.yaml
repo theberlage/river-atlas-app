@@ -6,8 +6,8 @@ settings:
 
 dependencies:
   '@allmaps/openlayers':
-    specifier: 1.0.0-beta.36
-    version: 1.0.0-beta.36
+    specifier: 1.0.0-beta.38
+    version: 1.0.0-beta.38
   lodash-es:
     specifier: ^4.17.21
     version: 4.17.21
@@ -101,8 +101,8 @@ packages:
       zod: 3.22.2
     dev: false
 
-  /@allmaps/openlayers@1.0.0-beta.36:
-    resolution: {integrity: sha512-SgQJ82mq4MV7Cr1X3BI7BOD6iMev9KOqoKjA+MjKWDKDqL50j4PFI0Usbj8H+F9NT6hSg30T8up7YTUakEMovg==}
+  /@allmaps/openlayers@1.0.0-beta.38:
+    resolution: {integrity: sha512-RILhrdw/QkJgRbj9iKOjg2EPs49ae9pnDCyF0raFJUEHFlZcFTS6dGnTu5U0OHNG+M0mpffRVDboOfHp2/exYw==}
     dependencies:
       '@allmaps/render': 1.0.0-beta.35
       lodash-es: 4.17.21
