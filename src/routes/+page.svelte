@@ -273,8 +273,8 @@
 			target: 'map'
 		})
 
-		addAllmapsLayer(firstRevision)
-		addVectorSource(firstRevisionVector)
+		// addAllmapsLayer(firstRevision)
+		// addVectorSource(firstRevisionVector)
 		changeView()
 
 		// if ($page.url.searchParams.has('project')) {
