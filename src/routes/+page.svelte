@@ -13,8 +13,10 @@
 	import ZoomToExtent from 'ol/control/ZoomToExtent.js'
 	import { getCenter } from 'ol/extent'
 	import GeoJSON from 'ol/format/GeoJSON.js'
-	import { OSM, Vector as VectorSource } from 'ol/source.js'
-	import { Fill, Stroke, Style } from 'ol/style.js'
+	import * as Color from 'ol/color.js'
+	import { OSM, XYZ, Vector as VectorSource } from 'ol/source.js'
+	import { Fill, Stroke, Circle, Style } from 'ol/style.js'
+	import EsriJSON from 'ol/format/EsriJSON.js'
 	import Select from 'ol/interaction/Select.js'
 	import { VectorSourceEvent } from 'ol/source/Vector'
 	import MapboxVector from 'ol/layer/MapboxVector'
@@ -39,6 +41,8 @@
 	import Slideshow from '$lib/components/Slideshow.svelte'
 	import About from '$lib/components/About.svelte'
 	import Bearlage from '$lib/components/Bearlage.svelte'
+	import { fill } from 'lodash-es'
+	import { colorToGlsl } from 'ol/style/expressions'
 
 	// Declaring changing variables with let and fixed ones with const
 
@@ -54,26 +58,23 @@
 	let selectedSlide: any = undefined
 	let selectedFeature: FeatureLike | undefined
 
-	let allmapsAnnotations: Array<String>
-
 	let innerHeight: number
 	let about: boolean = false
 
 	// Overview constants
 
-	const firstRevision: Array<String> = [
-		'https://annotations.allmaps.org/manifests/f940b520d16381d4',
-		'https://annotations.allmaps.org/manifests/752b29a50403371d'
+	const initialMaps: Array<String> = [
+		'https://annotations.allmaps.org/manifests/b011d3b8c502e0e9'
 	]
-	const firstRevisionVector: Array<string> = ['/overview/geojsons/first-revision.geojson']
-	const initialViewCoords = fromLonLat([5.115, 51.882])
+	const initialVector: Array<string> = ['/overview/geojsons/locations.geojson']
+	const initialViewCoords = fromLonLat([4.900668, 52.356416])
 
 	// Styles for OpenLayers
 
 	const styles = new Style({
 		stroke: new Stroke({
-			color: 'grey',
-			width: 1
+			color: 'yellow',
+			width: 4
 		}),
 		fill: new Fill({
 			color: 'rgba(255, 255, 255, 0)'
@@ -82,22 +83,22 @@
 
 	const selected = new Style({
 		stroke: new Stroke({
-			color: 'black',
-			width: 1
+			color: 'yellow',
+			width: 4
 		}),
 		fill: new Fill({
-			color: 'rgba(0, 255, 255, 0.2)'
+			color: 'yellow'
 		}),
 		zIndex: 5
 	})
 
 	const selectable = new Style({
 		stroke: new Stroke({
-			color: 'rgba(0, 0, 0, 1)',
-			width: 1
+			color: 'yellow',
+			width: 4
 		}),
 		fill: new Fill({
-			color: 'rgba(0, 255, 255, 0.6)'
+			color: 'rgba(0, 255, 255, 0)'
 		}),
 		zIndex: 4
 	})
@@ -123,6 +124,42 @@
 
 		vectorSource.forEachFeature(function (feature) {
 			let properties = feature.getProperties()
+
+			let fillColor = properties['fill'] ? Color.asArray(properties.fill) : 'yellow'
+
+			if (properties['fill-opacity']) {
+				fillColor[3] = properties['fill-opacity']
+			}
+
+			let strokeColor = properties['stroke'] ? Color.asArray(properties.stroke) : 'yellow'
+
+			if (properties['stroke-opacity']) {
+				strokeColor[3] = properties['stroke-opacity']
+			}
+
+			let strokeWidth = properties['stroke-width'] ? properties['stroke-width'] : 4
+			let radius = properties.radius ? properties.radius : 10
+
+			let customStyle = new Style({
+				stroke: new Stroke({
+					color: strokeColor,
+					width: strokeWidth
+				}),
+				fill: new Fill({
+					color: fillColor
+				}),
+				image: new Circle({
+					radius,
+					fill: new Fill({ color: fillColor }),
+					stroke: new Stroke({
+						color: strokeColor,
+						width: strokeWidth
+					})
+				})
+			})
+
+			feature.setStyle(customStyle)
+
 			if (properties.project) {
 				feature.setStyle(selectable)
 			}
@@ -130,27 +167,15 @@
 	}
 
 	// Function to add Allmaps layer
-	// @Bert beter om warpedMapLayer te laten bestaan en warpedMapSource.clear() te doen
-	// @Bert checken of annotatie al is geladen (als dezelfde kaart voor meerdere slides wordt gebruikt)
-	// @Bert parameters voor transparency en mask
-	// @Bert kan ik de plugin een geojson terugvragen van de mask?
 
 	async function addAllmapsLayer(allmapsAnnotations: any) {
 		let annotations = await Promise.all(allmapsAnnotations.map(fetchJson))
 
-		warpedMapSource = new WarpedMapSource()
-
-		warpedMapLayer = new WarpedMapLayer({
-			source: warpedMapSource,
-			zIndex: 2
-		})
-
-		for (let annotation of annotations) {
+    for (let annotation of annotations) {
 			await warpedMapSource.addGeoreferenceAnnotation(annotation)
 		}
 
-		map.addLayer(warpedMapLayer)
-	}
+  }
 
 	function calculateExtent(boundingBox: Coordinate) {
 		return fromLonLat(boundingBox.slice(0, 2)).concat(fromLonLat(boundingBox.slice(2)))
@@ -171,7 +196,7 @@
 			resolution: resolution,
 			rotation: rotation
 		})
-		await sleep(duration)
+		// await sleep(duration)
 	}
 
 	// Function to change layers and view depending on state
@@ -181,8 +206,12 @@
 		let rotation: number
 		let extent: Extent
 		let geojsons: Array<string>
+    let allmapsAnnotations: Array<String>
 		let slide = $slideShowID
 		let index = $slideIndex
+
+    warpedMapSource.clear()
+    vectorSource.clear()
 
 		if (slide !== undefined) {
 			selectedSlide = $slidesByProject[slide][index]
@@ -190,7 +219,6 @@
 			extent = calculateExtent(selectedSlide.frontmatter.viewer.bbox)
 			rotation = selectedSlide.frontmatter.viewer.rotation * (Math.PI / 180)
 
-			map.removeLayer(warpedMapLayer) // Todo: check if layer exists
 			await animateView(extent, rotation)
 
 			if (selectedSlide.frontmatter.allmaps) {
@@ -201,9 +229,6 @@
 				addAllmapsLayer(allmapsAnnotationsReversed)
 			}
 
-			if (vectorSource) {
-				vectorSource.clear()
-			}
 			if (selectedSlide.frontmatter.geojson) {
 				geojsons = selectedSlide.frontmatter.geojson.map((item: any) => {
 					return `/projects/${$slideShowID}/geojsons/${item.filename}`
@@ -211,23 +236,16 @@
 				addVectorSource(geojsons)
 			}
 		} else if (slide === undefined) {
-			bbox = [4.018731, 51.737203, 6.213143, 52.027794]
+			bbox = [4.743863, 52.268553, 5.057967, 52.451301]
 			extent = calculateExtent(bbox)
-			rotation = 0
+			rotation = 150 * (Math.PI / 180)
 
-			allmapsAnnotations = firstRevision
-			if (warpedMapLayer) {
-				map.removeLayer(warpedMapLayer)
-			}
-			addAllmapsLayer(allmapsAnnotations)
+      await animateView(extent, rotation)
 
-			geojsons = firstRevisionVector
-			vectorSource.clear() // Todo: check if layer exists
-			addVectorSource(geojsons)
+			addAllmapsLayer(initialMaps)
+      addVectorSource(initialVector)
 
 			// extent = vectorSource.getExtent() // Aanpassen want addVectorSource is async
-
-			animateView(extent, rotation)
 		}
 	}
 
@@ -248,9 +266,10 @@
 			zIndex: 3
 		})
 
-		warpedMapSource = new WarpedMapSource()
+    warpedMapSource = new WarpedMapSource()
 		warpedMapLayer = new WarpedMapLayer({
-			source: warpedMapSource
+			source: warpedMapSource,
+			zIndex: 2
 		})
 
 		let mapBoxLayer = new MapboxVector({
@@ -259,22 +278,38 @@
 				'pk.eyJ1IjoiZWxpb3R0bW9yZWF1IiwiYSI6ImNsY3N0bWUwcDBlNXYzd3MxaGptMDlyeXgifQ.pXVx5GYbNMBGYDNY_gQZVg'
 		})
 
+		let xyzLayer = new TileLayer({
+			source: new XYZ({
+				url: 'https://images.huygens.knaw.nl/webmapper/maps/pw-1985/{z}/{x}/{y}.png'
+			})
+		})
+
+		// let esriLayer = new TileLayer({
+		// 	source: new XYZ({
+		// 		url: 'https://server.arcgisonline.com/ArcGIS/rest/services/World_Topo_Map/MapServer/tile/{z}/{y}/{x}',
+		// 		attribution:
+		// 			'Tiles &copy; Esri &mdash; Esri, DeLorme, NAVTEQ, TomTom, Intermap, iPC, USGS, FAO, NPS, NRCAN, GeoBase, Kadaster NL, Ordnance Survey, Esri Japan, METI, Esri China (Hong Kong), and the GIS User Community'
+		// 	})
+		// })
+
+		let osmLayer = new TileLayer({
+			source: new OSM(),
+			zIndex: 1
+		})
+
 		map = new Map({
 			view,
 			layers: [
-				// new TileLayer({
-				// 	source: new OSM(),
-				// 	zIndex: 1
-				// }),
+				// xyzLayer,
+				// esriLayer,
+				// osmLayer,
 				mapBoxLayer,
-				vectorLayer,
-				warpedMapLayer
+				warpedMapLayer,
+        vectorLayer
 			],
-			target: 'map'
+			target: 'ol'
 		})
 
-		addAllmapsLayer(firstRevision)
-		addVectorSource(firstRevisionVector)
 		changeView()
 
 		// if ($page.url.searchParams.has('project')) {
@@ -350,13 +385,13 @@
 <svelte:window bind:innerHeight on:keydown={onKeyDown} on:keyup={onKeyUp} />
 
 <svelte:head>
-	<title>River Atlas</title>
+	<title>City Atlas</title>
 </svelte:head>
 
 <div class="grid-container" style="height:{innerHeight}px;">
 	<div class="header">
 		<span class="link" on:click={() => goHome()} on:keypress={() => goHome()}>
-			<span class="hidden">The Berlage: </span>River Atlas</span
+			<span class="hidden">The Berlage: </span>City Atlas</span
 		>
 		{#if $slideShowID === undefined}
 			<span
@@ -379,7 +414,7 @@
 	{#if bear}
 		<Bearlage />
 	{/if}
-	<div id="map" class="map" />
+	<div id="ol" class="map" />
 </div>
 
 <style>
