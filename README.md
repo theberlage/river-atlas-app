@@ -39,10 +39,12 @@ Each slide contains the following frontmatter:
 ```yaml
 meta: # Slide metadata
   heading: Subtitle # Slide heading
-  period: [1900, 1930] # Array denoting period
 viewer: # Viewer settings
   bbox: [4.651103, 51.78665, 4.768242, 51.832353] # Viewer bounding box as can be exported from Placemark (Export > BBOX)
   rotation: 180 # Degrees
+xyz:
+  url: https://tile.openstreetmap.org/{z}/{x}/{y}.png # XZY url
+  label: OpenStreetMap # Label for layer
 geojson:
   - filename: vector-01.geojson # Filename of geojson in the project's geojsons/ folder
     label: Building outline # Optional label for vector
