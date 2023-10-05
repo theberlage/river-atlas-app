@@ -1,6 +1,6 @@
 # Project NL App
 
-This repository contains the source code for the application presenting the results of the fall 2022 Project NL design-research project of the [Berlage Center for Advanced Studies in Architecture and Urban Design](https://theberlage.nl/) of TU Delft.
+This repository contains the source code for the application presenting the results of the fall 2023 Project NL design-research project of the [Berlage Center for Advanced Studies in Architecture and Urban Design](https://theberlage.nl/) of TU Delft.
 
 The application showcases the possiblities of [IIIF](https://iiif.io) and [Allmaps](https://allmaps.org). See also [this repository](https://github.com/theberlage/allmaps-workshop) outlining the introductory workshop in the beginning of the semester.
 
@@ -16,7 +16,7 @@ The following file structure is used for the content (general introduction and i
     - annotations # Folder containing georeferencing annotations shown on overview page
       - annotation.json
     - geojsons # Folder containing vectors loaded on overview page
-      - sheetindex.geojson # Sheet index used to navigate the projects
+      - locations.geojson # Sheet index used to navigate the projects
   - projects
     - [project-slug] # Each project has a dedicated folder. Use no spaces or caps for folder name
       - annotations # Folder containing georeferencing annotations for project
