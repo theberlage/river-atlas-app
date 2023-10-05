@@ -23,7 +23,7 @@
 
 	// Stores
 
-	import { slidesByProject, slideShowID, slideIndex } from '$lib/components/stores'
+	import { slidesByProject, slideShowID, slideIndex, homePage } from '$lib/components/stores'
 
 	// Allmaps
 
@@ -53,6 +53,8 @@
 	let warpedMapLayer: WarpedMapLayer
 	let vectorSource: VectorSource
 	let vectorLayer: VectorLayer<VectorSource>
+	let xyzSource: XYZ
+	let xyzLayer: TileLayer<XYZ>
 
 	let slideCount: number
 	let selectedSlide: any = undefined
@@ -60,14 +62,6 @@
 
 	let innerHeight: number
 	let about: boolean = false
-
-	// Overview constants
-
-	const initialMaps: Array<String> = [
-		'https://annotations.allmaps.org/manifests/b011d3b8c502e0e9'
-	]
-	const initialVector: Array<string> = ['/overview/geojsons/locations.geojson']
-	const initialViewCoords = fromLonLat([4.900668, 52.356416])
 
 	// Styles for OpenLayers
 
@@ -168,14 +162,12 @@
 
 	// Function to add Allmaps layer
 
-	async function addAllmapsLayer(allmapsAnnotations: any) {
-		let annotations = await Promise.all(allmapsAnnotations.map(fetchJson))
-
-    for (let annotation of annotations) {
+	async function addWarpedMapSource(annotations: any) {
+		let response = await Promise.all(annotations.map(fetchJson))
+		for (let annotation of response) {
 			await warpedMapSource.addGeoreferenceAnnotation(annotation)
 		}
-
-  }
+	}
 
 	function calculateExtent(boundingBox: Coordinate) {
 		return fromLonLat(boundingBox.slice(0, 2)).concat(fromLonLat(boundingBox.slice(2)))
@@ -202,50 +194,53 @@
 	// Function to change layers and view depending on state
 
 	async function changeView() {
-		let bbox: Coordinate
 		let rotation: number
 		let extent: Extent
 		let geojsons: Array<string>
-    let allmapsAnnotations: Array<String>
+		let xyz: string
+		let annotations: Array<String>
 		let slide = $slideShowID
 		let index = $slideIndex
+		let path: string
 
-    warpedMapSource.clear()
-    vectorSource.clear()
+		warpedMapSource.clear()
+		vectorSource.clear()
+		xyzSource.setUrl('')
+    xyzSource.clear()
 
 		if (slide !== undefined) {
 			selectedSlide = $slidesByProject[slide][index]
 			slideCount = $slidesByProject[slide].length
 			extent = calculateExtent(selectedSlide.frontmatter.viewer.bbox)
 			rotation = selectedSlide.frontmatter.viewer.rotation * (Math.PI / 180)
-
-			await animateView(extent, rotation)
-
-			if (selectedSlide.frontmatter.allmaps) {
-				allmapsAnnotations = selectedSlide.frontmatter.allmaps.map((item: any) => {
-					return `/projects/${$slideShowID}/annotations/${item.annotation}`
-				})
-				let allmapsAnnotationsReversed = allmapsAnnotations.reverse()
-				addAllmapsLayer(allmapsAnnotationsReversed)
-			}
-
-			if (selectedSlide.frontmatter.geojson) {
-				geojsons = selectedSlide.frontmatter.geojson.map((item: any) => {
-					return `/projects/${$slideShowID}/geojsons/${item.filename}`
-				})
-				addVectorSource(geojsons)
-			}
+			path = '/projects/' + $slideShowID
 		} else if (slide === undefined) {
-			bbox = [4.743863, 52.268553, 5.057967, 52.451301]
-			extent = calculateExtent(bbox)
-			rotation = 150 * (Math.PI / 180)
+			selectedSlide = $homePage
+			extent = calculateExtent(selectedSlide.frontmatter.viewer.bbox)
+			rotation = selectedSlide.frontmatter.viewer.rotation * (Math.PI / 180)
+			path = '/overview'
+			await animateView(extent, rotation)
+		}
 
-      await animateView(extent, rotation)
+		await animateView(extent, rotation)
 
-			addAllmapsLayer(initialMaps)
-      addVectorSource(initialVector)
+		if (selectedSlide.frontmatter.allmaps && selectedSlide.frontmatter.allmaps.length > 0) {
+			annotations = selectedSlide.frontmatter.allmaps.map((item: any) => {
+				return path + '/annotations/' + item.annotation
+			})
+			addWarpedMapSource(annotations.reverse())
+		}
 
-			// extent = vectorSource.getExtent() // Aanpassen want addVectorSource is async
+		if (selectedSlide.frontmatter.geojson && selectedSlide.frontmatter.geojson.length > 0) {
+			geojsons = selectedSlide.frontmatter.geojson.map((item: any) => {
+				return path + '/geojsons/' + item.filename
+			})
+			addVectorSource(geojsons.reverse())
+		}
+
+		if (selectedSlide.frontmatter.xyz && selectedSlide.frontmatter.xyz.url) {
+			xyz = selectedSlide.frontmatter.xyz.url
+			xyzSource.setUrl(xyz)
 		}
 	}
 
@@ -255,8 +250,8 @@
 		// Initialising OpenLayers
 
 		view = new View({
-			center: initialViewCoords,
-			zoom: 8
+			// center: initialViewCoords,
+			// zoom: 8
 		})
 
 		vectorSource = new VectorSource()
@@ -266,22 +261,25 @@
 			zIndex: 3
 		})
 
-    warpedMapSource = new WarpedMapSource()
+		warpedMapSource = new WarpedMapSource()
 		warpedMapLayer = new WarpedMapLayer({
 			source: warpedMapSource,
 			zIndex: 2
+		})
+
+		xyzSource = new XYZ({
+			url: 'https://images.huygens.knaw.nl/webmapper/maps/pw-1985/{z}/{x}/{y}.png'
+		})
+
+		xyzLayer = new TileLayer({
+			source: xyzSource,
+			zIndex: 1
 		})
 
 		let mapBoxLayer = new MapboxVector({
 			styleUrl: 'mapbox://styles/eliottmoreau/cld2u07au002k01ql8ku1gx29',
 			accessToken:
 				'pk.eyJ1IjoiZWxpb3R0bW9yZWF1IiwiYSI6ImNsY3N0bWUwcDBlNXYzd3MxaGptMDlyeXgifQ.pXVx5GYbNMBGYDNY_gQZVg'
-		})
-
-		let xyzLayer = new TileLayer({
-			source: new XYZ({
-				url: 'https://images.huygens.knaw.nl/webmapper/maps/pw-1985/{z}/{x}/{y}.png'
-			})
 		})
 
 		// let esriLayer = new TileLayer({
@@ -300,14 +298,15 @@
 		map = new Map({
 			view,
 			layers: [
-				// xyzLayer,
+				xyzLayer,
 				// esriLayer,
 				// osmLayer,
-				mapBoxLayer,
+				// mapBoxLayer,
 				warpedMapLayer,
-        vectorLayer
+				vectorLayer
 			],
-			target: 'ol'
+			target: 'ol',
+			controls: []
 		})
 
 		changeView()
