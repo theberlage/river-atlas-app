@@ -1,11 +1,11 @@
 <script lang="ts">
-	import { aboutPage } from '$lib/components/stores'
+	import { homePage } from '$lib/components/stores'
 </script>
 
 <div class="about">
 	<div class="body">
-		<p class="project">{$aboutPage[0][1].frontmatter.title}</p>
-		<div class="html">{@html $aboutPage[0][1].html}</div>
+		<p class="project">{$homePage.frontmatter.meta.heading}</p>
+		<div class="html">{@html $homePage.html}</div>
 	</div>
 </div>
 

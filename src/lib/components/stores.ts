@@ -34,7 +34,7 @@ const slides = Object.entries(markdownSlides).map(([id, slide]) => {
 // Grouping slides by project
 
 export const slidesByProject = readable(groupBy(slides, (slide) => slide.project))
-export const aboutPage = readable(Object.entries(aboutMarkdown))
+export const homePage = readable(Object.entries(aboutMarkdown)[0][1])
 
 // Writable stores
 
