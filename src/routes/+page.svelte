@@ -19,7 +19,7 @@
 	import EsriJSON from 'ol/format/EsriJSON.js'
 	import Select from 'ol/interaction/Select.js'
 	import { VectorSourceEvent } from 'ol/source/Vector'
-	import MapboxVector from 'ol/layer/MapboxVector'
+	import { MapboxVectorLayer } from 'ol-mapbox-style'
 
 	// Stores
 
@@ -291,11 +291,11 @@
 			zIndex: 1
 		})
 
-		let mapBoxLayer = new MapboxVector({
-			styleUrl: 'mapbox://styles/eliottmoreau/cld2u07au002k01ql8ku1gx29',
-			accessToken:
-				'pk.eyJ1IjoiZWxpb3R0bW9yZWF1IiwiYSI6ImNsY3N0bWUwcDBlNXYzd3MxaGptMDlyeXgifQ.pXVx5GYbNMBGYDNY_gQZVg'
-		})
+		// let mapBoxLayer = new MapboxVectorLayer({
+		// 	styleUrl: 'mapbox://styles/eliottmoreau/cld2u07au002k01ql8ku1gx29',
+		// 	accessToken:
+		// 		'pk.eyJ1IjoiZWxpb3R0bW9yZWF1IiwiYSI6ImNsY3N0bWUwcDBlNXYzd3MxaGptMDlyeXgifQ.pXVx5GYbNMBGYDNY_gQZVg'
+		// })
 
 		// let esriLayer = new TileLayer({
 		// 	source: new XYZ({
@@ -305,10 +305,10 @@
 		// 	})
 		// })
 
-		let osmLayer = new TileLayer({
-			source: new OSM(),
-			zIndex: 1
-		})
+		// let osmLayer = new TileLayer({
+		// 	source: new OSM(),
+		// 	zIndex: 1
+		// })
 
 		map = new Map({
 			view,
