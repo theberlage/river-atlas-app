@@ -1,7 +1,9 @@
 <script lang="ts">
+	// JS and Svelte functions
+
 	import { onMount } from 'svelte'
-	import { groupBy } from 'lodash-es'
-	import { formatNumber } from '$lib/intl.js'
+
+	// OpenLayers
 
 	import Map from 'ol/Map'
 	import View from 'ol/View'
@@ -9,253 +11,425 @@
 	import 'ol/ol.css'
 	import { fromLonLat } from 'ol/proj.js'
 	import ZoomToExtent from 'ol/control/ZoomToExtent.js'
+	import { getCenter } from 'ol/extent'
 	import GeoJSON from 'ol/format/GeoJSON.js'
-	import Feature from 'ol/Feature.js'
-	import { OSM, Vector as VectorSource } from 'ol/source.js'
-	import { Fill, Stroke, Style } from 'ol/style.js'
+	import * as Color from 'ol/color.js'
+	import { OSM, XYZ, Vector as VectorSource } from 'ol/source.js'
+	import { Fill, Stroke, Circle, Style } from 'ol/style.js'
+	import EsriJSON from 'ol/format/EsriJSON.js'
+	import Select from 'ol/interaction/Select.js'
+	import { VectorSourceEvent } from 'ol/source/Vector'
+	import { MapboxVectorLayer } from 'ol-mapbox-style'
+
+	// Stores
+
+	import { slidesByProject, slideShowID, slideIndex, homePage } from '$lib/components/stores'
+
+	// Allmaps
 
 	import { WarpedMapSource, WarpedMapLayer } from '@allmaps/openlayers'
 
-	import Jules from '$lib/components/Jules.svelte'
-	import Projects from '$lib/components/Projects.svelte'
+	// Typescript
 
-	import type { MarkdownSlide } from '$lib/shared/types.js'
+	import type { FeatureLike } from 'ol/Feature.js'
+	import type { Coordinate } from 'ol/coordinate'
+	import type { Extent } from 'ol/extent'
+	import type { GeoJSONGeometryCollection } from 'ol/format/GeoJSON'
+
+	// Components
+
+	import Slideshow from '$lib/components/Slideshow.svelte'
+	import About from '$lib/components/About.svelte'
+	import Bearlage from '$lib/components/Bearlage.svelte'
+
+	// Declaring changing variables with let and fixed ones with const
 
 	let map: Map
 	let view: View
 
 	let warpedMapSource: WarpedMapSource
 	let warpedMapLayer: WarpedMapLayer
+	let vectorSource: VectorSource
+	let vectorLayer: VectorLayer<VectorSource>
+	let xyzSource: XYZ
+	let xyzLayer: TileLayer<XYZ>
 
-	let rotation: number = 0
-	let data = {}
+	let slideCount: number
+	let selectedSlide: any = undefined
+	let selectedFeature: FeatureLike | undefined
 
-	let dordrecht = {
-		type: 'FeatureCollection',
-		features: [
-			{
-				type: 'Feature',
-				geometry: {
-					type: 'Polygon',
-					coordinates: [
-						[
-							[4.6518381, 51.7866497],
-							[4.7682417, 51.7873216],
-							[4.7676233, 51.8323529],
-							[4.6511033, 51.8316801],
-							[4.6518381, 51.7866497]
-						]
-					]
-				},
-				properties: {
-					id: 425,
-					name: 'eerste druk-1-14-1833-dordrecht'
-				}
-			}
-		]
-	}
+	let innerHeight: number
+	let about: boolean = false
 
-	const styles = {
-		Polygon: new Style({
-			stroke: new Stroke({
-				color: 'blue',
-				lineDash: [4],
-				width: 3
-			}),
-			fill: new Fill({
-				color: 'rgba(0, 0, 255, 0.1)'
-			})
+	// Styles for OpenLayers
+
+	const styles = new Style({
+		stroke: new Stroke({
+			color: 'yellow',
+			width: 4
+		}),
+		fill: new Fill({
+			color: 'rgba(255, 255, 255, 0)'
 		})
-	}
-
-	const markdownSlides = import.meta.glob<MarkdownSlide>('$contents/projects/*/slides/*.md', {
-		eager: true
 	})
 
-	const slides = Object.entries(markdownSlides).map(([id, slide]) => {
-		let project = ''
-		let slideNumber = -1
-
-		const match = /projects\/(?<project>\w+)\/slides\/(?<slideNumber>\d+).md$/.exec(id)
-
-		if (match && match.groups) {
-			project = match.groups.project
-			slideNumber = parseInt(match.groups.slideNumber)
-		}
-
-		return {
-			project,
-			slideNumber,
-			...slide
-		}
+	const selected = new Style({
+		stroke: new Stroke({
+			color: 'yellow',
+			width: 4
+		}),
+		fill: new Fill({
+			color: 'yellow'
+		}),
+		zIndex: 5
 	})
 
-	const slidesByProject = groupBy(slides, (slide) => slide.project)
-	console.log(slides, slidesByProject)
+	const selectable = new Style({
+		stroke: new Stroke({
+			color: 'yellow',
+			width: 4
+		}),
+		fill: new Fill({
+			color: 'rgba(0, 255, 255, 0)'
+		}),
+		zIndex: 4
+	})
 
-	async function fetchJson(url: any) {
+	// Function to fetch external jsons
+
+	async function fetchJson(url: string) {
 		return fetch(url).then((response) => response.json())
 	}
 
-	let annotationUrls = [
-		// West-Roxbury
-		'https://raw.githubusercontent.com/allmaps/webgl2-preview/main/static/west-roxbury.json',
-		// Roxbury
-		'https://annotations.allmaps.org/images/25b19ade19654e66',
-		// Provincetown
-		'https://annotations.allmaps.org/?url=https://collections.leventhalmap.org/search/commonwealth:0r96fq56q/manifest',
-		// Cambridge
-		'https://annotations.allmaps.org/?url=https://collections.leventhalmap.org/search/commonwealth:wd376290m/manifest'
-	]
+	// Function to add vector layer
 
-	onMount(async () => {
-		let annotations = await Promise.all(annotationUrls.map(fetchJson))
+	async function addVectorSource(geojsonsPaths: Array<string>) {
+		let geojsons = await Promise.all(geojsonsPaths.map(fetchJson))
+		let extent: Extent
 
-		warpedMapSource = new WarpedMapSource()
-
-		warpedMapLayer = new WarpedMapLayer({
-			source: warpedMapSource
-		})
-
-		for (let annotation of annotations) {
-			await warpedMapSource.addGeorefAnnotation(annotation)
+		for (let geojson of geojsons) {
+			let features = new GeoJSON().readFeatures(geojson, {
+				featureProjection: 'EPSG:3857'
+			})
+			vectorSource.addFeatures(features)
 		}
 
-		view = new View({
-			center: [0, 0],
-			zoom: 1
+		vectorSource.forEachFeature(function (feature) {
+			let properties = feature.getProperties()
+
+			let fillColor = properties['fill'] ? Color.asArray(properties.fill) : 'yellow'
+
+			if (properties['fill-opacity']) {
+				fillColor[3] = properties['fill-opacity']
+			}
+
+			let strokeColor = properties['stroke'] ? Color.asArray(properties.stroke) : 'yellow'
+
+			if (properties['stroke-opacity']) {
+				strokeColor[3] = properties['stroke-opacity']
+			}
+
+			let strokeWidth = properties['stroke-width'] ? properties['stroke-width'] : 4
+			let radius = properties.radius ? properties.radius : 10
+
+			let customStyle = new Style({
+				stroke: new Stroke({
+					color: strokeColor,
+					width: strokeWidth
+				}),
+				fill: new Fill({
+					color: fillColor
+				}),
+				image: new Circle({
+					radius,
+					fill: new Fill({ color: fillColor }),
+					stroke: new Stroke({
+						color: strokeColor,
+						width: strokeWidth
+					})
+				})
+			})
+
+			feature.setStyle(customStyle)
+
+			if (properties.project) {
+				feature.setStyle(selectable)
+			}
 		})
+	}
+
+	// Function to add Allmaps layer
+
+	async function addWarpedMapSource(annotations: any) {
+		for (let annotation of annotations) {
+			let response = await fetchJson(annotation.path)
+			let id = await warpedMapSource.addGeoreferenceAnnotation(response).then((resp) => resp[0])
+			if (annotation.opacity) {
+				let opacity = annotation.opacity / 100
+				warpedMapLayer.setMapOpacity(id, opacity)
+			}
+			if (annotation.removeBackground && annotation.removeBackground.color) {
+				let hexColor = annotation.removeBackground.color
+				let threshold = annotation.removeBackground.threshold
+					? annotation.removeBackground.threshold / 100
+					: 0.1
+				let hardness = annotation.removeBackground.hardness
+					? annotation.removeBackground.hardness / 100
+					: 0.1
+				warpedMapLayer.setMapRemoveBackground(id, { hexColor, threshold, hardness })
+			}
+			if (annotation.colorize) {
+				warpedMapLayer.setMapColorize(id, annotation.colorize)
+			}
+		}
+	}
+
+	function calculateExtent(boundingBox: Coordinate) {
+		return fromLonLat(boundingBox.slice(0, 2)).concat(fromLonLat(boundingBox.slice(2)))
+	}
+
+	// Function to animate view
+
+	function sleep(ms: number) {
+		return new Promise((resolve) => setTimeout(resolve, ms))
+	}
+
+	async function animateView(extent: Extent, rotation: number, duration: number = 1000) {
+		let center = getCenter(extent)
+		let resolution = view.getResolutionForExtent(extent, map.getSize())
+
+		view.animate({
+			center: center,
+			resolution: resolution,
+			rotation: rotation
+		})
+		// await sleep(duration)
+	}
+
+	// Function to change layers and view depending on state
+
+	async function changeView() {
+		let rotation: number = 0
+		let extent: Extent | undefined = undefined
+		let geojsons: Array<string>
+		let xyz: string
+		let annotations: Array<String>
+		let slide = $slideShowID
+		let index = $slideIndex
+		let path: string
+
+		warpedMapSource.clear()
+		vectorSource.clear()
+		xyzSource.setUrl('')
+		xyzSource.clear()
+
+		if (slide !== undefined) {
+			selectedSlide = $slidesByProject[slide][index]
+			slideCount = $slidesByProject[slide].length
+			extent = calculateExtent(selectedSlide.frontmatter.viewer.bbox)
+			rotation = selectedSlide.frontmatter.viewer.rotation * (Math.PI / 180)
+			path = '/projects/' + $slideShowID
+		} else if (slide === undefined) {
+			selectedSlide = $homePage
+			extent = calculateExtent(selectedSlide.frontmatter.viewer.bbox)
+			rotation = selectedSlide.frontmatter.viewer.rotation * (Math.PI / 180)
+			path = '/overview'
+			await animateView(extent, rotation)
+		}
+
+		await animateView(extent, rotation)
+
+		if (selectedSlide.frontmatter.allmaps && selectedSlide.frontmatter.allmaps.length > 0) {
+			annotations = selectedSlide.frontmatter.allmaps.map((item: any) => {
+				return { path: path + '/annotations/' + item.annotation, ...item }
+			})
+			addWarpedMapSource(annotations.reverse())
+		}
+
+		if (selectedSlide.frontmatter.geojson && selectedSlide.frontmatter.geojson.length > 0) {
+			geojsons = selectedSlide.frontmatter.geojson.map((item: any) => {
+				return path + '/geojsons/' + item.filename
+			})
+			addVectorSource(geojsons.reverse())
+		}
+
+		if (selectedSlide.frontmatter.xyz && selectedSlide.frontmatter.xyz.url) {
+			xyz = selectedSlide.frontmatter.xyz.url
+			xyzSource.setUrl(xyz)
+		}
+	}
+
+	// onMount function after components are loaded, see https://svelte.dev/tutorial/onmount
+
+	onMount(async () => {
+		// Initialising OpenLayers
+
+		view = new View({
+			// center: initialViewCoords,
+			// zoom: 8
+		})
+
+		vectorSource = new VectorSource()
+		vectorLayer = new VectorLayer({
+			source: vectorSource,
+			style: styles,
+			zIndex: 3
+		})
+
+		warpedMapSource = new WarpedMapSource()
+		warpedMapLayer = new WarpedMapLayer({
+			source: warpedMapSource,
+			zIndex: 2
+		})
+
+		xyzSource = new XYZ({
+			url: 'https://images.huygens.knaw.nl/webmapper/maps/pw-1985/{z}/{x}/{y}.png'
+		})
+
+		xyzLayer = new TileLayer({
+			source: xyzSource,
+			zIndex: 1
+		})
+
+		// let mapBoxLayer = new MapboxVectorLayer({
+		// 	styleUrl: 'mapbox://styles/eliottmoreau/cld2u07au002k01ql8ku1gx29',
+		// 	accessToken:
+		// 		'pk.eyJ1IjoiZWxpb3R0bW9yZWF1IiwiYSI6ImNsY3N0bWUwcDBlNXYzd3MxaGptMDlyeXgifQ.pXVx5GYbNMBGYDNY_gQZVg'
+		// })
+
+		// let esriLayer = new TileLayer({
+		// 	source: new XYZ({
+		// 		url: 'https://server.arcgisonline.com/ArcGIS/rest/services/World_Topo_Map/MapServer/tile/{z}/{y}/{x}',
+		// 		attribution:
+		// 			'Tiles &copy; Esri &mdash; Esri, DeLorme, NAVTEQ, TomTom, Intermap, iPC, USGS, FAO, NPS, NRCAN, GeoBase, Kadaster NL, Ordnance Survey, Esri Japan, METI, Esri China (Hong Kong), and the GIS User Community'
+		// 	})
+		// })
+
+		// let osmLayer = new TileLayer({
+		// 	source: new OSM(),
+		// 	zIndex: 1
+		// })
 
 		map = new Map({
 			view,
 			layers: [
-				new TileLayer({
-					source: new OSM()
-				}),
+				xyzLayer,
+				// esriLayer,
+				// osmLayer,
+				// mapBoxLayer,
 				warpedMapLayer,
-				new VectorLayer({
-					source: new VectorSource({
-						features: new GeoJSON().readFeatures(dordrecht, {
-							featureProjection: 'EPSG:3857'
-						})
-					})
-				})
+				vectorLayer
 			],
-			target: 'map'
+			target: 'ol',
+			controls: []
+		})
+
+		changeView()
+
+		// if ($page.url.searchParams.has('project')) {
+		//   let project: string = $page.url.searchParams.get('project')
+		//   if ($slidesByProject[project]) {
+		//     slideShowID.set(project)
+		//     let slide: number = $page.url.searchParams.get('slide')
+		//     let slideCount = $slidesByProject[$slideShowID].length
+		//     if (slide >= 0 && slide <= slideCount) {
+		//       slideIndex.set(slide)
+		//     }
+		//     changeView()
+		//   }
+		// }
+
+		map.on('pointermove', function (event) {
+			vectorLayer.getFeatures(event.pixel).then(function (features) {
+				let feature = features.length ? features[0] : undefined
+				if (feature == undefined || !feature.getProperties().project) {
+					vectorSource.forEachFeature(function (feature) {
+						let properties = feature.getProperties()
+						if (properties.project) {
+							feature.setStyle(selectable)
+						}
+					})
+					map.getTargetElement().style.cursor = ''
+				}
+				if (feature !== undefined && feature.getProperties().project) {
+					feature.setStyle(selected)
+					map.getTargetElement().style.cursor = 'pointer'
+				}
+			})
+		})
+
+		map.on('singleclick', function (event) {
+			vectorLayer.getFeatures(event.pixel).then(function (features) {
+				const feature = features.length ? features[0] : undefined
+				if (feature !== undefined) {
+					const properties = feature.getProperties()
+					if (properties.project) {
+						slideShowID.set(properties.project)
+						changeView()
+					}
+				}
+			})
 		})
 	})
 
-	let chapters = [
-		{
-			title: 'hallo'
-		},
-		{
-			title: 'deze'
-		},
-		{
-			title: 'ook'
+	function goHome() {
+		slideShowID.set(undefined)
+		slideIndex.set(0)
+		about = false
+		changeView()
+	}
+
+	let bear: boolean = false
+
+	function onKeyDown(e: any) {
+		switch (e.keyCode) {
+			case 66:
+				bear = true
 		}
-	]
-
-	let boston = fromLonLat([-71.076, 42.359])
-	let bbox = [4.651103, 51.78665, 4.768242, 51.832353]
-	let extent = fromLonLat(bbox.slice(0, 2)).concat(fromLonLat(bbox.slice(2)))
-
-	async function goExtent() {
-		map.getView().fit(extent)
 	}
 
-	async function goBoston() {
-		view.animate({
-			center: boston,
-			zoom: 12,
-			rotation: 90
-		})
-		console.log(extent)
-	}
-
-	function handleBert(event) {
-		console.log('handleBert', event.detail)
-	}
-
-	async function handleClick() {
-		rotation = view.getRotation() - Math.PI / 2
-
-		view.animate({
-			rotation
-		})
-
-		chapters.push({
-			title: `Nieuwe: ${formatNumber(rotation)}`
-		})
-		chapters = chapters
-
-		const url = 'https://raw.githubusercontent.com/allmaps/allmaps/main/package.json'
-		const response = await fetch(url)
-		data = await response.json()
+	function onKeyUp(e: any) {
+		switch (e.keyCode) {
+			case 66:
+				bear = false
+		}
 	}
 </script>
 
-<div class="grid-container">
-	<div class="header">The Berlage: Project NL</div>
-	<div class="panel panel-grid-container">
-		<!-- <Projects {slides} /> -->
-		<div class="caption">
-			<h1>Title</h1>
-			<h2>Subtitle</h2>
-			<p>
-				Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed vitae porttitor neque. Nulla
-				mattis tempus nisl, non sagittis mi rhoncus non. Curabitur venenatis dolor erat, a tristique
-				justo lobortis vitae. Integer at faucibus lorem, sed fermentum arcu. Maecenas molestie leo
-				sed ultricies porttitor. Curabitur pharetra tincidunt mi vel feugiat. Nunc semper non ligula
-				sed mollis. Nam sit amet libero ac est posuere porttitor ac ac enim. Nulla facilisi.
-				Phasellus posuere tempor felis vel vulputate. Vestibulum commodo pretium justo ut congue.
-			</p>
-			<p>
-				Nulla consectetur dui ac risus consequat, eget ultrices velit porttitor. Suspendisse
-				placerat auctor mi, non tempor orci porta eu. Class aptent taciti sociosqu ad litora
-				torquent per conubia nostra, per inceptos himenaeos. Nunc at ipsum elementum, ullamcorper
-				enim ut, laoreet nibh. Maecenas vitae nunc a nulla vulputate facilisis. Ut at nunc in elit
-				accumsan elementum eu vel quam. Etiam at justo eget massa mattis sagittis. Mauris maximus
-				tortor ligula, eu iaculis nibh mattis id. Aenean vel imperdiet est, id tristique turpis.
-				Orci varius natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus.
-				Curabitur vestibulum a massa dignissim condimentum. Lorem ipsum dolor sit amet, consectetur
-				adipiscing elit. Aenean malesuada lacus leo, in euismod ante sagittis id. Phasellus
-				vestibulum justo quis iaculis lobortis.
-			</p>
-			<p>
-				Orci varius natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Donec
-				dapibus hendrerit ultricies. Suspendisse hendrerit convallis sapien eu hendrerit. Donec mi
-				dolor, tempus id felis ac, tempor lobortis urna. Nunc vel commodo leo, eget vestibulum
-				metus. Aliquam erat volutpat. Praesent sagittis consectetur eleifend. Donec et nunc arcu.
-			</p>
-			<p>
-				Donec at euismod tortor. Vivamus venenatis pharetra diam quis eleifend. Nulla vel interdum
-				quam. Mauris eu placerat tellus. Vivamus urna nibh, tincidunt nec aliquam in, elementum vel
-				lacus. Cras pellentesque nulla convallis ultricies pulvinar. Pellentesque maximus eu turpis
-				convallis finibus. Proin ac pharetra erat. Ut rutrum porttitor arcu quis pulvinar.
-			</p>
-		</div>
-		<div class="control-container">
-			<div class="control-item">
-				<button on:click={goExtent} class="button" type="button">Previous</button>
-			</div>
-			<div class="control-item">
-				<button on:click={goBoston} class="button" type="button">Next</button>
-			</div>
-		</div>
-	</div>
-	<div id="map" class="map" />
-</div>
+<svelte:window bind:innerHeight on:keydown={onKeyDown} on:keyup={onKeyUp} />
 
-<button on:click={handleClick}> Hoi </button>
-<ol>
-	{#each chapters as chapter, index}
-		<Jules on:bert={handleBert} title={chapter.title} {index} />
-	{/each}
-</ol>
-<div>Rotation: {formatNumber(rotation, 4)}</div>
-<pre><code>{JSON.stringify(data, null, 2)}</code></pre>
+<svelte:head>
+	<title>City Atlas</title>
+</svelte:head>
+
+<div class="grid-container" style="height:{innerHeight}px;">
+	<div class="header">
+		<span class="link" on:click={() => goHome()} on:keypress={() => goHome()}>
+			<span class="hidden">The Berlage: </span>City Atlas</span
+		>
+		{#if $slideShowID === undefined}
+			<span
+				class="float link"
+				on:click={() => (about = !about)}
+				on:keypress={() => (about = !about)}
+			>
+				{about === false ? 'About' : 'Back to overview'}
+			</span>
+		{:else}
+			<span class="float grey">About</span>
+		{/if}
+	</div>
+	{#if about}
+		<About />
+	{/if}
+	{#if $slideShowID !== undefined}
+		<Slideshow on:changeView={changeView} />
+	{/if}
+	{#if bear}
+		<Bearlage />
+	{/if}
+	<div id="ol" class="map" />
+</div>
 
 <style>
 	:global(@font-face) {
@@ -269,29 +443,33 @@
 	:global(html),
 	:global(body) {
 		font-family: ZurichBT, Helvetica Neue, Helvetica, Arial, sans-serif;
+		font-size: 15px;
 		padding: 0;
 		margin: 0;
 	}
 
-	li {
-		color: red;
+	:global(.float) {
+		float: right;
 	}
 
 	.grid-container {
 		display: grid;
 		grid-template-columns: 1fr 1fr 1fr [panel] 400px;
-		grid-template-rows: [header] 40px [map] 1fr;
+		grid-template-rows: [header] 42px [map] 1fr;
 		width: 100vw;
 		height: 100vh;
 	}
 
-	@media screen and (max-width: 400px) {
+	@media all and (max-width: 600px) {
 		.grid-container {
 			display: grid;
-			grid-template-columns: 1fr [panel];
+			grid-template-columns: [panel] 1fr;
 			grid-template-rows: [header] 40px [map] 1fr;
 			width: 100vw;
 			height: 100vh;
+		}
+		.hidden {
+			display: none;
 		}
 	}
 
@@ -299,55 +477,22 @@
 		grid-column: 1 / 5;
 		grid-row: header;
 		padding: 10px;
+		font-size: 1.2rem;
+		border-bottom: 1px solid lightgrey;
 	}
 
-	.panel {
-		background-color: aqua;
-		z-index: 2;
-		border-radius: 15px;
-		border: solid black;
-		margin: 20px;
-		padding: 10px;
+	.link {
+		cursor: pointer;
 	}
 
-	.panel-grid-container {
-		grid-column: panel;
-		grid-row: map;
-		display: grid;
-		grid-template-columns: 1fr;
-		grid-template-rows: 1fr [controls] 100px;
-		min-width: 0;
-		min-height: 0;
-	}
-
-	.caption {
-		grid-column: 1 / 2;
-		grid-row: 1 / 3;
-		overflow: auto;
-		z-index: 2;
-	}
-
-	.control-container {
-		grid-column: 1 / 2;
-		grid-row: controls;
-		display: flex;
-		flex-flow: row wrap;
-		justify-content: center;
-		gap: 20px;
-		margin: 20px;
-		align-items: flex-end;
-		z-index: 3;
-	}
-
-	.button {
-		width: 100px;
-		height: 35px;
+	.grey {
+		color: grey;
 	}
 
 	.map {
 		grid-column: 1 / 5;
 		grid-row: map;
-		background-color: blue;
+		background-color: white;
 		width: 100%;
 		height: 100%;
 		z-index: 1;
