@@ -8,12 +8,20 @@
 	let selectedSlide: any
 	let hidden: boolean = false
 	let annotations: any | undefined = undefined
+	let xyz: any | undefined = undefined
 
 	$: if ($slideShowID !== undefined) {
 		slideCount = $slidesByProject[$slideShowID].length
 		selectedSlide = $slidesByProject[$slideShowID][$slideIndex]
 		if (selectedSlide.frontmatter.allmaps) {
 			annotations = selectedSlide.frontmatter.allmaps
+		} else {
+			annotations = undefined
+		}
+		if (selectedSlide.frontmatter.xyz) {
+			xyz = selectedSlide.frontmatter.xyz
+		} else {
+			xyz = undefined
 		}
 	}
 
@@ -47,7 +55,7 @@
 	// down = 40
 	// right = 39
 	// left = 37
-  // esc = 27
+	// esc = 27
 
 	function onKeyDown(e: any) {
 		switch (e.keyCode) {
@@ -77,10 +85,19 @@
 			<ul>
 				{#if annotations}
 					{#each annotations as annotation}
-						<li>
-							{annotation.label}
-						</li>
+						{#if annotation.label}
+							<li>
+								{annotation.label}
+							</li>
+						{/if}
 					{/each}
+				{/if}
+				{#if xyz}
+					{#if xyz.label}
+						<li>
+							{xyz.label}
+						</li>
+					{/if}
 				{/if}
 			</ul>
 		</div>
