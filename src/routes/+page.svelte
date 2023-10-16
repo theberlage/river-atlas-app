@@ -10,7 +10,7 @@
 	import { Tile as TileLayer, Vector as VectorLayer } from 'ol/layer.js'
 	import 'ol/ol.css'
 	import { fromLonLat } from 'ol/proj.js'
-	import ZoomToExtent from 'ol/control/ZoomToExtent.js'
+	import { Rotate, defaults as defaultControls } from 'ol/control.js'
 	import { getCenter } from 'ol/extent'
 	import GeoJSON from 'ol/format/GeoJSON.js'
 	import * as Color from 'ol/color.js'
@@ -225,12 +225,12 @@
 		let center = getCenter(extent)
 		let resolution = view.getResolutionForExtent(extent, map.getSize())
 
-		let bboxPolygon = fromExtent(extent)
-		let bboxFeature = new Feature({
-			geometry: bboxPolygon
-		})
+		// let bboxPolygon = fromExtent(extent)
+		// let bboxFeature = new Feature({
+		// 	geometry: bboxPolygon
+		// })
 
-		vectorSource.addFeature(bboxFeature)
+		// vectorSource.addFeature(bboxFeature)
 
 		view.animate({
 			center,
@@ -350,7 +350,7 @@
 				vectorLayer
 			],
 			target: 'ol',
-			controls: []
+			controls: defaultControls().extend([new Rotate()])
 		})
 
 		changeView()
@@ -534,4 +534,10 @@
 	.part {
 		grid-column: 1 / 4;
 	}
+
+  :global(.ol-rotate) {
+    left: 0.5em;
+    top: 4em;
+    right: auto;
+  }
 </style>
