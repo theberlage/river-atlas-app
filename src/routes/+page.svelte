@@ -25,7 +25,8 @@
 
 	// Stores
 
-	import { slidesByProject, slideShowID, slideIndex, homePage } from '$lib/components/stores'
+	import { slidesByProject, slideShowID, slideIndex, homePage } from '$lib/shared/slides'
+	import { hexToRGBA, defaultStyles, selectableStyles, selectedStyles } from '$lib/shared/styles'
 
 	// Allmaps
 
@@ -63,65 +64,10 @@
 	let innerHeight: number
 	let about: boolean = false
 
-	// Styles for OpenLayers
-
-	const styles = new Style({
-		stroke: new Stroke({
-			color: 'yellow',
-			width: 4
-		}),
-		fill: new Fill({
-			color: 'rgba(255, 255, 0, 0)'
-		})
-	})
-
-	const selected = new Style({
-		stroke: new Stroke({
-			color: 'yellow',
-			width: 4
-		}),
-		fill: new Fill({
-			color: 'yellow'
-		}),
-		zIndex: 5
-	})
-
-	const selectable = new Style({
-		stroke: new Stroke({
-			color: 'yellow',
-			width: 4
-		}),
-		fill: new Fill({
-			color: 'rgba(0, 255, 255, 0)'
-		}),
-		zIndex: 4
-	})
-
 	// Function to fetch external jsons
 
 	async function fetchJson(url: string) {
 		return fetch(url).then((response) => response.json())
-	}
-
-	// From: https://gist.github.com/danieliser/b4b24c9f772066bcf0a6
-
-	function convertHexToRGBA(hexCode, opacity = 1) {
-		let hex = hexCode.replace('#', '')
-
-		if (hex.length === 3) {
-			hex = `${hex[0]}${hex[0]}${hex[1]}${hex[1]}${hex[2]}${hex[2]}`
-		}
-
-		const r = parseInt(hex.substring(0, 2), 16)
-		const g = parseInt(hex.substring(2, 4), 16)
-		const b = parseInt(hex.substring(4, 6), 16)
-
-		/* Backward compatibility for whole number based opacity values. */
-		if (opacity > 1 && opacity <= 100) {
-			opacity = opacity / 100
-		}
-
-		return `rgba(${r},${g},${b},${opacity})`
 	}
 
 	// Function to add vector layer
@@ -146,14 +92,14 @@
 				properties.fill && properties.fill.includes('rgba')
 					? properties.fill
 					: properties.fill && properties.fill.includes('#')
-					? convertHexToRGBA(properties.fill, fillOpacity)
+					? $hexToRGBA(properties.fill, fillOpacity)
 					: `rgba(255, 255, 0, ${fillOpacity})`
 
 			let strokeColor =
 				properties.stroke && properties.stroke.includes('rgba')
 					? properties.stroke
 					: properties.stroke && properties.stroke.includes('#')
-					? convertHexToRGBA(properties.stroke, strokeOpacity)
+					? $hexToRGBA(properties.stroke, strokeOpacity)
 					: `rgba(255, 255, 0, ${strokeOpacity})`
 
 			let strokeWidth = 'stroke-width' in properties ? properties['stroke-width'] : 2
@@ -180,7 +126,7 @@
 			feature.setStyle(customStyle)
 
 			if (properties.project) {
-				feature.setStyle(selectable)
+				feature.setStyle($selectableStyles)
 			}
 		})
 	}
@@ -273,16 +219,20 @@
 		await animateView(extent, rotation)
 
 		if (selectedSlide.frontmatter.allmaps && selectedSlide.frontmatter.allmaps.length > 0) {
-			annotations = selectedSlide.frontmatter.allmaps.map((item: any) => {
-				return { path: path + '/annotations/' + item.annotation, ...item }
-			})
+			annotations = selectedSlide.frontmatter.allmaps
+				.filter((item: any) => item.annotation)
+				.map((item: any) => {
+					return { path: path + '/annotations/' + item.annotation, ...item }
+				})
 			addWarpedMapSource(annotations.reverse())
 		}
 
 		if (selectedSlide.frontmatter.geojson && selectedSlide.frontmatter.geojson.length > 0) {
-			geojsons = selectedSlide.frontmatter.geojson.map((item: any) => {
-				return path + '/geojsons/' + item.filename
-			})
+			geojsons = selectedSlide.frontmatter.geojson
+				.filter((item: any) => item.filename)
+				.map((item: any) => {
+					return path + '/geojsons/' + item.filename
+				})
 			addVectorSource(geojsons.reverse())
 		}
 
@@ -305,7 +255,7 @@
 		vectorSource = new VectorSource()
 		vectorLayer = new VectorLayer({
 			source: vectorSource,
-			style: styles,
+			style: $defaultStyles,
 			zIndex: 3
 		})
 
@@ -375,13 +325,13 @@
 					vectorSource.forEachFeature(function (feature) {
 						let properties = feature.getProperties()
 						if (properties.project) {
-							feature.setStyle(selectable)
+							feature.setStyle($selectableStyles)
 						}
 					})
 					map.getTargetElement().style.cursor = ''
 				}
 				if (feature !== undefined && feature.getProperties().project) {
-					feature.setStyle(selected)
+					feature.setStyle($selectedStyles)
 					map.getTargetElement().style.cursor = 'pointer'
 				}
 			})
@@ -535,9 +485,9 @@
 		grid-column: 1 / 4;
 	}
 
-  :global(.ol-rotate) {
-    left: 0.5em;
-    top: 4em;
-    right: auto;
-  }
+	:global(.ol-rotate) {
+		left: 0.5em;
+		top: 4em;
+		right: auto;
+	}
 </style>
