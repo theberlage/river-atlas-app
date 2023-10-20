@@ -109,7 +109,7 @@
 				</dl>
 			{/if}
 			{#if annotations || xyz}
-				<span class="sub-title">Credits</span>
+				<span class="sub-title">Sources</span>
 				<ul>
 					{#if annotations}
 						{#each annotations as annotation}
