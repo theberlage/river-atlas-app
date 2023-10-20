@@ -395,7 +395,7 @@
 			>
 				{about === false ? 'About' : 'Back to overview'}
 			</span>
-		<!-- {:else}
+			<!-- {:else}
 			<span class="float grey">About</span> -->
 		{/if}
 	</div>
@@ -440,17 +440,10 @@
 		height: 100vh;
 	}
 
-	@media all and (max-width: 600px) {
-		.grid-container {
-			display: grid;
-			grid-template-columns: [panel] 1fr;
-			grid-template-rows: [header] 40px [map] 1fr;
-			width: 100vw;
-			height: 100vh;
-		}
-		.hidden {
-			display: none;
-		}
+  :global(.ol-rotate) {
+		left: 0.5em;
+		top: 4em;
+		right: auto;
 	}
 
 	.header {
@@ -486,9 +479,21 @@
 		grid-column: 1 / 4;
 	}
 
-	:global(.ol-rotate) {
-		left: 0.5em;
-		top: 4em;
-		right: auto;
+	@media all and (max-width: 600px) {
+		.grid-container {
+			display: grid;
+			grid-template-columns: [panel] 1fr;
+			grid-template-rows: [header] 40px [map] 1fr;
+			width: 100vw;
+			height: 100vh;
+		}
+		.hidden {
+			display: none;
+		}
+		:global(.ol-rotate) {
+      left: auto;
+			right: 0.5em;
+			top: 0.5em;
+		}
 	}
 </style>
