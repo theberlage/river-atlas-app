@@ -395,8 +395,8 @@
 			>
 				{about === false ? 'About' : 'Back to overview'}
 			</span>
-		{:else}
-			<span class="float grey">About</span>
+		<!-- {:else}
+			<span class="float grey">About</span> -->
 		{/if}
 	</div>
 	{#if about}
