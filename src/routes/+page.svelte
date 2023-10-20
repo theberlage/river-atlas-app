@@ -62,6 +62,7 @@
 	let selectedFeature: FeatureLike | undefined
 
 	let innerHeight: number
+	let innerWidth: number
 	let about: boolean = false
 
 	// Function to fetch external jsons
@@ -204,7 +205,7 @@
 		xyzSource.clear()
 
 		if (slide !== undefined) {
-			view.padding = [0, 400, 0, 0]
+			view.padding = innerWidth > 600 ? [0, 400, 0, 0] : [0, 0, 0, 0]
 			selectedSlide = $slidesByProject[slide][index]
 			slideCount = $slidesByProject[slide].length
 			path = '/projects/' + $slideShowID
@@ -375,7 +376,7 @@
 	}
 </script>
 
-<svelte:window bind:innerHeight on:keydown={onKeyDown} on:keyup={onKeyUp} />
+<svelte:window bind:innerHeight bind:innerWidth on:keydown={onKeyDown} on:keyup={onKeyUp} />
 
 <svelte:head>
 	<title>City Atlas</title>

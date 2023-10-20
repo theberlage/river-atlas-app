@@ -8,7 +8,8 @@
 
 	let slideCount: number
 	let selectedSlide: any
-	let hidden: boolean = false
+	let innerWidth: number
+	$: hidden = innerWidth > 600 ? false : true
 	let annotations: any | undefined = undefined
 	let legend: any | undefined = undefined
 	let xyz: any | undefined = undefined
@@ -75,7 +76,7 @@
 	}
 </script>
 
-<svelte:window on:keydown|preventDefault={onKeyDown} />
+<svelte:window bind:innerWidth on:keydown|preventDefault={onKeyDown} />
 
 <div class="panel panel-grid-container">
 	<div class="description">
