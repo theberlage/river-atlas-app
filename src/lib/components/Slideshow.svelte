@@ -29,8 +29,6 @@
 		xyz = selectedSlide.frontmatter.xyz?.url ? selectedSlide.frontmatter.xyz : undefined
 	}
 
-  console.log($page)
-
 	function goNext() {
 		if ($slideIndex < slideCount - 1) {
 			slideIndex.update((n) => n + 1)
