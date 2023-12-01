@@ -263,6 +263,7 @@
 				slideShowID.set(undefined)
 				slideIndex.set(0)
 				about = false
+        location.hash = "#/"
 			}
 		}
 		changeView()
