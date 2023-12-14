@@ -5,12 +5,22 @@ viewer:
   bbox: [4.806266,52.296147,5.027182,52.417977]
   rotation: 140
 geojson:
-  - filename: locations.geojson
+  - filename:
+    label:
+  - filename: mothermap.geojson
     label: Locations
 xyz:
 allmaps:
+  - label: Mother Map Biljmeer
+    annotation: MotherMap_Biljmeer.json
+    opacity: 100
+    saturation: 100
+  - label: Mother Map
+    annotation: MotherMap.json
+    opacity: 100
+    saturation: 100
   - label: Uilenburg
-    annotation: 02uilenburgfrontpagenew2.json
+    annotation: 
     opacity: 100
     saturation: 100
     removeBackground:
@@ -19,7 +29,7 @@ allmaps:
       hardness: 
     colorize: "#570a0a"
   - label: Houthavens
-    annotation: houthavensnew.json
+    annotation: 
     opacity: 100
     saturation: 100
     removeBackground:
@@ -28,7 +38,7 @@ allmaps:
       hardness: 
     colorize: "#570a0a"
   - label: Helmersbuurt
-    annotation: helmersbuurtcover.json
+    annotation: 
     opacity: 100
     saturation: 100
     removeBackground:
@@ -37,7 +47,7 @@ allmaps:
       hardness: 
     colorize: "#570a0a"
   - label: Amsterdam Plan Tuistad-Slotermeer, 1952, scale 1:10.000
-    annotation: slotermeer.json
+    annotation: 
     opacity: 100
     saturation: 100
     removeBackground:
@@ -46,7 +56,7 @@ allmaps:
       hardness: 
     colorize: "#570a0a"
   - label: vijzelstraat
-    annotation: vijzelstraat-map0.json
+    annotation: 
     opacity: 100
     saturation: 100
     removeBackground:
@@ -55,7 +65,7 @@ allmaps:
       hardness: 
     colorize: "#570a0a"
   - label: bijlmermeer
-    annotation: 05bijlmercovermap.json
+    annotation: 
     opacity: 100
     saturation: 100
     removeBackground:
@@ -64,7 +74,7 @@ allmaps:
       hardness: 
     colorize: "#570a0a"
 mapbox:
-  styleUrl: 'mapbox://styles/momokb/clnk7dduu000801pgefgra6yk'
+  styleUrl: 'mapbox://styles/momokb/clpqw96dn016901r52ys29agm/draft'
   accessToken: 'pk.eyJ1IjoibW9tb2tiIiwiYSI6ImNsbmJxcGtrODBkYnUyaXI3Yjl2ODR1NTkifQ.OvugAnw_FwWro66sJ7Rl5A'
 ---
 ## Project NL
