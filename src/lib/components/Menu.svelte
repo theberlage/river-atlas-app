@@ -1,11 +1,11 @@
 <script lang="ts">
-	import { homePage } from '$lib/shared/slides'
+	// import { homePage } from '$lib/shared/slides'
 </script>
 
 <div class="about">
 	<div class="body">
-		<p class="project">{$homePage.frontmatter.meta.heading}</p>
-		<div class="html">{@html $homePage.html}</div>
+		<!-- <p class="project">{$homePage.frontmatter.meta.heading}</p>
+		<div class="html">{@html $homePage.html}</div> -->
 	</div>
 </div>
 

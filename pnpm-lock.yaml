@@ -6,8 +6,8 @@ settings:
 
 dependencies:
   '@allmaps/openlayers':
-    specifier: 1.0.0-beta.41
-    version: 1.0.0-beta.41
+    specifier: 1.0.0-beta.45
+    version: 1.0.0-beta.45
   lodash-es:
     specifier: ^4.17.21
     version: 4.17.21
@@ -93,76 +93,77 @@ packages:
     engines: {node: '>=0.10.0'}
     dev: true
 
-  /@allmaps/annotation@1.0.0-beta.17:
-    resolution: {integrity: sha512-Z6oOMx/GYcZBUOImtW/ZyDQ/UeI0Offln2k6W+bNov9JybQyQ60SfOMdHsX/n6P8m+4mpu04mHVhqklPybxxQw==}
+  /@allmaps/annotation@1.0.0-beta.19:
+    resolution: {integrity: sha512-tk56HtGTfcpAdO0p26g5FEhWzYpK0LyzvSE5ckBZFixntg8jT6x49J17z/sXsXTLON6uimGuizOlj1cYpPreDQ==}
     dependencies:
       zod: 3.22.4
     dev: false
 
-  /@allmaps/id@1.0.0-beta.19:
-    resolution: {integrity: sha512-mxb3a82jY0Tn5iX0DDsSf6lgpE4CP1jjA4j3LbAOcdlzcegl6d0VYbANVJ9K8sbLnxkZVv4yTKAC2pGDwgv/3Q==}
+  /@allmaps/id@1.0.0-beta.20:
+    resolution: {integrity: sha512-Gf2ly9WpXSpZ48muNK0g6a82bZd6f2GUcxmIOUS9LBkB1UDOOOKutrZ1yXwQgmaKDld1eg1oRFnWS442bhOsLA==}
     engines: {node: '>=v19.0.0'}
     dev: false
 
-  /@allmaps/iiif-parser@1.0.0-beta.26:
-    resolution: {integrity: sha512-ejNiYSNQNSEU69n7sOP8ri91UmTHc+I9Sye1FrOM4MSKMhDIn3aPmtDVR2zGH9n4dtv+pZzJ6sPQaUTHXo3RVw==}
+  /@allmaps/iiif-parser@1.0.0-beta.28:
+    resolution: {integrity: sha512-Ht4WDuWNvjWTGI7aH9NfhYi9CKnh5u+zNMNWoROryonN8cAFXR0aWJUpmP4PBNfbI8YIM7sgjJYSVg0fyangdw==}
     dependencies:
       zod: 3.22.4
     dev: false
 
-  /@allmaps/openlayers@1.0.0-beta.41:
-    resolution: {integrity: sha512-7f3eZF2mXeTj8dtyQXN5jdejavIbaGv15vkvfyMcSMMQzwT+UwPDHGuaPbagBhpqBLpmpBGVppyvdzXR9feCUw==}
+  /@allmaps/openlayers@1.0.0-beta.45:
+    resolution: {integrity: sha512-2SbjAOZmB20BlRT3i8rXMRgKlVAgORucU5aMG4P9kXajoTxsU4wt1f4p6pquZ3gydSgUGioXIZhGCE+tROOaJg==}
     dependencies:
-      '@allmaps/render': 1.0.0-beta.38
+      '@allmaps/render': 1.0.0-beta.42
+      '@allmaps/stdlib': 1.0.0-beta.17
       lodash-es: 4.17.21
       ol: 8.1.0
     dev: false
 
-  /@allmaps/render@1.0.0-beta.38:
-    resolution: {integrity: sha512-7HNtqH14zRgPC/Z3FLVdlMDy7rejuo23ZdEZY83xusFNzMmCQnxkhYiDXHcxx1G4os4RAzlOTFZP1h+RFNJF7w==}
+  /@allmaps/render@1.0.0-beta.42:
+    resolution: {integrity: sha512-CA3rJ/bBiJj697irD/4kejnm6INq5ZjhcvM9gd+Yd3Gvb0SaEls5dyO3tk4NyrqwJyIJJL7zHBVUuE8hVJiPQg==}
     dependencies:
-      '@allmaps/annotation': 1.0.0-beta.17
-      '@allmaps/id': 1.0.0-beta.19
-      '@allmaps/iiif-parser': 1.0.0-beta.26
-      '@allmaps/stdlib': 1.0.0-beta.13
-      '@allmaps/transform': 1.0.0-beta.16
-      '@allmaps/triangulate': 1.0.0-beta.5
+      '@allmaps/annotation': 1.0.0-beta.19
+      '@allmaps/id': 1.0.0-beta.20
+      '@allmaps/iiif-parser': 1.0.0-beta.28
+      '@allmaps/stdlib': 1.0.0-beta.17
+      '@allmaps/transform': 1.0.0-beta.20
+      '@allmaps/triangulate': 1.0.0-beta.9
       lodash-es: 4.17.21
       potpack: 2.0.0
       rbush: 3.0.1
     dev: false
 
-  /@allmaps/stdlib@1.0.0-beta.13:
-    resolution: {integrity: sha512-QMBPGkt4V7BsX5FIurAAiPxaXhAx5c58MIduAwUakAi9s5T4/GbphRgv2QCC/UAEO8WuTBqd+wzKX/H1ec4x/w==}
+  /@allmaps/stdlib@1.0.0-beta.17:
+    resolution: {integrity: sha512-UfOQmuIb8hN6k3GOa2hcajlryZXv0vX3A26FqhasS7juT0dxclRVX4DVOrz61fJfnJ2V1BfbiXb8M0dUIa1SpA==}
     dependencies:
-      '@allmaps/annotation': 1.0.0-beta.17
-      '@allmaps/iiif-parser': 1.0.0-beta.26
-      '@allmaps/types': 1.0.0-beta.4
+      '@allmaps/annotation': 1.0.0-beta.19
+      '@allmaps/iiif-parser': 1.0.0-beta.28
+      '@allmaps/types': 1.0.0-beta.6
       '@placemarkio/geojson-rewind': 1.0.2
       svg-parser: 2.0.4
     dev: false
 
-  /@allmaps/transform@1.0.0-beta.16:
-    resolution: {integrity: sha512-5CwW+BYyxa0pMXUSY+b5XXqjvrpkoyGGPpvapDfNHETiXD8HMfb8X+z7RCsbz0+DMLh1RetgqLohRXgna30LWA==}
+  /@allmaps/transform@1.0.0-beta.20:
+    resolution: {integrity: sha512-7XUtJs5ogiHJhUTMUaZfD2kJNzyaHR/o2pzIlrLhtEghfx6XC/W+d1eBtwCT1fdFVy6vSj2wHTH1L8Ov1hxT1w==}
     dependencies:
-      '@allmaps/stdlib': 1.0.0-beta.13
-      '@allmaps/types': 1.0.0-beta.4
+      '@allmaps/stdlib': 1.0.0-beta.17
+      '@allmaps/types': 1.0.0-beta.6
       '@turf/distance': 6.5.0
       '@turf/midpoint': 6.5.0
       ml-matrix: 6.10.5
     dev: false
 
-  /@allmaps/triangulate@1.0.0-beta.5:
-    resolution: {integrity: sha512-/83QTenXQ748sgcQwQ0hEBQOvaM9vdo5k4DPJGJvFG7IiHH74tvaiK5RIxgU/9MmYDzOJ6Ug8riT1JkSGAynzg==}
+  /@allmaps/triangulate@1.0.0-beta.9:
+    resolution: {integrity: sha512-4wWzFVWpYDXwTbtgwxXKpfKHYXUj/CN6km4T+d6yjhdCEf2/8/qC2Bm/pIkOf9Cwax9XzJoMq5Ylk3Th8RjRzg==}
     dependencies:
-      '@allmaps/stdlib': 1.0.0-beta.13
-      '@allmaps/types': 1.0.0-beta.4
+      '@allmaps/stdlib': 1.0.0-beta.17
+      '@allmaps/types': 1.0.0-beta.6
       poly2tri: 1.5.0
       robust-point-in-polygon: 1.0.3
     dev: false
 
-  /@allmaps/types@1.0.0-beta.4:
-    resolution: {integrity: sha512-Sp0hdsfkgJ5STOr9YsJGV4kzVZvt3K1BKQ9ZpZZuKfkHLfpbmlYovIBeOm7LtAwBE+IeySx72PP2LsC8vlHszA==}
+  /@allmaps/types@1.0.0-beta.6:
+    resolution: {integrity: sha512-1fm78/s0QOZFX2fUa8ee5o+kXBK9xE9yA8R+8B5NNNfoXi9m+8bXmtfQTRY93Ti52SzIQ1enhaySCi5ku9r8qA==}
     dev: false
 
   /@esbuild/android-arm64@0.18.20:
