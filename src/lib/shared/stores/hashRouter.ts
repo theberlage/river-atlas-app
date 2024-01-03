@@ -3,28 +3,27 @@ import { slideData as slideDataStore } from '$lib/shared/stores/markdownSlides.j
 import {
 	selectedChapter as selectedChapterStore,
 	selectedSlideShow as selectedSlideShowStore,
-	selectedSlideIndex as selectedSlideIndexStore
+	selectedSlideIndex as selectedSlideIndexStore,
+	selectedSlideShowCount
 } from '$lib/shared/stores/selectedSlide.js'
-
-export let locationHash = writable<string | undefined>(undefined)
-
-// Parse hash and set stores each time hash changes
-locationHash.subscribe((value) => {
-	if (value !== undefined) {
-		parseHash(value)
-		console.log('hash:', value)
-	}
-})
 
 // slideData doesn't change so only get once
 const slideData = get(slideDataStore)
+export const hash = writable<string | undefined>(undefined)
+
+// Parse hash and set stores each time hash changes
+hash.subscribe((value) => {
+	if (value !== undefined) {
+		parseHash(value)
+		console.log('!---! NEW HASH !---!', value, '!---!')
+	}
+})
 
 function parseHash(hash: string) {
 	const hashArray = hash.split('/')
 	const length = hashArray.length
 	let selectedChapter: Map<string, Array<any>>
 	let selectedSlideShow: Array<any>
-	let selectedSlide: any
 
 	// hashArray always has length 1
 	// 0: # or empty
@@ -46,14 +45,14 @@ function parseHash(hash: string) {
 			} else {
 				// Select first slide of select slide show
 				selectedSlideIndexStore.set(0)
-				// Todo: set hash to /1
+				// window.location.hash = `#/${selectedChapter}/${selectedSlideShow}/1`
 			}
 		} else {
 			// Select first slide of selected chapter
 			selectedSlideShow = selectedChapter.entries().next().value[0]
 			selectedSlideShowStore.set(selectedSlideShow)
 			selectedSlideIndexStore.set(0)
-			// Todo: set hash to slide show
+			// window.location.hash = `#/${selectedChapter}/${selectedSlideShow}/1`
 		}
 	} else {
 		// Select first slide of first chapter
@@ -62,7 +61,7 @@ function parseHash(hash: string) {
 		selectedSlideShow = slideData.get(selectedChapter).entries().next().value[0]
 		selectedSlideShowStore.set(selectedSlideShow)
 		selectedSlideIndexStore.set(0)
-		// Todo: set hash to chapter
+		// window.location.hash = `#/${selectedChapter}/`
 	}
 
 	// if (hashArray.length >= 1) {
@@ -87,6 +86,12 @@ function parseHash(hash: string) {
 	// 	}
 	// }
 }
+
+// export function goNext() {
+// 	window.location.hash = `#/${$selectedChapterStore}/${$selectedSlideShowStore}/${
+// 		$selectedSlideIndexStore + 1
+// 	}`
+// }
 
 export function goHome() {
 	window.location.hash = '#/'

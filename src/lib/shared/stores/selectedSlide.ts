@@ -4,7 +4,7 @@ import { fetchJson } from '$lib/shared/utils.js'
 
 export let selectedChapter = writable<string | undefined>(undefined)
 export let selectedSlideShow = writable<string | undefined>(undefined)
-export let selectedSlideIndex = writable<number | undefined>(undefined)
+export let selectedSlideIndex = writable<number>(0)
 
 selectedChapter.subscribe((value) => {
 	console.log('selectedChapter', value)
@@ -18,27 +18,39 @@ selectedSlideIndex.subscribe((value) => {
 	console.log('selectedSlideIndex', value)
 })
 
-// const selectedChapterData = derived([slideData, selectedChapter],
-//   ([$slideData, $selectedChapter], set) => {
-//     if ($selectedChapter) {
-//       set($slideData.get($selectedChapter))
-//     }
-//   }
-// )
+const selectedChapterData = derived(
+	[slideData, selectedChapter],
+	([$slideData, $selectedChapter], set) => {
+		if ($selectedChapter) {
+			set($slideData.get($selectedChapter))
+		}
+	}
+)
+
+const selectedSlideShowData = derived(
+	[selectedChapterData, selectedSlideShow],
+	([$selectedChapterData, $selectedSlideShow], set) => {
+		if ($selectedChapterData) {
+			set($selectedChapterData.get($selectedSlideShow))
+		}
+	}
+)
+
+export const selectedSlideShowCount = derived(
+	selectedSlideShowData,
+	($selectedSlideShowData, set) => {
+		if ($selectedSlideShowData) set($selectedSlideShowData.length)
+	}
+)
 
 // Data for the current slide
 // First value is undefined
 export const selectedSlideData = derived(
-	[slideData, selectedChapter, selectedSlideShow, selectedSlideIndex],
-	([$slideData, $selectedChapter, $selectedSlideShow, $selectedSlideIndex], set) => {
+	[selectedSlideShowData, selectedSlideIndex],
+	([$selectedSlideShowData, $selectedSlideIndex], set) => {
 		// First value of selectedChapter is undefined
-		if ($selectedChapter) {
-			const chapter = $slideData.get($selectedChapter)
-			const slideshow = chapter.get($selectedSlideShow)
-			// selectedSlideIndex can be zero
-			if ($selectedSlideIndex !== undefined) {
-				set(slideshow[$selectedSlideIndex])
-			}
+		if ($selectedSlideShowData) {
+			set($selectedSlideShowData[$selectedSlideIndex])
 		}
 	}
 )
@@ -129,6 +141,10 @@ export const mapBoxLayer = derived(
 		}
 	}
 )
+
+selectedSlideShowCount.subscribe((value) => {
+	console.log('slideShowCount', value)
+})
 
 selectedSlideData.subscribe((value) => {
 	console.log('selectedSlideData', value)

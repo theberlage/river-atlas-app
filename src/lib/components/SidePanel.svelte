@@ -1,87 +1,42 @@
 <script lang="ts">
-	import { createEventDispatcher } from 'svelte'
-	import { slidesByProject, slideShowID, slideIndex } from '$lib/shared/slides'
-	import { hexToRGBA } from '$lib/shared/styles'
+	import {
+		selectedSlideData as slide,
+		selectedSlideShowCount as count,
+		selectedSlideIndex as index
+	} from '$lib/shared/stores/selectedSlide.js'
+	import { hexToRGBA } from '$lib/shared/utils.js'
 	import { page } from '$app/stores'
 
-	const dispatch = createEventDispatcher()
-
-	let slideCount: number
-	let selectedSlide: any
 	let innerWidth: number
 	$: hidden = innerWidth > 600 ? false : true
-	let annotations: any | undefined = undefined
-	let legend: any | undefined = undefined
-	let xyz: any | undefined = undefined
+	let data: any
+	let path: string
+	let html: string
+	let annotations: any
+	let legend: any
+	let xyz: any
 	let allmapsViewer: string = 'https://viewer.allmaps.org/?url='
 
-	$: if ($slideShowID !== undefined) {
-		slideCount = $slidesByProject[$slideShowID].length
-		selectedSlide = $slidesByProject[$slideShowID][$slideIndex]
-		legend =
-			selectedSlide.frontmatter.legend && selectedSlide.frontmatter.legend.length > 0
-				? selectedSlide.frontmatter.legend
-				: undefined
-		annotations =
-			selectedSlide.frontmatter.allmaps && selectedSlide.frontmatter.allmaps.length > 0
-				? selectedSlide.frontmatter.allmaps
-				: undefined
-		xyz = selectedSlide.frontmatter.xyz?.url ? selectedSlide.frontmatter.xyz : undefined
-	}
-
-	function goNext() {
-		if ($slideIndex < slideCount - 1) {
-			const index = $slideIndex + 2
-			window.location.hash = '#/project/' + $slideShowID + '/' + index
-		} else if ($slideIndex === slideCount - 1) {
-			window.location.hash = '#/'
-		}
-	}
-
-	function goPrev() {
-		if ($slideIndex > 0) {
-			const index = $slideIndex
-			window.location.hash = '#/project/' + $slideShowID + '/' + index
-		} else if ($slideIndex === 0) {
-			window.location.hash = '#/'
-		}
-	}
-
-	function goHome() {
-		window.location.hash = '#/'
-	}
-
-	// up = 38
-	// down = 40
-	// right = 39
-	// left = 37
-	// esc = 27
-
-	function onKeyDown(e: any) {
-		switch (e.keyCode) {
-			case 27:
-				goHome()
-				break
-			case 37:
-				goPrev()
-				break
-			case 39:
-				goNext()
-				break
-		}
+	$: {
+		data = $slide.frontmatter
+		html = $slide.html
+		path = $slide.path
+		legend = data.legend && data.legend.length > 0 ? data.legend : undefined
+		annotations = data.allmaps && data.allmaps.length > 0 ? data.allmaps : undefined
+		xyz = data.xyz?.url ? data.xyz : undefined
 	}
 </script>
 
-<svelte:window bind:innerWidth on:keydown|preventDefault={onKeyDown} />
+<svelte:window bind:innerWidth />
 
 <div class="panel panel-grid-container">
 	<div class="description">
 		<p class="project">
-			{selectedSlide.frontmatter.meta.heading}
-			<span class="float">{$slideIndex + 1}/{slideCount}</span>
+			{data.meta.heading}
+			<span class="float">{$index + 1}/{$count}</span>
 		</p>
 		<div class:hidden class="body">
-			{@html selectedSlide.html}
+			{@html html}
 			{#if legend}
 				<span class="sub-title">Legend</span>
 				<dl class="legend">
@@ -90,11 +45,11 @@
 							<div
 								class="legend-item"
 								style="background: {item.fill && item['fill-opacity']
-									? $hexToRGBA(item.fill, item['fill-opacity'])
+									? hexToRGBA(item.fill, item['fill-opacity'])
 									: item.fill
 									? item.fill
 									: 'none'}; outline-color: {item.stroke && item['stroke-opacity']
-									? $hexToRGBA(item.stroke, item['stroke-opacity'])
+									? hexToRGBA(item.stroke, item['stroke-opacity'])
 									: item.stroke
 									? item.stroke
 									: item.fill}"
@@ -109,7 +64,7 @@
 				<ul>
 					{#if annotations}
 						{#each annotations as annotation}
-							{#if annotation.label}
+							{#if annotation.annotation && annotation.label}
 								<li>
 									{annotation.label}
 									{#if annotation.attribution?.name && annotation.attribution?.url}
@@ -118,7 +73,7 @@
 									<a
 										href={allmapsViewer +
 											$page.url.origin +
-											selectedSlide.path +
+											path +
 											'annotations/' +
 											annotation.annotation}>Open in Allmaps</a
 									>
@@ -140,7 +95,7 @@
 			{/if}
 		</div>
 	</div>
-	<div class="control-container">
+	<!-- <div class="control-container">
 		<button class="control-item hideshow" on:click={() => (hidden = !hidden)}>
 			{hidden === false ? 'Hide text' : 'Show text'}
 		</button>
@@ -150,12 +105,12 @@
 		<button class="control-item" on:click={goPrev}>
 			{$slideIndex === 0 ? 'Back to overview' : 'Previous slide'}
 		</button>
-	</div>
+	</div> -->
 </div>
 
 <style>
 	.panel {
-		background-color: rgba(255, 255, 255, 0.9);
+		background-color: rgba(255, 255, 114);
 		z-index: 2;
 	}
 
@@ -167,30 +122,9 @@
 		grid-template-rows: 1fr [controls] 100px;
 		min-width: 0;
 		min-height: 0;
-		border-left: 1px solid lightgray;
-	}
-
-	:global(h1) {
-		font-size: 1.3rem;
-		font-weight: normal;
-	}
-
-	:global(h2) {
-		font-size: 1.3rem;
-		font-weight: normal;
-	}
-
-	:global(h3) {
-		font-size: 1.3rem;
-		font-weight: normal;
-	}
-
-	:global(strong) {
-		font-weight: normal;
-	}
-
-	:global(em) {
-		font-style: normal;
+		/* border-left: 1px solid lightgray; */
+		border-radius: 10px;
+		margin: 0px 15px 15px 15px;
 	}
 
 	ul {
@@ -208,7 +142,7 @@
 
 	.description {
 		grid-column: 1 / 2;
-		grid-row: 1 / 2;
+		grid-row: 1 / 3;
 		overflow: auto;
 		z-index: 2;
 		line-height: 1.3;
@@ -221,9 +155,9 @@
 	}
 
 	.body {
-		hyphens: auto;
+		/* hyphens: auto;
 		text-align: justify;
-		text-justify: inter-word;
+		text-justify: inter-word; */
 	}
 
 	.project {
@@ -306,7 +240,7 @@
 		}
 		.panel-grid-container {
 			grid-template-rows: 1fr [controls] 100px;
-			border-top: 1px solid lightgray;
+			/* border-top: 1px solid lightgray; */
 			border-left: none;
 		}
 		.project {

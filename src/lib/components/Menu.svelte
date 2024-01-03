@@ -1,37 +1,63 @@
 <script lang="ts">
-	// import { homePage } from '$lib/shared/slides'
+	import { createEventDispatcher } from 'svelte'
+	import { slideData } from '$lib/shared/stores/markdownSlides.js'
+	import { menu } from '$lib/shared/stores/componentStates.js'
+
+	const toggleMenu = () => menu.toggle()
 </script>
 
-<div class="about">
+<div class="menu">
 	<div class="body">
-		<!-- <p class="project">{$homePage.frontmatter.meta.heading}</p>
-		<div class="html">{@html $homePage.html}</div> -->
+		<p class="project">Menu</p>
+		<div class="html">
+			<ul>
+				{#each [...$slideData.keys()] as chapter}
+					<li><a on:click={toggleMenu} href="#/{chapter}">{chapter}</a></li>
+					<ul>
+						{#each [...$slideData.get(chapter).keys()] as slideshow}
+							<li>
+								<a on:click={toggleMenu} href="#/{chapter}/{slideshow}/1">{slideshow}</a>
+							</li>
+						{/each}
+					</ul>
+				{/each}
+			</ul>
+		</div>
 	</div>
 </div>
 
 <style>
-	.about {
+	.menu {
 		grid-column: 1 / 5;
-		grid-row: map;
-		background-color: rgba(255, 255, 255, 0.9);
+		grid-row: 1 / 3;
+		background-color: rgba(0, 0, 0, 0.6);
 		padding-left: 20px;
 		padding-right: 20px;
 		min-width: 0;
 		min-height: 0;
 		overflow: auto;
-		z-index: 2;
+		z-index: 3;
 		display: flex;
 		justify-content: center;
 		align-items: center;
-    line-height: 1.3;
+		line-height: 1.3;
+		color: white;
+	}
+	a {
+		color: white;
+		text-decoration: none;
+	}
+	a:hover {
+		color: rgba(255, 255, 114);
+		text-decoration: none;
 	}
 	.body {
 		max-width: 600px;
 		max-height: 100%;
 	}
-  .project {
+	.project {
 		font-size: 0.8rem;
-    margin-bottom: 0;
+		margin-bottom: 0;
 	}
 	.html {
 		hyphens: auto;
@@ -39,18 +65,10 @@
 		text-justify: inter-word;
 		columns: 1;
 	}
-  :global(ul) {
+	ul {
 		margin-left: 0;
-		padding-left: 0;
+		padding-left: 1em;
 		list-style-type: none;
-	}
-	:global(a) {
-		color: blue;
-		text-decoration: none;
-	}
-	:global(a:hover) {
-		color: black;
-		text-decoration: none;
 	}
 	@media all and (max-width: 800px) {
 		.body {

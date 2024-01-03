@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { onMount } from 'svelte'
+	import { createEventDispatcher, onMount } from 'svelte'
 	import { readable, writable, derived, get } from 'svelte/store'
 
 	// Stores
@@ -25,13 +25,20 @@
 	import { MapboxVectorLayer } from 'ol-mapbox-style'
 	import { fromExtent } from 'ol/geom/Polygon'
 	import Feature from 'ol/Feature.js'
+	import { unByKey } from 'ol/Observable'
 
 	// Types & CSS
 	import type { Extent, Coordinate } from 'ol/extent'
+	import type { EventsKey } from 'ol/events'
 	import 'ol/ol.css'
 
 	// Vector styles
-	import { defaultStyles, selectedStyles, selectableStyles } from '$lib/shared/vectorStyles.js'
+	import {
+		defaultStyles,
+		selectedStyles,
+		selectableStyles,
+		parseCustomFeatureStyle
+	} from '$lib/shared/vectorStyles.js'
 
 	// Allmaps
 	import { WarpedMapSource, WarpedMapLayer } from '@allmaps/openlayers'
@@ -56,6 +63,11 @@
 	let animating: boolean = false
 	let extent: Extent
 
+	let pointerMoveKey: EventsKey | undefined = undefined
+	let singleClickKey: EventsKey | undefined = undefined
+
+	let innerWidth: number
+
 	// Add Mapbox background layer
 	$: {
 		if (map && $mapboxSettings) {
@@ -65,6 +77,12 @@
 			})
 			let resp = map.getLayers().extend([mapboxLayer])
 			console.log('Added Mapbox layer')
+		}
+	}
+
+	$: {
+		if (view) {
+			view.padding = innerWidth > 600 ? [0, 400, 0, 0] : [0, 0, 0, 0]
 		}
 	}
 
@@ -81,22 +99,25 @@
 			// Add/remove XYZ layer
 			if (settings.xyz?.url) {
 				const url = settings.xyz.url
-				if (currentXyzSource !== url) {
+				if (currentXyzSource && currentXyzSource !== url) {
 					// Replace XYZ layer
 					xyzSource.setUrl('')
 					xyzSource.clear()
 					xyzSource.setUrl(url)
-					currentXyzSource = url
+					console.log('Changed XYZ layer')
+				} else if (currentXyzSource === url) console.log('Existing XYZ layer')
+				else {
+					xyzSource.setUrl(url)
+					console.log('Added XYZ layer')
 				}
-			} else {
+				currentXyzSource = url
+			} else if (currentXyzSource) {
 				// Remove XYZ layer
 				xyzSource.setUrl('')
 				xyzSource.clear()
 				currentXyzSource = undefined
+				console.log('Removed XYZ layer')
 			}
-
-			// Todo: Padding
-			// view.padding = innerWidth > 600 ? [0, 400, 0, 0] : [0, 0, 0, 0]
 
 			// Animate view
 			animateView(center, resolution, rotation, duration)
@@ -112,8 +133,9 @@
 			} else {
 				warpedMapSource.clear()
 				currentWarpedMapSource.set(new Map())
+				console.log('All maps removed')
 			}
-			console.log('Processed maps!')
+			// console.log('Processed maps')
 		}
 	}
 
@@ -126,8 +148,9 @@
 			} else {
 				vectorSource.clear()
 				currentVectorSource.set(new Map())
+				console.log('All features removed')
 			}
-			console.log('Processed features!')
+			// console.log('Processed features')
 		}
 	}
 
@@ -146,21 +169,25 @@
 	}
 
 	async function addWarpedMapSource(newWarpedMapSource: any) {
+		let removedCount = 0
+		let addedCount = 0
+		let existingCount = 0
 		for (const [id, annotation] of $currentWarpedMapSource) {
 			// Remove maps from WarpedMapSource that are not on the new slide
 			if (!newWarpedMapSource.has(id)) {
 				await warpedMapSource.removeGeoreferenceAnnotation(annotation)
-				console.log('Removed map', id)
+				removedCount++
 			}
 		}
 		for (const [id, annotation] of newWarpedMapSource) {
 			// Only add new maps to WarpedMapSource
 			if (!$currentWarpedMapSource.has(id)) {
 				await warpedMapSource.addGeoreferenceAnnotation(annotation)
-				console.log('Added map', id)
+				addedCount++
 			} else {
 				// Move existing maps to front to follow new layer order
 				warpedMapSource.bringMapsToFront([id])
+				existingCount++
 			}
 			// Set properties
 			const properties = annotation.properties
@@ -187,16 +214,27 @@
 				warpedMapLayer.setMapColorize(id, properties.colorize)
 			}
 		}
+		console.log(`Maps: ${removedCount} removed, ${addedCount} added, ${existingCount} existing`)
 		currentWarpedMapSource.set(newWarpedMapSource)
 	}
 
 	function addVectorSource(newVectorSource: any) {
+		// Remove existing listeners
+		if (pointerMoveKey && singleClickKey) {
+			map.getTargetElement().style.cursor = ''
+			unByKey(pointerMoveKey)
+			unByKey(singleClickKey)
+			console.log('Removed listeners')
+		}
+		let removedCount = 0
+		let addedCount = 0
+		let existingCount = 0
 		vectorSource.forEachFeature((feature) => {
 			const path = feature.getProperties().collection
 			// Remove vectors from VectorSource that are not on the new slide
 			if (!newVectorSource.has(path)) {
 				vectorSource.removeFeature(feature)
-				console.log('Removed feature', feature)
+				removedCount++
 			}
 		})
 		for (let [path, features] of newVectorSource) {
@@ -206,9 +244,12 @@
 					featureProjection: 'EPSG:3857'
 				})
 				vectorSource.addFeatures(parsedFeatures)
-				console.log('Added features', features)
+				addedCount++
+			} else {
+				existingCount++
 			}
 		}
+		console.log(`Features: ${removedCount} removed, ${addedCount} added, ${existingCount} existing`)
 		currentVectorSource.set(newVectorSource)
 		// Uncomment the block below to display the bbox of the view
 
@@ -219,78 +260,53 @@
 		// vectorSource.addFeature(bboxFeature)
 
 		// Set properties
+		let selectable = false
 		vectorSource.forEachFeature(function (feature) {
 			let properties = feature.getProperties()
-			let fillOpacity = 'fill-opacity' in properties ? properties['fill-opacity'] : 0
-			let strokeOpacity = 'stroke-opacity' in properties ? properties['stroke-opacity'] : 1
-			let fillColor =
-				properties.fill && properties.fill.includes('rgba')
-					? properties.fill
-					: properties.fill && properties.fill.includes('#')
-					? hexToRGBA(properties.fill, fillOpacity)
-					: `rgba(255, 255, 0, ${fillOpacity})`
-			let strokeColor =
-				properties.stroke && properties.stroke.includes('rgba')
-					? properties.stroke
-					: properties.stroke && properties.stroke.includes('#')
-					? hexToRGBA(properties.stroke, strokeOpacity)
-					: `rgba(255, 255, 0, ${strokeOpacity})`
-			let strokeWidth = 'stroke-width' in properties ? properties['stroke-width'] : 2
-			let radius = 'radius' in properties ? properties.radius : 10
-			let customStyle = new Style({
-				stroke: new Stroke({
-					color: strokeColor,
-					width: strokeWidth
-				}),
-				fill: new Fill({
-					color: fillColor
-				}),
-				image: new Circle({
-					radius,
-					fill: new Fill({ color: fillColor }),
-					stroke: new Stroke({
-						color: strokeColor,
-						width: strokeWidth
-					})
-				})
-			})
-			feature.setStyle(customStyle)
-			if (properties.project) {
+			if (properties.href) {
+				selectable = true
 				feature.setStyle(selectableStyles)
+			} else {
+				const customStyle = parseCustomFeatureStyle(properties)
+				feature.setStyle(customStyle)
 			}
 		})
+		if (selectable) createListeners()
 	}
 
-	// map.on('pointermove', function (event) {
-	// 	vectorLayer.getFeatures(event.pixel).then(function (features) {
-	// 		let feature = features.length ? features[0] : undefined
-	// 		if (feature == undefined || !feature.getProperties().project) {
-	// 			vectorSource.forEachFeature(function (feature) {
-	// 				let properties = feature.getProperties()
-	// 				if (properties.project) {
-	// 					feature.setStyle($selectableStyles)
-	// 				}
-	// 			})
-	// 			map.getTargetElement().style.cursor = ''
-	// 		}
-	// 		if (feature !== undefined && feature.getProperties().project) {
-	// 			feature.setStyle($selectedStyles)
-	// 			map.getTargetElement().style.cursor = 'pointer'
-	// 		}
-	// 	})
-	// })
+	function createListeners() {
+		pointerMoveKey = map.on('pointermove', function (event) {
+			vectorLayer.getFeatures(event.pixel).then(function (features) {
+				let feature = features.length ? features[0] : undefined
+				if (feature == undefined || !feature.getProperties().href) {
+					vectorSource.forEachFeature(function (feature) {
+						let properties = feature.getProperties()
+						if (properties.href) {
+							feature.setStyle(selectableStyles)
+						}
+					})
+					map.getTargetElement().style.cursor = ''
+				}
+				if (feature && feature.getProperties().href) {
+					feature.setStyle(selectedStyles)
+					map.getTargetElement().style.cursor = 'pointer'
+				}
+			})
+		})
 
-	// map.on('singleclick', function (event) {
-	// 	vectorLayer.getFeatures(event.pixel).then(function (features) {
-	// 		const feature = features.length ? features[0] : undefined
-	// 		if (feature !== undefined) {
-	// 			const properties = feature.getProperties()
-	// 			if (properties.project) {
-	// 				window.location.hash = '#/project/' + properties.project + '/1'
-	// 			}
-	// 		}
-	// 	})
-	// })
+		singleClickKey = map.on('singleclick', function (event) {
+			vectorLayer.getFeatures(event.pixel).then(function (features) {
+				const feature = features.length ? features[0] : undefined
+				if (feature) {
+					const properties = feature.getProperties()
+					if (properties.href) {
+						window.location.hash = properties.href
+					}
+				}
+			})
+		})
+		console.log('Added listeners')
+	}
 
 	onMount(async () => {
 		// let osmLayer = new TileLayer({
@@ -318,6 +334,7 @@
 		})
 
 		view = new olView()
+
 		map = new olMap({
 			view,
 			layers: [
@@ -333,29 +350,36 @@
 	})
 </script>
 
+<svelte:window bind:innerWidth />
+
 <div id="ol" class="map" />
 
 <style>
 	.map {
 		grid-column: 1 / 5;
-		grid-row: map;
+		grid-row: 1 / 3;
 		background-color: white;
 		width: 100%;
 		height: 100%;
 		z-index: 1;
 	}
 
+	:global(.ol-zoom) {
+		top: 45px;
+		left: 10px;
+	}
+
 	:global(.ol-rotate) {
-		left: 0.5em;
-		top: 4em;
+		left: 10px;
+		top: 95px;
 		right: auto;
 	}
 
 	@media all and (max-width: 600px) {
 		:global(.ol-rotate) {
-			left: auto;
+			/* left: auto;
 			right: 0.5em;
-			top: 0.5em;
+			top: 0.5em; */
 		}
 	}
 </style>

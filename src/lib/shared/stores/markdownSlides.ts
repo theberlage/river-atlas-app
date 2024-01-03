@@ -12,12 +12,10 @@ const slidesWithMetadata = Object.entries(markdownSlides).map(([id, slide]) => {
 	let chapter: string = ''
 	let slideshow: string = ''
 	let index: number = -1
-	let path = id.split("/contents/")[1].split("slides/")[0]
+	let path = '/' + id.split('/contents/')[1].split('slides/')[0]
 
 	const match =
-		/\/data\/\d+-(?<chapter>\w+)\/\d+-(?<slideshow>\w+)\/slides\/(?<index>\d+).md$/.exec(
-			id
-		)
+		/\/data\/\d+-(?<chapter>\w+)\/\d+-(?<slideshow>\w+)\/slides\/(?<index>\d+).md$/.exec(id)
 
 	if (match && match.groups) {
 		chapter = match.groups.chapter
@@ -29,7 +27,7 @@ const slidesWithMetadata = Object.entries(markdownSlides).map(([id, slide]) => {
 		chapter,
 		slideshow,
 		index,
-    path,
+		path,
 		...slide
 	}
 })
