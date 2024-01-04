@@ -5,6 +5,7 @@
 		selectedSlideShowCount as count,
 		selectedSlideIndex as index
 	} from '$lib/shared/stores/selectedSlide.js'
+	import { next, prev } from '$lib/shared/svgs.js'
 
 	function goNext() {
 		if ($index < $count - 1) {
@@ -45,27 +46,21 @@
 				break
 		}
 	}
-
-	const next = `<svg class="icon w-6 h-6 text-gray-800 dark:text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 8 14">
-    <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m1 13 5.7-5.326a.909.909 0 0 0 0-1.348L1 1"/>
-  </svg>`
-
-	const prev = `<svg class="icon w-6 h-6 text-gray-800 dark:text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 8 14">
-    <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 1 1.3 6.326a.91.91 0 0 0 0 1.348L7 13"/>
-  </svg>`
 </script>
 
 <svelte:window on:keydown={onKeyDown} />
 
-{#if $count > 1}
-	<div class="control">
-		<div class="content">
+<div class="control">
+	<div class="content">
+		{#if $count > 1}
 			<span class="link" on:click={() => goPrev()}>{@html prev}</span>
 			Slide {$index + 1} of {$count}
 			<span class="link" on:click={() => goNext()}>{@html next}</span>
-		</div>
+		{:else}
+			<span>Click a location to start a slideshow</span>
+		{/if}
 	</div>
-{/if}
+</div>
 
 <style>
 	.control {

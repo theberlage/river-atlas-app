@@ -16,6 +16,12 @@ export function sleep(ms: number) {
 	return new Promise((resolve) => setTimeout(resolve, ms))
 }
 
+export function stringToHTML(str: string) {
+	var parser = new DOMParser()
+	var doc = parser.parseFromString(str, 'text/html')
+	return doc.body
+}
+
 // From: https://gist.github.com/danieliser/b4b24c9f772066bcf0a6
 
 export function hexToRGBA(hexCode, opacity = 1) {

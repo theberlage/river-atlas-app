@@ -11,14 +11,15 @@
 	} from '$lib/shared/stores/selectedSlide.js'
 
 	// Shared functions
-	import { calculateExtent, sleep, hexToRGBA } from '$lib/shared/utils.js'
+	import { calculateExtent, sleep, hexToRGBA, stringToHTML } from '$lib/shared/utils.js'
 
 	// Open Layers
 	import olMap from 'ol/Map'
 	import olView from 'ol/View'
 	import { Tile as TileLayer, Vector as VectorLayer } from 'ol/layer.js'
 	import { OSM, XYZ, Vector as VectorSource } from 'ol/source.js'
-	import { Rotate, defaults as defaultControls } from 'ol/control.js'
+	import { Rotate, Zoom, Control, defaults as defaultControls } from 'ol/control.js'
+	import Collection from 'ol/Collection.js'
 	import { getCenter } from 'ol/extent'
 	import GeoJSON from 'ol/format/GeoJSON.js'
 	import { Fill, Stroke, Circle, Style } from 'ol/style.js'
@@ -32,13 +33,14 @@
 	import type { EventsKey } from 'ol/events'
 	import 'ol/ol.css'
 
-	// Vector styles
+	// Vector styles and svg
 	import {
 		defaultStyles,
 		selectedStyles,
 		selectableStyles,
 		parseCustomFeatureStyle
 	} from '$lib/shared/vectorStyles.js'
+	import { plus, minus, arrowUp } from '$lib/shared/svgs.js'
 
 	// Allmaps
 	import { WarpedMapSource, WarpedMapLayer } from '@allmaps/openlayers'
@@ -67,6 +69,21 @@
 	let singleClickKey: EventsKey | undefined = undefined
 
 	let innerWidth: number
+
+	const addControls = () => {
+		const collection = new Collection()
+		const zoomIn = new Zoom({
+			zoomInLabel: stringToHTML(plus),
+			zoomOutLabel: stringToHTML(minus)
+			// className: 'custom-control'
+		})
+		const rotate = new Rotate({
+			label: stringToHTML(arrowUp)
+			// className: 'custom-control'
+		})
+		collection.extend([zoomIn, rotate])
+		return collection
+	}
 
 	// Add Mapbox background layer
 	$: {
@@ -345,7 +362,7 @@
 				vectorLayer
 			],
 			target: 'ol',
-			controls: defaultControls().extend([new Rotate()])
+			controls: addControls()
 		})
 	})
 </script>
@@ -364,14 +381,39 @@
 		z-index: 1;
 	}
 
+	:global(.ol-control) {
+		background: none;
+		& button {
+			background: none;
+			border: none;
+			color: white;
+			height: 1.5rem;
+			width: 1.5rem;
+			& svg {
+				height: 1.5rem;
+				width: 1.5rem;
+			}
+			&:hover {
+				text-decoration: none;
+				outline: none;
+				color: rgba(255, 255, 114);
+			}
+			&:focus {
+				text-decoration: none;
+				outline: none;
+				color: rgba(255, 255, 114);
+			}
+		}
+	}
+
 	:global(.ol-zoom) {
 		top: 45px;
-		left: 10px;
+		left: 15px;
 	}
 
 	:global(.ol-rotate) {
-		left: 10px;
-		top: 95px;
+		left: 15px;
+		top: 105px;
 		right: auto;
 	}
 
