@@ -50,6 +50,9 @@
 			case 39:
 				goNext()
 				break
+			case 80:
+				togglePanel()
+				break
 		}
 	}
 </script>
