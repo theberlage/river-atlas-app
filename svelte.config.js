@@ -8,6 +8,9 @@ const config = {
 	preprocess: vitePreprocess(),
 	kit: {
 		adapter: adapter(),
+		prerender: {
+			handleMissingId: 'ignore'
+		},
 		files: {
 			assets: 'contents'
 		}
