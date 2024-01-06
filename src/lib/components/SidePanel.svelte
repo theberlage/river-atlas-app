@@ -31,7 +31,7 @@
 <svelte:window />
 
 <div class="panel-grid-container" transition:fade>
-	<div class="description">
+	<div class="content">
 		<p class="project">
 			{data.meta.heading}
 		</p>
@@ -48,7 +48,7 @@
 									? hexToRGBA(item.fill, item['fill-opacity'])
 									: item.fill
 									? item.fill
-									: 'none'}; outline-color: {item.stroke && item['stroke-opacity']
+									: 'none'}; border-color: {item.stroke && item['stroke-opacity']
 									? hexToRGBA(item.stroke, item['stroke-opacity'])
 									: item.stroke
 									? item.stroke
@@ -121,17 +121,20 @@
 		border-bottom: 1px solid black;
 		color: black;
 	}
-	.description {
+	.content {
 		grid-column: 1 / 2;
 		grid-row: 1 / 3;
 		overflow: auto;
 		z-index: 2;
 		line-height: 1.3;
-		padding-left: 1rem;
-		padding-right: 1rem;
+		margin: 1rem;
 	}
 	.project {
 		font-size: 0.8rem;
+		margin-top: 0px;
+	}
+	.body {
+		margin-bottom: 0px;
 	}
 	.sub-title {
 		text-transform: uppercase;
@@ -159,8 +162,8 @@
 	.legend-item {
 		width: 12px;
 		height: 12px;
-		outline-width: 2px;
-		outline-style: solid;
+		border-width: 2px;
+		border-style: solid;
 	}
 	@media all and (max-width: 600px) {
 		.panel-grid-container {
@@ -170,10 +173,7 @@
 			background-color: white;
 		}
 		.body {
-			padding-bottom: 5.2rem;
-		}
-		.project {
-			font-size: 1rem;
+			padding-bottom: 4.2rem;
 		}
 	}
 </style>
