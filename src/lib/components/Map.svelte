@@ -1,6 +1,5 @@
 <script lang="ts">
 	import { onMount } from 'svelte'
-	import { readable, writable, derived, get } from 'svelte/store'
 
 	// Stores
 	import {
@@ -62,8 +61,8 @@
 	let mapBoxLayer: MapboxVectorLayer
 
 	let currentXyzSource: string | undefined = undefined
-	let currentWarpedMapSource = writable(new Map())
-	let currentVectorSource = writable(new Map())
+	let currentWarpedMapSource = new Map()
+	let currentVectorSource = new Map()
 	let animating: boolean = false
 	let extent: Extent
 
@@ -102,6 +101,8 @@
 	}
 
 	$: {
+		// Todo: use view.fit(extent, {padding, duration})
+		// https://openlayers.org/en/latest/apidoc/module-ol_View-View.html#fit
 		if (view && innerWidth > 600) {
 			view.padding = $panel ? [0, 400, 0, 0] : [0, 0, 0, 0]
 		} else if (view) {
@@ -161,7 +162,7 @@
 				addWarpedMapSource($newWarpedMapSource)
 			} else {
 				warpedMapSource.clear()
-				currentWarpedMapSource.set(new Map())
+				currentWarpedMapSource = new Map()
 				console.log('All maps removed')
 			}
 			// console.log('Processed maps')
@@ -176,7 +177,7 @@
 				addVectorSource($newVectorSource)
 			} else {
 				vectorSource.clear()
-				currentVectorSource.set(new Map())
+				currentVectorSource = new Map()
 				console.log('All features removed')
 			}
 			// console.log('Processed features')
@@ -201,7 +202,7 @@
 		let removedCount = 0
 		let addedCount = 0
 		let existingCount = 0
-		for (const [id, annotation] of $currentWarpedMapSource) {
+		for (const [id, annotation] of currentWarpedMapSource) {
 			// Remove maps from WarpedMapSource that are not on the new slide
 			if (!newWarpedMapSource.has(id)) {
 				await warpedMapSource.removeGeoreferenceAnnotation(annotation)
@@ -210,7 +211,7 @@
 		}
 		for (const [id, annotation] of newWarpedMapSource) {
 			// Only add new maps to WarpedMapSource
-			if (!$currentWarpedMapSource.has(id)) {
+			if (!currentWarpedMapSource.has(id)) {
 				await warpedMapSource.addGeoreferenceAnnotation(annotation)
 				addedCount++
 			} else {
@@ -244,7 +245,7 @@
 			}
 		}
 		console.log(`Maps: ${removedCount} removed, ${addedCount} added, ${existingCount} existing`)
-		currentWarpedMapSource.set(newWarpedMapSource)
+		currentWarpedMapSource = newWarpedMapSource
 	}
 
 	function addVectorSource(newVectorSource: any) {
@@ -268,7 +269,7 @@
 		})
 		for (let [path, features] of newVectorSource) {
 			// Only add new features to VectorSource
-			if (!$currentVectorSource.has(path)) {
+			if (!currentVectorSource.has(path)) {
 				let parsedFeatures = new GeoJSON().readFeatures(features, {
 					featureProjection: 'EPSG:3857'
 				})
@@ -279,7 +280,7 @@
 			}
 		}
 		console.log(`Features: ${removedCount} removed, ${addedCount} added, ${existingCount} existing`)
-		currentVectorSource.set(newVectorSource)
+		currentVectorSource = newVectorSource
 		// Uncomment the block below to display the bbox of the view
 
 		// let bboxPolygon = fromExtent(extent)
