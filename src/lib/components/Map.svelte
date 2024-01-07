@@ -205,7 +205,9 @@
 		for (const [id, annotation] of currentWarpedMapSource) {
 			// Remove maps from WarpedMapSource that are not on the new slide
 			if (!newWarpedMapSource.has(id)) {
-				await warpedMapSource.removeGeoreferenceAnnotation(annotation)
+				// Trick because sometimes a removed map remains visible during animation
+				warpedMapLayer.setMapOpacity(id, 0)
+				warpedMapSource.removeGeoreferenceAnnotation(annotation)
 				removedCount++
 			}
 		}
