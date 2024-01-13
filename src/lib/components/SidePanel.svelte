@@ -2,7 +2,8 @@
 	import {
 		selectedSlideData as slide,
 		selectedSlideShowCount as count,
-		selectedSlideIndex as index
+		selectedSlideIndex as index,
+		textColor
 	} from '$lib/shared/stores/selectedSlide.js'
 	import { hexToRGBA } from '$lib/shared/utils.js'
 	import { page } from '$app/stores'
@@ -30,12 +31,12 @@
 
 <svelte:window />
 
-<div class="panel-grid-container" transition:fade>
+<div class="panel-grid-container" style="--text-color: {$textColor}" transition:fade>
 	<div class="content">
-		<p class="project">
-			{data.meta.heading}
-		</p>
 		<div class="body">
+			<p class="heading">
+				{data.meta.heading}
+			</p>
 			{@html html}
 			{#if legend}
 				<span class="sub-title">Legend</span>
@@ -99,7 +100,8 @@
 
 <style>
 	.panel-grid-container {
-		background-color: rgba(255, 255, 114);
+		background-color: rgba(255, 255, 255, 0.9);
+		color: var(--text-color);
 		z-index: 3;
 		grid-column: panel;
 		grid-row: map;
@@ -118,8 +120,8 @@
 		padding-bottom: 1rem;
 	}
 	ul > li > a {
-		border-bottom: 1px solid black;
-		color: black;
+		border-bottom: 1px solid var(--text-color);
+		color: var(--text-color);
 	}
 	.content {
 		grid-column: 1 / 2;
@@ -127,14 +129,14 @@
 		overflow: auto;
 		z-index: 2;
 		line-height: 1.3;
-		margin: 1rem;
+		margin: 1rem 0rem;
 	}
-	.project {
+	.heading {
 		font-size: 0.8rem;
 		margin-top: 0px;
 	}
 	.body {
-		margin-bottom: 0px;
+		margin: 0rem 1rem;
 	}
 	.sub-title {
 		text-transform: uppercase;
@@ -165,15 +167,11 @@
 		border-width: 2px;
 		border-style: solid;
 	}
-	@media all and (max-width: 600px) {
+	@media all and (max-width: 700px) {
 		.panel-grid-container {
 			grid-template-rows: 1 / 3;
 			border-radius: 1rem 1rem 0 0;
-			margin: 0.4rem 0.4rem 0 0.4rem;
-			background-color: white;
-		}
-		.body {
-			padding-bottom: 4.2rem;
+			margin: 0.4rem 1rem 4rem 1rem;
 		}
 	}
 </style>

@@ -3,7 +3,8 @@
 		selectedChapter as chapter,
 		selectedSlideShow as slideshow,
 		selectedSlideShowCount as count,
-		selectedSlideIndex as index
+		selectedSlideIndex as index,
+		textColor
 	} from '$lib/shared/stores/selectedSlide.js'
 	import { panel } from '$lib/shared/stores/componentStates.js'
 	import { next, prev } from '$lib/shared/svgs.js'
@@ -59,7 +60,7 @@
 
 <svelte:window on:keydown={onKeyDown} />
 
-<div class:control-panel={!$panel} class="control">
+<div class:control-panel={!$panel} class="control" style="--text-color: {$textColor}">
 	<div class:overview-container={overview} class="grid-container">
 		{#if !overview}
 			<div class="grid-item prev button">
@@ -103,7 +104,8 @@
 		grid-template-rows: [top] 1fr [bottom] 1fr;
 		font-size: 1.2rem;
 		border-radius: 1rem;
-		background-color: rgba(255, 255, 114);
+		background-color: rgba(255, 255, 255, 0.9);
+		color: var(--text-color);
 		height: 4rem;
 		min-width: 300px;
 	}
@@ -131,7 +133,7 @@
 			height: 100%;
 			background: none;
 			border: none;
-			color: black;
+			color: var(--text-color);
 			& svg {
 				width: 1.5rem;
 				height: 1.5rem;
@@ -166,5 +168,13 @@
 		grid-row: top;
 		margin: auto;
 		padding: 0 1rem;
+	}
+	@media all and (max-width: 700px) {
+		.control {
+			margin: 1rem;
+		}
+		.grid-container {
+			background-color: rgba(255, 255, 255, 1);
+		}
 	}
 </style>

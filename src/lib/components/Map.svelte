@@ -448,6 +448,6 @@
 		}
 	}
 
-	@media all and (max-width: 600px) {
+	@media all and (max-width: 700px) {
 	}
 </style>

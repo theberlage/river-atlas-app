@@ -57,7 +57,7 @@
 	}
 	.body {
 		font-size: 1.2rem;
-		max-width: 600px;
+		max-width: 700px;
 		max-height: 100%;
 	}
 	ul {
@@ -66,7 +66,7 @@
 		padding-bottom: 1em;
 		list-style-type: none;
 	}
-	@media all and (max-width: 800px) {
+	@media all and (max-width: 700px) {
 		.body {
 			height: 100%;
 		}
