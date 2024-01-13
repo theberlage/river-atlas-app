@@ -16,7 +16,7 @@
 					]
 				]
 			},
-			"properties": { "Title": "Uilenburg & Marken", "href": "#/argumentation/uilenburg" }
+			"properties": { "label": "Uilenburg & Marken", "href": "#/argumentation/uilenburg" }
 		},
 		{
 			"type": "Feature",
@@ -32,7 +32,7 @@
 					]
 				]
 			},
-			"properties": { "Title": "Vijzelstraat", "href": "#/argumentation/vijzelstraat" }
+			"properties": { "label": "Vijzelstraat", "href": "#/argumentation/vijzelstraat" }
 		},
 		{
 			"type": "Feature",
@@ -50,7 +50,7 @@
 					]
 				]
 			},
-			"properties": { "Title": "Helmersbuurt", "href": "#/argumentation/helmersbuurt" }
+			"properties": { "label": "Helmersbuurt", "href": "#/argumentation/helmersbuurt" }
 		},
 		{
 			"type": "Feature",
@@ -70,7 +70,7 @@
 					]
 				]
 			},
-			"properties": { "Title": "Houthavens", "href": "#/argumentation/houthavens" }
+			"properties": { "label": "Houthavens", "href": "#/argumentation/houthavens" }
 		},
 		{
 			"type": "Feature",
@@ -88,7 +88,7 @@
 					]
 				]
 			},
-			"properties": { "Title": "Slotermeer", "href": "#/argumentation/slotermeer" }
+			"properties": { "label": "Slotermeer", "href": "#/argumentation/slotermeer" }
 		},
 		{
 			"type": "Feature",
@@ -116,7 +116,7 @@
 					]
 				]
 			},
-			"properties": { "Title": "Kleiburg & Koningshoef", "href": "#/argumentation/kleiburg" }
+			"properties": { "label": "Kleiburg & Koningshoef", "href": "#/argumentation/bijlmermeer" }
 		}
 	]
 }

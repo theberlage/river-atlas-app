@@ -253,7 +253,6 @@
 	function addVectorSource(newVectorSource: any) {
 		// Remove existing listeners
 		if (pointerMoveKey && singleClickKey) {
-			map.getTargetElement().style.cursor = ''
 			unByKey(pointerMoveKey)
 			unByKey(singleClickKey)
 			console.log('Removed listeners')
@@ -306,7 +305,14 @@
 		if (selectable) createListeners()
 	}
 
+	// Todo:
+	// Overlays: https://openlayers.org/en/latest/examples/overlay.html
+	// Markers: https://openlayers.org/en/latest/examples/icon.html
+	// Tooltip: https://openlayers.org/en/latest/examples/tooltip-on-hover.html
+	// Popup: https://openlayers.org/en/latest/examples/popup.html
+
 	function createListeners() {
+		const tooltip = document.getElementById('tooltip')
 		pointerMoveKey = map.on('pointermove', function (event) {
 			vectorLayer.getFeatures(event.pixel).then(function (features) {
 				let feature = features.length ? features[0] : undefined
@@ -317,11 +323,19 @@
 							feature.setStyle(selectableStyles)
 						}
 					})
+					tooltip.style.visibility = 'hidden'
 					map.getTargetElement().style.cursor = ''
 				}
 				if (feature && feature.getProperties().href) {
 					feature.setStyle(selectedStyles)
 					map.getTargetElement().style.cursor = 'pointer'
+					// Overlay
+					if (feature.getProperties().label) {
+						tooltip.style.left = event.pixel[0] + 'px'
+						tooltip.style.top = event.pixel[1] + 'px'
+						tooltip.style.visibility = 'visible'
+						tooltip.innerText = feature.getProperties().label
+					}
 				}
 			})
 		})
@@ -332,6 +346,8 @@
 				if (feature) {
 					const properties = feature.getProperties()
 					if (properties.href) {
+						tooltip.style.visibility = 'hidden'
+						map.getTargetElement().style.cursor = ''
 						window.location.hash = properties.href
 					}
 				}
@@ -386,6 +402,8 @@
 
 <div id="ol" class="map" />
 
+<div id="tooltip" />
+
 <div id="controls" class:black={$black} />
 
 <style>
@@ -396,6 +414,23 @@
 		width: 100%;
 		height: 100%;
 		z-index: 1;
+	}
+
+	#tooltip {
+		position: absolute;
+		display: inline-block;
+		height: auto;
+		width: auto;
+		z-index: 100;
+		background-color: rgba(255, 255, 0, 1);
+		color: black;
+		text-align: center;
+		border-radius: 4px;
+		padding: 5px;
+		left: 50%;
+		transform: translateX(10%);
+		visibility: hidden;
+		pointer-events: none;
 	}
 
 	#controls {
