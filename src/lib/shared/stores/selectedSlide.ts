@@ -31,6 +31,10 @@ export const black = derived(selectedChapter, ($selectedChapter) =>
 	$selectedChapter === 'argumentation' ? false : true
 )
 
+export const textColor = derived(selectedChapter, ($selectedChapter) =>
+	$selectedChapter === 'argumentation' ? 'rgb(53, 110, 79)' : 'rgb(119, 63, 63)'
+)
+
 const selectedSlideShowData = derived(
 	[selectedChapterData, selectedSlideShow],
 	([$selectedChapterData, $selectedSlideShow]) => {

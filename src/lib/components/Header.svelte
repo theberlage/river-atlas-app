@@ -41,17 +41,22 @@
 		top: 1rem;
 		& button {
 			background: none;
+			display: block;
 			border: none;
 			color: white;
-			width: 100%;
-			height: 100%;
+			width: 2rem;
+			height: 2rem;
+			padding: 0;
+			margin: 0;
 			border-radius: 0.2rem;
+			line-height: 0.4em;
 			& svg {
 				height: 1.5rem;
 				width: 1.5rem;
 			}
 			&:hover {
 				color: rgba(255, 255, 114);
+				background: rgba(0, 0, 0, 0.2);
 			}
 			&:active {
 				color: rgba(255, 255, 114);
@@ -72,7 +77,7 @@
 		color: rgba(255, 255, 114);
 		text-decoration: none;
 	}
-	@media all and (max-width: 600px) {
+	@media all and (max-width: 700px) {
 		.hidden {
 			display: none;
 		}

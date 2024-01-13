@@ -1,6 +1,5 @@
 <script lang="ts">
 	import { onMount } from 'svelte'
-	import { readable, writable, derived, get } from 'svelte/store'
 
 	// Stores
 	import {
@@ -62,8 +61,8 @@
 	let mapBoxLayer: MapboxVectorLayer
 
 	let currentXyzSource: string | undefined = undefined
-	let currentWarpedMapSource = writable(new Map())
-	let currentVectorSource = writable(new Map())
+	let currentWarpedMapSource = new Map()
+	let currentVectorSource = new Map()
 	let animating: boolean = false
 	let extent: Extent
 
@@ -102,6 +101,8 @@
 	}
 
 	$: {
+		// Todo: use view.fit(extent, {padding, duration})
+		// https://openlayers.org/en/latest/apidoc/module-ol_View-View.html#fit
 		if (view && innerWidth > 600) {
 			view.padding = $panel ? [0, 400, 0, 0] : [0, 0, 0, 0]
 		} else if (view) {
@@ -161,7 +162,7 @@
 				addWarpedMapSource($newWarpedMapSource)
 			} else {
 				warpedMapSource.clear()
-				currentWarpedMapSource.set(new Map())
+				currentWarpedMapSource = new Map()
 				console.log('All maps removed')
 			}
 			// console.log('Processed maps')
@@ -176,7 +177,7 @@
 				addVectorSource($newVectorSource)
 			} else {
 				vectorSource.clear()
-				currentVectorSource.set(new Map())
+				currentVectorSource = new Map()
 				console.log('All features removed')
 			}
 			// console.log('Processed features')
@@ -201,16 +202,18 @@
 		let removedCount = 0
 		let addedCount = 0
 		let existingCount = 0
-		for (const [id, annotation] of $currentWarpedMapSource) {
+		for (const [id, annotation] of currentWarpedMapSource) {
 			// Remove maps from WarpedMapSource that are not on the new slide
 			if (!newWarpedMapSource.has(id)) {
-				await warpedMapSource.removeGeoreferenceAnnotation(annotation)
+				// Trick because sometimes a removed map remains visible during animation
+				warpedMapLayer.setMapOpacity(id, 0)
+				warpedMapSource.removeGeoreferenceAnnotation(annotation)
 				removedCount++
 			}
 		}
 		for (const [id, annotation] of newWarpedMapSource) {
 			// Only add new maps to WarpedMapSource
-			if (!$currentWarpedMapSource.has(id)) {
+			if (!currentWarpedMapSource.has(id)) {
 				await warpedMapSource.addGeoreferenceAnnotation(annotation)
 				addedCount++
 			} else {
@@ -244,13 +247,12 @@
 			}
 		}
 		console.log(`Maps: ${removedCount} removed, ${addedCount} added, ${existingCount} existing`)
-		currentWarpedMapSource.set(newWarpedMapSource)
+		currentWarpedMapSource = newWarpedMapSource
 	}
 
 	function addVectorSource(newVectorSource: any) {
 		// Remove existing listeners
 		if (pointerMoveKey && singleClickKey) {
-			map.getTargetElement().style.cursor = ''
 			unByKey(pointerMoveKey)
 			unByKey(singleClickKey)
 			console.log('Removed listeners')
@@ -268,7 +270,7 @@
 		})
 		for (let [path, features] of newVectorSource) {
 			// Only add new features to VectorSource
-			if (!$currentVectorSource.has(path)) {
+			if (!currentVectorSource.has(path)) {
 				let parsedFeatures = new GeoJSON().readFeatures(features, {
 					featureProjection: 'EPSG:3857'
 				})
@@ -279,7 +281,7 @@
 			}
 		}
 		console.log(`Features: ${removedCount} removed, ${addedCount} added, ${existingCount} existing`)
-		currentVectorSource.set(newVectorSource)
+		currentVectorSource = newVectorSource
 		// Uncomment the block below to display the bbox of the view
 
 		// let bboxPolygon = fromExtent(extent)
@@ -303,7 +305,14 @@
 		if (selectable) createListeners()
 	}
 
+	// Todo:
+	// Overlays: https://openlayers.org/en/latest/examples/overlay.html
+	// Markers: https://openlayers.org/en/latest/examples/icon.html
+	// Tooltip: https://openlayers.org/en/latest/examples/tooltip-on-hover.html
+	// Popup: https://openlayers.org/en/latest/examples/popup.html
+
 	function createListeners() {
+		const tooltip = document.getElementById('tooltip')
 		pointerMoveKey = map.on('pointermove', function (event) {
 			vectorLayer.getFeatures(event.pixel).then(function (features) {
 				let feature = features.length ? features[0] : undefined
@@ -314,11 +323,19 @@
 							feature.setStyle(selectableStyles)
 						}
 					})
+					tooltip.style.visibility = 'hidden'
 					map.getTargetElement().style.cursor = ''
 				}
 				if (feature && feature.getProperties().href) {
 					feature.setStyle(selectedStyles)
 					map.getTargetElement().style.cursor = 'pointer'
+					// Overlay
+					if (feature.getProperties().label) {
+						tooltip.style.left = event.pixel[0] + 'px'
+						tooltip.style.top = event.pixel[1] + 'px'
+						tooltip.style.visibility = 'visible'
+						tooltip.innerText = feature.getProperties().label
+					}
 				}
 			})
 		})
@@ -329,6 +346,8 @@
 				if (feature) {
 					const properties = feature.getProperties()
 					if (properties.href) {
+						tooltip.style.visibility = 'hidden'
+						map.getTargetElement().style.cursor = ''
 						window.location.hash = properties.href
 					}
 				}
@@ -383,6 +402,8 @@
 
 <div id="ol" class="map" />
 
+<div id="tooltip" />
+
 <div id="controls" class:black={$black} />
 
 <style>
@@ -393,6 +414,23 @@
 		width: 100%;
 		height: 100%;
 		z-index: 1;
+	}
+
+	#tooltip {
+		position: absolute;
+		display: inline-block;
+		height: auto;
+		width: auto;
+		z-index: 100;
+		background-color: rgba(255, 255, 0, 1);
+		color: black;
+		text-align: center;
+		border-radius: 4px;
+		padding: 5px;
+		left: 50%;
+		transform: translateX(10%);
+		visibility: hidden;
+		pointer-events: none;
 	}
 
 	#controls {
@@ -445,6 +483,6 @@
 		}
 	}
 
-	@media all and (max-width: 600px) {
+	@media all and (max-width: 700px) {
 	}
 </style>

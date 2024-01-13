@@ -18,7 +18,7 @@
 	let innerHeight: number
 	let innerWidth: number
 
-	$: if (innerWidth > 600) {
+	$: if (innerWidth > 700) {
 		panel.set(true)
 	} else {
 		panel.set(false)
@@ -59,7 +59,7 @@
 		width: 100vw;
 		height: 100vh;
 	}
-	@media all and (max-width: 600px) {
+	@media all and (max-width: 700px) {
 		.grid-container {
 			display: grid;
 			grid-template-columns: [panel] 1fr;
