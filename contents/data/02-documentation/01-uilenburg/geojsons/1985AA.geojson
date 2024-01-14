@@ -37,7 +37,7 @@
                 ]
             },
             "properties": {
-                "stroke": "#0022ff",
+                "stroke": "#809fc6",
                 "stroke-width": 2
             }
         },
@@ -321,7 +321,7 @@
                 ]
             },
             "properties": {
-                "stroke": "#0022ff",
+                "stroke": "#809fc6",
                 "stroke-width": 2
             }
         },
@@ -553,7 +553,7 @@
                 ]
             },
             "properties": {
-                "stroke": "#0022ff",
+                "stroke": "#809fc6",
                 "stroke-width": 2
             }
         },
@@ -845,8 +845,8 @@
                 ]
             },
             "properties": {
-                "stroke": "#0022ff",
-                "stroke-width": 0.5
+                "stroke": "#809fc6",
+                "stroke-width": 1
             }
         },
         {
@@ -958,7 +958,7 @@
             },
             "properties": {
                 "stroke": "#df3e3c",
-                "stroke-width": 0.5
+                "stroke-width": 1
             }
         },
         {
@@ -1086,7 +1086,7 @@
             },
             "properties": {
                 "stroke": "#000000",
-                "stroke-width": 0.5
+                "stroke-width": 1
             }
         },
         {
@@ -1217,8 +1217,8 @@
                 ]
             },
             "properties": {
-                "stroke": "#0022ff",
-                "stroke-width": 0.5
+                "stroke": "#809fc6",
+                "stroke-width": 1
             }
         },
         {
@@ -1286,7 +1286,7 @@
             },
             "properties": {
                 "stroke": "#df3e3c",
-                "stroke-width": 0.5
+                "stroke-width": 1
             }
         },
         {
@@ -1438,7 +1438,7 @@
             },
             "properties": {
                 "stroke": "#000000",
-                "stroke-width": 0.5
+                "stroke-width": 1
             }
         },
         {
@@ -1458,7 +1458,7 @@
             },
             "properties": {
                 "stroke": "#df3e3c",
-                "stroke-width": 0.5
+                "stroke-width": 1
             }
         }
     ]
