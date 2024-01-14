@@ -51,11 +51,18 @@ export const selectedSlideShowCount = derived(selectedSlideShowData, ($selectedS
 // Data for the current slide
 // First value is undefined
 export const selectedSlideData = derived(
-	[selectedSlideShowData, selectedSlideIndex],
-	([$selectedSlideShowData, $selectedSlideIndex]) => {
+	[slideData, selectedChapter, selectedSlideShow, selectedSlideIndex],
+	([$slideData, $selectedChapter, $selectedSlideShow, $selectedSlideIndex]) => {
 		// First value of selectedChapter is undefined
-		if ($selectedSlideShowData) {
-			return $selectedSlideShowData[$selectedSlideIndex]
+		if ($selectedChapter) {
+			const chapterData = $slideData.get($selectedChapter)
+			// First value of selectedSlideShow is undefined
+			if ($selectedSlideShow && chapterData) {
+				const slideshowData = chapterData.get($selectedSlideShow)
+				if (slideshowData) {
+					return slideshowData[$selectedSlideIndex]
+				}
+			}
 		}
 	}
 )
@@ -118,10 +125,12 @@ export const vectorLayers = derived(selectedSlideData, ($selectedSlideData, set)
 				for (const item of data) {
 					if (item.resp.type === 'Feature') {
 						item.resp.properties.collection = item.path
+						item.resp.properties.collectionLabel = item.label
 					} else {
 						for (const feature of item.resp.features) {
 							// Add geojson path to each feature to check for existing features
 							feature.properties.collection = item.path
+							feature.properties.collectionLabel = item.label
 						}
 					}
 					map.set(item.path, item.resp)

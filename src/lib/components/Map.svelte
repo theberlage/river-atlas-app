@@ -23,9 +23,10 @@
 	import Collection from 'ol/Collection.js'
 	import { getCenter } from 'ol/extent'
 	import GeoJSON from 'ol/format/GeoJSON.js'
-	import { Fill, Stroke, Circle, Style } from 'ol/style.js'
+	import { Fill, Stroke, Circle, Style, Icon } from 'ol/style.js'
 	import { MapboxVectorLayer } from 'ol-mapbox-style'
 	import { fromExtent } from 'ol/geom/Polygon'
+	import Point from 'ol/geom/Point.js'
 	import Feature from 'ol/Feature.js'
 	import { unByKey } from 'ol/Observable'
 
@@ -41,7 +42,7 @@
 		selectableStyles,
 		parseCustomFeatureStyle
 	} from '$lib/shared/vectorStyles.js'
-	import { plus, minus, arrowUp } from '$lib/shared/svgs.js'
+	import { plus, minus, arrowUp, berlage } from '$lib/shared/svgs.js'
 
 	// Allmaps
 	import { WarpedMapSource, WarpedMapLayer } from '@allmaps/openlayers'
@@ -70,6 +71,10 @@
 	let singleClickKey: EventsKey | undefined = undefined
 
 	let innerWidth: number
+
+	let tooltip: string = 'hidden'
+	let tooltipContents: string = ''
+	let tooltipCoords: number[] = [0, 0]
 
 	const addControls = () => {
 		const collection = new Collection()
@@ -297,6 +302,24 @@
 			if (properties.href) {
 				selectable = true
 				feature.setStyle(selectableStyles)
+
+				// Add Berlage icon for selectable items
+				// const berlageIcon = new Style({
+				// 	image: new Icon({
+				// 		anchor: [0.5, 0.7],
+				// 		anchorXUnits: 'fraction',
+				// 		anchorYUnits: 'fraction',
+				// 		scale: 0.08,
+				// 		// src: 'data:image/svg+xml;base64,' + btoa(JSON.stringify(berlage))
+				// 		src: 'assets/berlage-logo.png'
+				// 	})
+				// })
+				// const center = getCenter(feature.getGeometry()?.getExtent())
+				// const extraFeature = new Feature({
+				// 	geometry: new Point(center)
+				// })
+				// extraFeature.setStyle(berlageIcon)
+				// vectorSource.addFeature(extraFeature)
 			} else {
 				const customStyle = parseCustomFeatureStyle(properties)
 				feature.setStyle(customStyle)
@@ -312,7 +335,6 @@
 	// Popup: https://openlayers.org/en/latest/examples/popup.html
 
 	function createListeners() {
-		const tooltip = document.getElementById('tooltip')
 		pointerMoveKey = map.on('pointermove', function (event) {
 			vectorLayer.getFeatures(event.pixel).then(function (features) {
 				let feature = features.length ? features[0] : undefined
@@ -323,18 +345,18 @@
 							feature.setStyle(selectableStyles)
 						}
 					})
-					tooltip.style.visibility = 'hidden'
+					tooltip = 'hidden'
 					map.getTargetElement().style.cursor = ''
 				}
 				if (feature && feature.getProperties().href) {
 					feature.setStyle(selectedStyles)
 					map.getTargetElement().style.cursor = 'pointer'
 					// Overlay
-					if (feature.getProperties().label) {
-						tooltip.style.left = event.pixel[0] + 'px'
-						tooltip.style.top = event.pixel[1] + 'px'
-						tooltip.style.visibility = 'visible'
-						tooltip.innerText = feature.getProperties().label
+					const label = feature.getProperties().label || feature.getProperties().collectionLabel
+					if (label) {
+						tooltipCoords = event.pixel
+						tooltip = 'visible'
+						tooltipContents = label
 					}
 				}
 			})
@@ -346,7 +368,7 @@
 				if (feature) {
 					const properties = feature.getProperties()
 					if (properties.href) {
-						tooltip.style.visibility = 'hidden'
+						tooltip = 'hidden'
 						map.getTargetElement().style.cursor = ''
 						window.location.hash = properties.href
 					}
@@ -402,7 +424,12 @@
 
 <div id="ol" class="map" />
 
-<div id="tooltip" />
+<div
+	id="tooltip"
+	style="visibility: {tooltip}; left: {tooltipCoords[0]}px; top: {tooltipCoords[1]}px"
+>
+	{tooltipContents}
+</div>
 
 <div id="controls" class:black={$black} />
 
@@ -425,11 +452,9 @@
 		background-color: rgba(255, 255, 0, 1);
 		color: black;
 		text-align: center;
-		border-radius: 4px;
+		border-radius: 0.2rem;
 		padding: 5px;
-		left: 50%;
-		transform: translateX(10%);
-		visibility: hidden;
+		transform: translate(1rem, 1rem);
 		pointer-events: none;
 	}
 

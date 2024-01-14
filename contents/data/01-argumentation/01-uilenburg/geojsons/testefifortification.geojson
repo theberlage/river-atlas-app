@@ -109,7 +109,6 @@
 	},
 	"properties": {
 		"@circle": { "type": "Mercator", "center": [4.906979295315046, 52.36802927658974] },
-		"href": "#/documentation/uilenburg/5",
-		"label": "Open in Documentation"
+		"href": "#/documentation/uilenburg/5"
 	}
 }
