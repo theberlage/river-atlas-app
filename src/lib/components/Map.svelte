@@ -96,11 +96,14 @@
 	// Add Mapbox background layer
 	$: {
 		if (map && $mapboxSettings) {
-			let mapboxLayer = new MapboxVectorLayer({
+			if (mapBoxLayer) {
+				map.removeLayer(mapBoxLayer)
+			}
+			mapBoxLayer = new MapboxVectorLayer({
 				styleUrl: $mapboxSettings.styleUrl,
 				accessToken: $mapboxSettings.accessToken
 			})
-			let resp = map.getLayers().extend([mapboxLayer])
+			map.getLayers().extend([mapBoxLayer])
 			console.log('Added Mapbox layer')
 		}
 	}
