@@ -51,11 +51,18 @@ export const selectedSlideShowCount = derived(selectedSlideShowData, ($selectedS
 // Data for the current slide
 // First value is undefined
 export const selectedSlideData = derived(
-	[selectedSlideShowData, selectedSlideIndex],
-	([$selectedSlideShowData, $selectedSlideIndex]) => {
+	[slideData, selectedChapter, selectedSlideShow, selectedSlideIndex],
+	([$slideData, $selectedChapter, $selectedSlideShow, $selectedSlideIndex]) => {
 		// First value of selectedChapter is undefined
-		if ($selectedSlideShowData) {
-			return $selectedSlideShowData[$selectedSlideIndex]
+		if ($selectedChapter) {
+			const chapterData = $slideData.get($selectedChapter)
+			// First value of selectedSlideShow is undefined
+			if ($selectedSlideShow && chapterData) {
+				const slideshowData = chapterData.get($selectedSlideShow)
+				if (slideshowData) {
+					return slideshowData[$selectedSlideIndex]
+				}
+			}
 		}
 	}
 )
