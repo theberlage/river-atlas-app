@@ -2,8 +2,7 @@
 	"type": "Feature",
 	"properties": {
 		"@circle": { "type": "Mercator", "center": [4.903441454359501, 52.369845865258014] },
-		"href": "#/documentation/uilenburg/3",
-		"label": "Open in Documentation"
+		"href": "#/documentation/uilenburg/3"
 	},
 	"geometry": {
 		"type": "Polygon",
